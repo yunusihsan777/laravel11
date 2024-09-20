@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/perencanaan', [DashboardController::class, 'perencanaan'])->name('perencanaan');
     Route::get('/pengukuran', [DashboardController::class, 'pengukuran'])->name('pengukuran');
     Route::get('/pelaporan', [DashboardController::class, 'pelaporan'])->name('pelaporan');
+    Route::get('/evaluasi', [DashboardController::class, 'evaluasi'])->name('evaluasi');
 });
 
 // Handle file upload menu keputusan

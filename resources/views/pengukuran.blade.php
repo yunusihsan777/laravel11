@@ -5,7 +5,7 @@
 @section('content')
 <div class="content" id="content">
     <div class="container-fluid">
-        <h2>Perencanaan</h2>
+        <h2>Pengukuran</h2>
     <div class="container mt-5">
         <div class="card border-light shadow-sm">
             <div class="card-body">

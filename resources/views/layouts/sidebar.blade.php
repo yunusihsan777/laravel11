@@ -15,7 +15,7 @@
         <a href="{{ route('perencanaan') }}" class="{{ request()->is('perencanaan') ? 'active' : '' }}"><i class="fas fa-file-alt"></i> Perencanaan</a>
         <a href="{{ route('pengukuran') }}" class="{{ request()->is('pengukuran') ? 'active' : '' }}"><i class="fas fa-chart-line"></i> Pengukuran</a>
         <a href="{{ route('pelaporan') }}" class="{{ request()->is('pelaporan') ? 'active' : '' }}"><i class="fas fa-file-upload"></i> Pelaporan</a>
-        <a href="#"><i class="fas fa-clipboard-check"></i> Evaluasi</a>
+        <a href="{{ route('evaluasi') }}" class="{{ request()->is('evaluasi') ? 'active' : '' }}"><i class="fas fa-clipboard-check"></i> Evaluasi</a>
     </div>
     <a href="#" class="{{ request()->is('sakip-wilayah') ? 'active' : '' }}"><i class="fas fa-globe"></i> <span class="sidebar-text">SAKIP Wilayah</span></a>
     <a href="#" class="{{ request()->is('sakip-validasi') ? 'active' : '' }}"><i class="fas fa-check-circle"></i> <span class="sidebar-text">SAKIP Validasi</span></a>

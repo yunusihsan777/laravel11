@@ -36,5 +36,9 @@ class DashboardController extends Controller
     {
         return view('pelaporan');  // Pastikan file pengukuran.blade.php ada di folder resources/views
     }
+    public function evaluasi()
+    {
+        return view('evaluasi');  // Pastikan file pengukuran.blade.php ada di folder resources/views
+    }
 }
 
