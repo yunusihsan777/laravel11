@@ -21,11 +21,11 @@
     <a href="{{ route('sakipvalidasi') }}" class="{{ request()->is('sakipvalidasi') ? 'active' : '' }}"><i class="fas fa-check-circle"></i> <span class="sidebar-text">SAKIP Validasi</span></a>
     <a href="{{ route('kepatuhan') }}" class="{{ request()->is('kepatuhan') ? 'active' : '' }}"><i class="fas fa-shield-alt"></i> <span class="sidebar-text">Kepatuhan AKIP</span></a>
     <a href="{{ route('chatsupport') }}" class="{{ request()->is('chatsupport') ? 'active' : '' }}"><i class="fas fa-comments"></i> <span class="sidebar-text">Chat Support</span></a>
-    <a href="#" class="{{ request()->is('pengumuman') ? 'active' : '' }}"><i class="fas fa-envelope"></i> <span class="sidebar-text">Pengumuman</span></a>
-    <a href="#" class="{{ request()->is('sumber-aturan') ? 'active' : '' }}"><i class="fas fa-gavel"></i> <span class="sidebar-text">Sumber Aturan</span></a>
-    <a href="#" class="{{ request()->is('sumber-literasi') ? 'active' : '' }}"><i class="fas fa-book"></i> <span class="sidebar-text">Sumber Literasi</span></a>
-    <a href="#" class="{{ request()->is('faq') ? 'active' : '' }}"><i class="fas fa-question-circle"></i> <span class="sidebar-text">FAQ</span></a>
-    <a href="#" class="{{ request()->is('ubah-password') ? 'active' : '' }}"><i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span></a>
+    <a href="{{ route('pengumuman') }}" class="{{ request()->is('pengumuman') ? 'active' : '' }}"><i class="fas fa-envelope"></i> <span class="sidebar-text">Pengumuman</span></a>
+    <a href="{{ route('aturan') }}" class="{{ request()->is('aturan') ? 'active' : '' }}"><i class="fas fa-gavel"></i> <span class="sidebar-text">Sumber Aturan</span></a>
+    <a href="{{ route('literasi') }}" class="{{ request()->is('literasi') ? 'active' : '' }}"><i class="fas fa-book"></i> <span class="sidebar-text">Sumber Literasi</span></a>
+    <a href="{{ route('faq') }}" class="{{ request()->is('faq') ? 'active' : '' }}"><i class="fas fa-question-circle"></i> <span class="sidebar-text">FAQ</span></a>
+    <a href="{{ route('ubahpassword') }}" class="{{ request()->is('ubahpassword') ? 'active' : '' }}"><i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span></a>
 </div>
 
 <!-- Sidebar Toggler Button -->

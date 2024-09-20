@@ -9,7 +9,7 @@ class FileUploadController extends Controller
 {
     public function index()
     {
-        return view('keputusan');
+        return view('kelola.keputusan');
     }
 
     public function upload(Request $request)

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Chat Support')
+@section('title', 'Ubah Password')
 
 @section('content')
     <div class="content" id="content">
@@ -8,12 +8,11 @@
             <div class="card border-light shadow-sm">
                 <div class="card-body">
                     <center>
-                        <h2><b>Chat Support</b></h2>
+                        <h2><b>Ubah Password</b></h2>
                     </center><br><br>
                     <div class="text mb-4">
-                        <p>Her content for Chat Support...</p>
+                        <p>Her content for Ubah Password...</p>
                     </div>
-
                 </div>
             </div>
 
