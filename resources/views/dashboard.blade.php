@@ -13,30 +13,39 @@
             <!-- Dashboard Cards -->
             <div class="row">
                 <!-- Card Pesan Masuk (1:1) -->
-                <div class="col-md-12">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title"><b>Pengumuman</b></h5>
-                            <p class="card-text" style="color: red;"><b>Batas Waktu Pengisian dan Upload</b><br>
-                                Bahwa sehubungan penilaian nasional AKIP satuan kerja di lingkungan Kejaksaan RI diberikan
-                                waktu batas pengisian dan upload paling lambat tanggal 28 Juni 2024
-                                28/06/2024</p>
-                            <a href="#" class="btn btn-primary">Lihat Pesan</a>
+                
+                    <div class="col-md-12">
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Pengumuman</b></h5>
+                                @foreach ($pengumuman as $item)
+                                <p class="card-text" style="color: red;">
+                                    <b>{{ $item->judul }}</b></p>
+                                <p>    {{ $item->isi }}
+                                </p>
+                                @endforeach
+                                
+                            </div>
                         </div>
                     </div>
-                </div>
+                
+
 
                 <!-- Card Sumber Aturan (1:3) -->
-                <div class="row">
+             
                     <div class="col-md-4">
                         <div class="card shadow-sm mb-4">
                             <div class="card-body">
                                 <h5 class="card-title"><b>Sumber Aturan</b></h5>
                                 <p class="card-text">Lihat sumber aturan dan referensi hukum yang relevan.</p>
-                                <a href="#" class="btn btn-primary">Lihat Sumber Aturan</a>
+                                <p class="card-text"><b>Jumlah Aturan:</b> {{ $jumlahAturan }}</p>
+                                <!-- Menampilkan jumlah aturan -->
+                                <a href="{{ route('aturan') }}" class="btn btn-primary">Lihat Sumber Aturan</a>
                             </div>
                         </div>
                     </div>
+              
+                
 
                     <!-- Card Sumber Literasi (1:3) -->
                     <div class="col-md-4">

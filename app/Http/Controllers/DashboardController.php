@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -14,8 +15,9 @@ class DashboardController extends Controller
 
     public function index()
     {
-        return view('dashboard');
+        $pengumuman = DB::table('sinori_sakip_inbox')->get();
+        $jumlahAturan = DB::table('sinori_sakip_literasi')->count(); // Hitung jumlah aturan
+        return view('dashboard', compact('pengumuman','jumlahAturan'));
     }
-
 }
 
