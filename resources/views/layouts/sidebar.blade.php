@@ -1,0 +1,58 @@
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar"><br>
+    @php
+    $satkernama = session('satkernama', 'Nama Satker');
+    $idSatker = session('id_satker', 'ID Satker');
+    @endphp
+    <img src="{{ asset('gambar/kejaksaan.png') }}" alt="Profile Picture" class="profile-pic">
+    <h5 class="text-center text-black">Selamat Datang<br>{{ $satkernama }}<br>ID Satker: {{ $idSatker }}</h5>
+    <a href="{{ route('dashboard') }}"><i class="fas fa-home"></i> <span class="sidebar-text">Beranda</span></a>
+    <a href="#" id="toggle-submenu"><i class="fas fa-tasks"></i> <span class="sidebar-text">Tata Kelola AKIP</span>
+        <i class="fas fa-chevron-right arrow-icon"></i>
+    </a>
+    <div class="submenu" id="submenu">
+        <a href="{{ route('keputusan') }}"><i class="fas fa-users"></i> Kep Tim SAKIP</a>
+        <a href="{{ route('perencanaan') }}"><i class="fas fa-file-alt"></i> Perencanaan</a>
+        <a href="{{ route('pengukuran') }}"><i class="fas fa-chart-line"></i> Pengukuran</a>
+        <a href="{{ route('pelaporan') }}"><i class="fas fa-file-upload"></i> Pelaporan</a>
+        <a href="#"><i class="fas fa-clipboard-check"></i> Evaluasi</a>
+    </div>
+    <a href="#"><i class="fas fa-globe"></i> <span class="sidebar-text">SAKIP Wilayah</span></a>
+    <a href="#"><i class="fas fa-check-circle"></i> <span class="sidebar-text">SAKIP Validasi</span></a>
+    <a href="#"><i class="fas fa-shield-alt"></i> <span class="sidebar-text">Kepatuhan AKIP</span></a>
+    <a href="#"><i class="fas fa-comments"></i> <span class="sidebar-text">Chat Support</span></a>
+    <a href="#"><i class="fas fa-envelope"></i> <span class="sidebar-text">Pengumuman</span></a>
+    <a href="#"><i class="fas fa-gavel"></i> <span class="sidebar-text">Sumber Aturan</span></a>
+    <a href="#"><i class="fas fa-book"></i> <span class="sidebar-text">Sumber Literasi</span></a>
+    <a href="#"><i class="fas fa-question-circle"></i> <span class="sidebar-text">FAQ</span></a>
+    <a href="#"><i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span></a>
+</div>
+
+<!-- Sidebar Toggler Button -->
+<button class="btn btn-primary toggler-btn" id="toggler-btn">
+    <i class="fas fa-chevron-left"></i>
+</button>
+
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbar">
+    <div class="container-fluid">
+        {{-- <span class="navbar-brand"><br><br>Halaman Saat Ini</span> --}}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <span class="nav-link">{{ $satkernama }}</span>
+                </li>
+                <li class="nav-item">
+                    {{-- <a href="#" class="nav-link text-danger"><i class="fas fa-sign-out-alt"></i> Sign Out</a> --}}
+                    <form action="{{ url('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
