@@ -57,6 +57,26 @@
         .forgot-password a {
             color: #007bff;
         }
+        /* Custom Button Styles */
+.btn-yellow {
+    background-color: #f0bb49; /* Warna kuning */
+    color: #fff; /* Warna teks putih */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-yellow:hover {
+    background-color: #e0a842; /* Warna kuning yang sedikit lebih gelap untuk efek hover */
+}
+
+.btn-yellow:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(240, 187, 73, 0.8);
+}
     </style>
 </head>
 <body>
@@ -93,7 +113,7 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn login-button">Login</button>
+            <button type="submit" class="btn btn-yellow login-button">Login</button>
         </form>
 
         <br>

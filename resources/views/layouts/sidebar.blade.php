@@ -30,7 +30,7 @@
 </div>
 
 <!-- Sidebar Toggler Button -->
-<button class="btn btn-primary toggler-btn" id="toggler-btn">
+<button class="btn btn-yellow toggler-btn" id="toggler-btn">
     <i class="fas fa-chevron-left"></i>
 </button>
 
@@ -51,7 +51,7 @@
                     {{-- <a href="#" class="nav-link text-danger"><i class="fas fa-sign-out-alt"></i> Sign Out</a> --}}
                     <form action="{{ url('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-primary">Logout</button>
+                        <button type="submit" class="btn btn-red">Logout</button>
                     </form>
                 </li>
             </ul>

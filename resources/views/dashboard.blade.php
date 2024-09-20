@@ -17,15 +17,18 @@
                 <div class="col-md-12">
                     <div class="card shadow-sm mb-4">
                         <div class="card-body">
-                            <h5 class="card-title"><b>Pengumuman</b></h5>
+                            <center><h4 class="card-title"><b>Pengumuman</b></h4></center>
                             @foreach ($pengumuman as $item)
-                                <p class="card-text" style="color: red;">
-                                    <b>{{ $item->judul }}</b>
-                                </p>
-                                <p> {{ $item->isi }}
-                                </p>
+                                <div class="card shadow-sm mb-4">
+                                    <div class="card-body">
+                                        <p class="card-text" style="color: red;">
+                                            <b>{{ $item->judul }}</b>
+                                        </p>
+                                        <p> {{ $item->isi }}
+                                        </p>
+                                    </div>
+                                </div>
                             @endforeach
-
                         </div>
                     </div>
                 </div>
@@ -41,7 +44,7 @@
                             <p class="card-text">Lihat sumber aturan dan referensi hukum yang relevan.</p>
                             <p class="card-text"><b>Jumlah Aturan:</b> {{ $jumlahAturan }} Dokumen</p>
                             <!-- Menampilkan jumlah aturan -->
-                            <a href="{{ route('aturan') }}" class="btn btn-primary">Lihat Sumber Aturan</a>
+                            <a href="{{ route('aturan') }}" class="btn btn-yellow">Lihat Sumber Aturan</a>
                         </div>
                     </div>
                 </div>
@@ -54,7 +57,7 @@
                         <div class="card-body">
                             <h5 class="card-title"><b>Sumber Literasi</b></h5>
                             <p class="card-text">Jelajahi sumber literasi dan referensi tambahan.</p>
-                            <a href="#" class="btn btn-primary">Lihat Sumber Literasi</a>
+                            <a href="#" class="btn btn-yellow">Lihat Sumber Literasi</a>
                         </div>
                     </div>
                 </div>
@@ -65,7 +68,7 @@
                         <div class="card-body">
                             <h5 class="card-title"><b>FAQ</b></h5>
                             <p class="card-text">Lihat pertanyaan yang sering diajukan tentang sistem ini.</p>
-                            <a href="#" class="btn btn-primary">Lihat FAQ</a>
+                            <a href="#" class="btn btn-yellow">Lihat FAQ</a>
                         </div>
                     </div>
                 </div>

@@ -78,7 +78,8 @@ Route::get('/keputusan', [FileUploadController::class, 'index'])->name('keputusa
 Route::post('/upload-file', [FileUploadController::class, 'upload'])->name('upload.file');
 
 // Handle file upload menu Renstra
-use App\Http\Controllers\RenstraController;
-Route::get('/renstra', [RenstraController::class, 'index'])->name('renstra.index');
-Route::post('/upload-renstra', [RenstraController::class, 'uploadRenstra'])->name('upload.renstra');
+// use App\Http\Controllers\RenstraController;
+// Route::get('/kelola.perencanaan', [RenstraController::class, 'index'])->name('kelola.perencanaan');
+
+// Route::post('/upload-renstra', [RenstraController::class, 'uploadRenstra'])->name('upload.renstra');
 

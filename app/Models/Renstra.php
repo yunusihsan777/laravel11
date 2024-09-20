@@ -7,11 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Renstra extends Model
 {
-    use HasFactory;
+    // protected $table = 'sinori_sakip_renstra'; // Nama tabel di database
 
-    protected $table = 'renstra';
+    // // Tentukan kolom yang bisa diisi (fillable)
+    // protected $fillable = [
+    //     'id_periode', 'id_perubahan', 'id_tglupload'
+    // ];
+    // use HasFactory;
 
-    protected $fillable = ['filename', 'version', 'uploaded_at'];
+    // protected $table = 'renstra';
 
-    public $timestamps = false;
+    // protected $fillable = ['filename', 'version', 'uploaded_at'];
+
+    // public $timestamps = false;
+
+    // $renstra = Renstra::all(); // Mengambil semua data dari tabel sinori_sakip_renstra
+    // return view('kelola.perencanaan', compact('renstra'));
 }
