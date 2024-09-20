@@ -18,15 +18,35 @@ Route::post('/login', [LoginController::class, 'login']);
 // Handle Logout
 Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-// Handle Auth
+
 use App\Http\Controllers\DashboardController;
+
+use App\Http\Controllers\KeputusanController;
+
+use App\Http\Controllers\PerencanaanController;
+
+use App\Http\Controllers\PengukuranController;
+
+use App\Http\Controllers\PelaporanController;
+
+use App\Http\Controllers\EvaluasiController;
+
+use App\Http\Controllers\SakipwilController;
+
+use App\Http\Controllers\SakipvalidasiController;
+
+use App\Http\Controllers\KepatuhanController;
+// Handle Auth
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/keputusan', [DashboardController::class, 'keputusan'])->name('keputusan');
-    Route::get('/perencanaan', [DashboardController::class, 'perencanaan'])->name('perencanaan');
-    Route::get('/pengukuran', [DashboardController::class, 'pengukuran'])->name('pengukuran');
-    Route::get('/pelaporan', [DashboardController::class, 'pelaporan'])->name('pelaporan');
-    Route::get('/evaluasi', [DashboardController::class, 'evaluasi'])->name('evaluasi');
+    Route::get('/keputusan', [KeputusanController::class, 'index'])->name('keputusan');
+    Route::get('/perencanaan', [PerencanaanController::class, 'index'])->name('perencanaan');
+    Route::get('/pengukuran', [PengukuranController::class, 'index'])->name('pengukuran');
+    Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
+    Route::get('/evaluasi', [EvaluasiController::class, 'index'])->name('evaluasi');
+    Route::get('/sakipwil', [SakipwilController::class, 'index'])->name('sakipwil');
+    Route::get('/sakipvalidasi', [SakipvalidasiController::class, 'index'])->name('sakipvalidasi');
+    Route::get('/kepatuhan', [KepatuhanController::class, 'index'])->name('kepatuhan');
 });
 
 // Handle file upload menu keputusan

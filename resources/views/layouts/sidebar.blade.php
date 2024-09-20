@@ -17,9 +17,9 @@
         <a href="{{ route('pelaporan') }}" class="{{ request()->is('pelaporan') ? 'active' : '' }}"><i class="fas fa-file-upload"></i> Pelaporan</a>
         <a href="{{ route('evaluasi') }}" class="{{ request()->is('evaluasi') ? 'active' : '' }}"><i class="fas fa-clipboard-check"></i> Evaluasi</a>
     </div>
-    <a href="#" class="{{ request()->is('sakip-wilayah') ? 'active' : '' }}"><i class="fas fa-globe"></i> <span class="sidebar-text">SAKIP Wilayah</span></a>
-    <a href="#" class="{{ request()->is('sakip-validasi') ? 'active' : '' }}"><i class="fas fa-check-circle"></i> <span class="sidebar-text">SAKIP Validasi</span></a>
-    <a href="#" class="{{ request()->is('kepatuhan-akip') ? 'active' : '' }}"><i class="fas fa-shield-alt"></i> <span class="sidebar-text">Kepatuhan AKIP</span></a>
+    <a href="{{ route('sakipwil') }}" class="{{ request()->is('sakipwil') ? 'active' : '' }}"><i class="fas fa-globe"></i> <span class="sidebar-text">SAKIP Wilayah</span></a>
+    <a href="{{ route('sakipvalidasi') }}" class="{{ request()->is('sakipvalidasi') ? 'active' : '' }}"><i class="fas fa-check-circle"></i> <span class="sidebar-text">SAKIP Validasi</span></a>
+    <a href="{{ route('kepatuhan') }}" class="{{ request()->is('kepatuhan') ? 'active' : '' }}"><i class="fas fa-shield-alt"></i> <span class="sidebar-text">Kepatuhan AKIP</span></a>
     <a href="#" class="{{ request()->is('chat-support') ? 'active' : '' }}"><i class="fas fa-comments"></i> <span class="sidebar-text">Chat Support</span></a>
     <a href="#" class="{{ request()->is('pengumuman') ? 'active' : '' }}"><i class="fas fa-envelope"></i> <span class="sidebar-text">Pengumuman</span></a>
     <a href="#" class="{{ request()->is('sumber-aturan') ? 'active' : '' }}"><i class="fas fa-gavel"></i> <span class="sidebar-text">Sumber Aturan</span></a>

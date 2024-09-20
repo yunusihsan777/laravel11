@@ -17,28 +17,5 @@ class DashboardController extends Controller
         return view('dashboard');
     }
 
-    public function keputusan()
-    {
-
-        return view('keputusan');
-    }
-
-    public function perencanaan()
-    {
-        return view('perencanaan');
-    }
-
-    public function pengukuran()
-    {
-        return view('pengukuran');  // Pastikan file pengukuran.blade.php ada di folder resources/views
-    }
-    public function pelaporan()
-    {
-        return view('pelaporan');  // Pastikan file pengukuran.blade.php ada di folder resources/views
-    }
-    public function evaluasi()
-    {
-        return view('evaluasi');  // Pastikan file pengukuran.blade.php ada di folder resources/views
-    }
 }
 
