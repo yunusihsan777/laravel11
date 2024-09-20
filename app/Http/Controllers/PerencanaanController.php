@@ -8,7 +8,7 @@ class PerencanaanController extends Controller
 {
     public function index()
     {
-        return view('perencanaan');
+        return view('kelola.perencanaan');
     }
     
 }

@@ -36,6 +36,8 @@ use App\Http\Controllers\SakipwilController;
 use App\Http\Controllers\SakipvalidasiController;
 
 use App\Http\Controllers\KepatuhanController;
+
+use App\Http\Controllers\ChatsupportController;
 // Handle Auth
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -47,12 +49,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sakipwil', [SakipwilController::class, 'index'])->name('sakipwil');
     Route::get('/sakipvalidasi', [SakipvalidasiController::class, 'index'])->name('sakipvalidasi');
     Route::get('/kepatuhan', [KepatuhanController::class, 'index'])->name('kepatuhan');
+    Route::get('/chatsupport', [ChatsupportController::class, 'index'])->name('chatsupport');
 });
 
 // Handle file upload menu keputusan
-use App\Http\Controllers\FileUploadController;
-Route::get('/keputusan', [FileUploadController::class, 'index'])->name('keputusan');
-Route::post('/upload-file', [FileUploadController::class, 'upload'])->name('upload.file');
+// use App\Http\Controllers\FileUploadController;
+// Route::get('/keputusan', [FileUploadController::class, 'index'])->name('keputusan');
+// Route::post('/upload-file', [FileUploadController::class, 'upload'])->name('upload.file');
 
 // Handle file upload menu Renstra
 use App\Http\Controllers\RenstraController;

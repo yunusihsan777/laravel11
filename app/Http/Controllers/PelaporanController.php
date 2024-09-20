@@ -8,6 +8,6 @@ class PelaporanController extends Controller
 {
     public function index()
     {
-        return view('pelaporan');
+        return view('kelola.pelaporan');
     }
 }

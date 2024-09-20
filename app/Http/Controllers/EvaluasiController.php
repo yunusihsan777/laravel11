@@ -8,6 +8,6 @@ class EvaluasiController extends Controller
 {
     public function index()
     {
-        return view('evaluasi');
+        return view('kelola.evaluasi');
     }
 }
