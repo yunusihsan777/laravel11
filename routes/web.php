@@ -41,6 +41,12 @@ use App\Http\Controllers\ChatsupportController;
 
 use App\Http\Controllers\PengumumanController;
 
+Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
+Route::get('/pengumuman/{id}/edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');
+Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
+Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
+
+
 use App\Http\Controllers\AturanController;
 
 use App\Http\Controllers\LiterasiController;
