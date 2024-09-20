@@ -26,6 +26,7 @@
     <a href="{{ route('literasi') }}" class="{{ request()->is('literasi') ? 'active' : '' }}"><i class="fas fa-book"></i> <span class="sidebar-text">Sumber Literasi</span></a>
     <a href="{{ route('faq') }}" class="{{ request()->is('faq') ? 'active' : '' }}"><i class="fas fa-question-circle"></i> <span class="sidebar-text">FAQ</span></a>
     <a href="{{ route('ubahpassword') }}" class="{{ request()->is('ubahpassword') ? 'active' : '' }}"><i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span></a>
+<div><br><br><center><p>Powered by Kejaksaan RI @2024</p></center></div>
 </div>
 
 <!-- Sidebar Toggler Button -->

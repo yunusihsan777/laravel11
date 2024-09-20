@@ -36,6 +36,18 @@
         background-color: #0056b3;
         border-color: #004085;
     }
+    /* Awal card berada di bawah dan tersembunyi */
+    .card {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.6s ease-out;
+    }
+
+    /* Setelah halaman dimuat, card akan muncul ke posisi semula */
+    .card.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
 </style>
     @if (!auth()->check())
     
@@ -65,8 +77,5 @@
     {{-- </div> --}}
     @include('layouts.footer')
 </body>
-
-</html>
-
     
 @endif

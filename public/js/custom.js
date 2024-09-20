@@ -35,3 +35,5 @@ const sidebar = document.getElementById('sidebar');
              submenuArrow.style.transform = 'rotate(0)';
          }
      });
+
+     
