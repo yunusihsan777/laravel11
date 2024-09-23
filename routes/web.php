@@ -47,6 +47,8 @@ Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('p
 Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
 
 use App\Http\Controllers\AturanController;
+Route::resource('aturan', \App\Http\Controllers\AturanController::class);
+Route::get('/aturan/create', [AturanController::class, 'create'])->name('aturan.create');
 
 use App\Http\Controllers\LiterasiController;
 
