@@ -123,7 +123,7 @@
                     <div class="card-body">
                         <h5 class="card-title"><b>Sumber Literasi</b></h5>
                         <p class="card-text">Jelajahi sumber literasi dan referensi tambahan.</p>
-                        <a href="#" class="btn btn-yellow">Lihat Sumber Literasi</a>
+                        <a href="{{ route('literasi') }}" class="btn btn-yellow">Lihat Sumber Literasi</a>
                     </div>
                 </div>
             </div>
@@ -134,7 +134,7 @@
                     <div class="card-body">
                         <h5 class="card-title"><b>FAQ</b></h5>
                         <p class="card-text">Lihat pertanyaan yang sering diajukan tentang sistem ini.</p>
-                        <a href="#" class="btn btn-yellow">Lihat FAQ</a>
+                        <a href="{{ route('faq') }}" class="btn btn-yellow">Lihat FAQ</a>
                     </div>
                 </div>
             </div>
