@@ -182,3 +182,52 @@ footer {
     width: 100%;
     text-align: center;
 }
+/* Custom Button Styles */
+.btn-yellow {
+    background-color: #f0bb49; /* Warna kuning */
+    color: #fff; /* Warna teks putih */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-yellow:hover {
+    background-color: #e0a842; /* Warna kuning yang sedikit lebih gelap untuk efek hover */
+}
+
+.btn-yellow:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(240, 187, 73, 0.8);
+}
+
+/* CSS untuk button merah */
+.btn-red {
+    background-color: #ff0000;  /* Warna merah */
+    color: white;               /* Warna teks putih */
+    border: none;               /* Tanpa border */
+    padding: 10px 20px;         /* Padding di dalam button */
+    border-radius: 5px;         /* Sudut rounded */
+    font-size: 16px;            /* Ukuran font */
+    cursor: pointer;            /* Mengubah kursor saat hover */
+    transition: background-color 0.3s ease; /* Efek transisi */
+}
+
+/* Efek hover */
+.btn-red:hover {
+    background-color: #cc0000;  /* Warna merah lebih gelap saat hover */
+}
+
+/* Efek fokus */
+.btn-red:focus {
+    outline: none;              /* Menghilangkan outline default */
+    box-shadow: 0 0 5px #ff0000; /* Tambahkan bayangan saat fokus */
+}
+.table-hover tbody tr:hover {
+    background-color: #ffe6b3; /* Warna kuning muda saat hover */
+}
+.table-hover tbody tr:hover {
+    background-color: #ffe6b3; /* Warna kuning muda saat hover */
+}

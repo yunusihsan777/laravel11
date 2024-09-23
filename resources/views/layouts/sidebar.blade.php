@@ -26,10 +26,11 @@
     <a href="{{ route('literasi') }}" class="{{ request()->is('literasi') ? 'active' : '' }}"><i class="fas fa-book"></i> <span class="sidebar-text">Sumber Literasi</span></a>
     <a href="{{ route('faq') }}" class="{{ request()->is('faq') ? 'active' : '' }}"><i class="fas fa-question-circle"></i> <span class="sidebar-text">FAQ</span></a>
     <a href="{{ route('ubahpassword') }}" class="{{ request()->is('ubahpassword') ? 'active' : '' }}"><i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span></a>
+<div><br><br><center><p>Powered by Kejaksaan RI @2024</p></center></div>
 </div>
 
 <!-- Sidebar Toggler Button -->
-<button class="btn btn-primary toggler-btn" id="toggler-btn">
+<button class="btn btn-yellow toggler-btn" id="toggler-btn">
     <i class="fas fa-chevron-left"></i>
 </button>
 
@@ -50,7 +51,7 @@
                     {{-- <a href="#" class="nav-link text-danger"><i class="fas fa-sign-out-alt"></i> Sign Out</a> --}}
                     <form action="{{ url('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-primary">Logout</button>
+                        <button type="submit" class="btn btn-red">Logout</button>
                     </form>
                 </li>
             </ul>

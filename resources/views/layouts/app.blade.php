@@ -36,6 +36,18 @@
         background-color: #0056b3;
         border-color: #004085;
     }
+    /* Awal card berada di bawah dan tersembunyi */
+    .card {
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.6s ease-out;
+    }
+
+    /* Setelah halaman dimuat, card akan muncul ke posisi semula */
+    .card.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
 </style>
     @if (!auth()->check())
     
@@ -52,6 +64,8 @@
     @else
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 @include('layouts.head')
 <body class="section-with-background" style="background-image: url('{{ asset('gambar/background.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 400px;">
     
@@ -65,8 +79,5 @@
     {{-- </div> --}}
     @include('layouts.footer')
 </body>
-
-</html>
-
     
 @endif
