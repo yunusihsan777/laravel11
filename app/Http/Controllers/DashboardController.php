@@ -17,7 +17,14 @@ class DashboardController extends Controller
     {
         $pengumuman = DB::table('sinori_sakip_inbox')->get();
         $jumlahAturan = DB::table('sinori_sakip_literasi')->count(); // Hitung jumlah aturan
-        return view('dashboard', compact('pengumuman','jumlahAturan'));
+        // Data untuk chart
+        $data = [
+            'pengisian_pk' => 80,
+            'tw1' => 50,
+            'tw2' => 50
+        ];
+
+        // Kirim data ke view
+        return view('dashboard', compact('pengumuman', 'jumlahAturan', 'data'));
     }
 }
-

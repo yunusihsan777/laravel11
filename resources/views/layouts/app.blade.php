@@ -64,6 +64,8 @@
     @else
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
 @include('layouts.head')
 <body class="section-with-background" style="background-image: url('{{ asset('gambar/background.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 400px;">
     

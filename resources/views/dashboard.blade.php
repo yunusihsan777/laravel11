@@ -33,46 +33,112 @@
                     </div>
                 </div>
 
+                {{-- Chart --}}
 
-
-                <!-- Card Sumber Aturan (1:3) -->
-
+                <!-- Card Renstra (1:3) -->
                 <div class="col-md-4">
                     <div class="card shadow-sm mb-4">
                         <div class="card-body">
-                            <h5 class="card-title"><b>Sumber Aturan</b></h5>
-                            <p class="card-text">Lihat sumber aturan dan referensi hukum yang relevan.</p>
-                            <p class="card-text"><b>Jumlah Aturan:</b> {{ $jumlahAturan }} Dokumen</p>
-                            <!-- Menampilkan jumlah aturan -->
-                            <a href="{{ route('aturan') }}" class="btn btn-yellow">Lihat Sumber Aturan</a>
+                            <h5 class="card-title"><b>Pengisian Renstra</b></h5>
+                            <p class="card-text">Pengisian Renstra sudah dilakukan sebanyak 30 %</p>
+                            <p class="card-text">Pengisian Renstra sudah dilakukan sebanyak 70 %</p>
                         </div>
                     </div>
                 </div>
 
-
-
-                <!-- Card Sumber Literasi (1:3) -->
+                <!-- Card IKU (1:3) -->
                 <div class="col-md-4">
                     <div class="card shadow-sm mb-4">
                         <div class="card-body">
-                            <h5 class="card-title"><b>Sumber Literasi</b></h5>
-                            <p class="card-text">Jelajahi sumber literasi dan referensi tambahan.</p>
-                            <a href="#" class="btn btn-yellow">Lihat Sumber Literasi</a>
+                            <h5 class="card-title"><b>IKU Sudah di otentikasi</b></h5>
+                            <p class="card-text">IKU Sudah di otentikasi sebanyak 50 %</p>
+                            <p class="card-text">IKU Sudah di otentikasi sebanyak 50 %</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card FAQ (1:3) -->
+                <!-- Card Renja (1:3) -->
                 <div class="col-md-4">
                     <div class="card shadow-sm mb-4">
                         <div class="card-body">
-                            <h5 class="card-title"><b>FAQ</b></h5>
-                            <p class="card-text">Lihat pertanyaan yang sering diajukan tentang sistem ini.</p>
-                            <a href="#" class="btn btn-yellow">Lihat FAQ</a>
+                            <h5 class="card-title"><b>Renja Sudah di otentikasi</b></h5>
+                            <p class="card-text">Renja Sudah di otentikasi sebanyak 20 %</p>
+                            <p class="card-text">Renja Sudah di otentikasi sebanyak 80 %</p>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Card PK (1:3) -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>Pengisian PK</b></h5>
+                            <p class="card-text">Pengisian PK sudah dilakukan sebanyak 80 %</p>
+                            <p class="card-text">Pengisian PK sudah dilakukan sebanyak 20 %</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card TW1 (1:3) -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>TW1 Sudah di otentikasi</b></h5>
+                            <p class="card-text">TW1 Sudah di otentikasi sebanyak 50 %</p>
+                            <p class="card-text">TW1 Sudah di otentikasi sebanyak 50 %</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card TW2 (1:3) -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>TW2 Sudah di otentikasi</b></h5>
+                            <p class="card-text">TW2 Sudah di otentikasi sebanyak 50 %</p>
+                            <p class="card-text">TW2 Sudah di otentikasi sebanyak 50 %</p>
+                        </div>
+                    </div>
+                </div>
+            
+
+            {{-- Card --}}
+            <!-- Card Sumber Aturan (1:3) -->
+
+            <div class="col-md-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Sumber Aturan</b></h5>
+                        <p class="card-text">Lihat sumber aturan dan referensi hukum yang relevan.</p>
+                        <p class="card-text"><b>Jumlah Aturan:</b> {{ $jumlahAturan }} Dokumen</p>
+                        <!-- Menampilkan jumlah aturan -->
+                        <a href="{{ route('aturan') }}" class="btn btn-yellow">Lihat Sumber Aturan</a>
                     </div>
                 </div>
             </div>
+
+            <!-- Card Sumber Literasi (1:3) -->
+            <div class="col-md-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>Sumber Literasi</b></h5>
+                        <p class="card-text">Jelajahi sumber literasi dan referensi tambahan.</p>
+                        <a href="#" class="btn btn-yellow">Lihat Sumber Literasi</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card FAQ (1:3) -->
+            <div class="col-md-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title"><b>FAQ</b></h5>
+                        <p class="card-text">Lihat pertanyaan yang sering diajukan tentang sistem ini.</p>
+                        <a href="#" class="btn btn-yellow">Lihat FAQ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
             <!-- New Cards Below -->
             <div class="row">
@@ -191,5 +257,29 @@
                 card.classList.add('show');
             }, index * 100); // Animasi akan muncul satu per satu dengan delay 100ms
         });
+    });
+
+    //chart
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    const progressChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Pengisian PK', 'TW1 Otentikasi', 'TW2 Otentikasi'],
+            datasets: [{
+                data: [{{ $data['pengisian_pk'] }}, {{ $data['tw1'] }}, {{ $data['tw2'] }}],
+                backgroundColor: ['#f0bb49', '#ff6384', '#36a2eb'],
+                hoverBackgroundColor: ['#f79f2a', '#ff4567', '#3381ca'],
+                borderColor: '#ffffff',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
     });
 </script>
