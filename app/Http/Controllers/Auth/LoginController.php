@@ -18,18 +18,18 @@ class LoginController extends Controller
     public function login(Request $request)
 {
     $request->validate([
-        'email' => 'required',
-        'password' => 'required',
+        'id_satker' => 'required',
+        'satkerpass' => 'required',
     ]);
 
-    $email = $request->input('email');
-    $password = $request->input('password');
+    $id_satker = $request->input('id_satker');
+    $satkerpass = $request->input('sakterpass');
 
     // Fetch user from database
-    $user = DB::table('sinori_login')->where('id_satker', $email)->first();
+    $user = DB::table('sinori_login')->where('id_satker', $id_satker)->first();
 
     // Check if user exists and password is correct
-    if ($user && md5($password) === $user->satkerpass) {
+    if ($user && md5($satkerpass) === $user->satkerpass) {
         // Store user data in session
         $request->session()->put('id_satker', $user->id_satker);
         $request->session()->put('satkernama', str_replace('_', ' ', $user->satkernama));
@@ -40,7 +40,7 @@ class LoginController extends Controller
         return redirect()->route('dashboard');
     }
 
-    return back()->withErrors(['email' => 'Invalid credentials']);
+    return back()->withErrors(['id_satker' => 'Invalid credentials']);
 }
 
 
