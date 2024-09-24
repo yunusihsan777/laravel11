@@ -21,7 +21,8 @@ Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout
 
 use App\Http\Controllers\DashboardController;
 
-use App\Http\Controllers\KeputusanController;
+use App\Http\Controllers\KepController;
+Route::post('kep', [KepController::class, 'store'])->name('kep.store');
 
 use App\Http\Controllers\PerencanaanController;
 
@@ -40,14 +41,13 @@ use App\Http\Controllers\KepatuhanController;
 use App\Http\Controllers\ChatsupportController;
 
 use App\Http\Controllers\PengumumanController;
-
 Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
 Route::get('/pengumuman/{id}/edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');
 Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
 Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
 
 use App\Http\Controllers\AturanController;
-Route::resource('aturan', \App\Http\Controllers\AturanController::class);
+Route::resource('aturan', AturanController::class);
 Route::get('/aturan/create', [AturanController::class, 'create'])->name('aturan.create');
 
 use App\Http\Controllers\LiterasiController;
@@ -58,7 +58,7 @@ use App\Http\Controllers\UbahpasswordController;
 // Handle Auth
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/keputusan', [KeputusanController::class, 'index'])->name('keputusan');
+    Route::get('/kep', [KepController::class, 'index'])->name('kep');
     Route::get('/perencanaan', [PerencanaanController::class, 'index'])->name('perencanaan');
     Route::get('/pengukuran', [PengukuranController::class, 'index'])->name('pengukuran');
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
@@ -76,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Handle file upload menu keputusan
 use App\Http\Controllers\FileUploadController;
-Route::get('/keputusan', [FileUploadController::class, 'index'])->name('keputusan');
+// Route::get('/keputusan', [FileUploadController::class, 'index'])->name('keputusan');
 Route::post('/upload-file', [FileUploadController::class, 'upload'])->name('upload.file');
 
 // Handle file upload menu Renstra

@@ -12,83 +12,86 @@ class AturanController extends Controller
     {
         // $aturan = Aturan::all();
         $aturan = DB::table('sinori_sakip_literasi') // Atau gunakan model jika ada
-        ->orderBy('id_tahun', 'asc') // Urutkan berdasarkan kolom 'id_tahun'
-        ->get();
+            ->orderBy('id_tahun', 'asc') // Urutkan berdasarkan kolom 'id_tahun'
+            ->get();
         return view('aturan', compact('aturan'));
-        
     }
-    // Menampilkan form untuk menambah aturan baru
+    // Function untuk menampilkan halaman tambah peraturan
     public function create()
     {
         return view('aturan.create');
     }
 
-    // Menyimpan aturan baru ke database
+    // Function untuk menyimpan peraturan baru
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
-            'id_namaproduk' => 'required',
-            'id_produsen' => 'required',
-            'id_tahun' => 'required|digits:4|numeric',
-            'file' => 'required|mimes:pdf|max:2048', // Validasi untuk file PDF
+            'id_namaproduk' => 'required|string|max:255',
+            'id_produsen' => 'required|string|max:255',
+            'id_tahun' => 'required|numeric|min:1900|max:' . date('Y'),
+            'file' => 'required|mimes:pdf|max:2048' // Validasi hanya menerima file PDF dengan ukuran maksimal 2MB
         ]);
 
-        // Proses upload file
+        // Handle file upload
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename); // Simpan file di folder uploads
+            $filename = $file->getClientOriginalName(); // Buat nama unik untuk file
+            $file->move(public_path('uploads/peraturan'), $filename); // Simpan file ke folder "uploads"
 
-            // Simpan data aturan termasuk nama file
+            // Simpan data ke database
             Aturan::create([
                 'id_namaproduk' => $request->id_namaproduk,
                 'id_produsen' => $request->id_produsen,
                 'id_tahun' => $request->id_tahun,
-                'id_filename' => $filename, // Simpan nama file di kolom id_filename
+                'id_filename' => $filename // Simpan nama file ke dalam database
             ]);
         }
-        return redirect()->route('aturan')->with('success', 'Peraturan berhasil ditambahkan.');
+
+        return redirect()->route('aturan')->with('success', 'Peraturan berhasil ditambahkan');
     }
 
-    // Menampilkan form untuk mengedit aturan
+    // Function untuk menampilkan halaman edit
     public function edit($id)
     {
         $aturan = Aturan::findOrFail($id);
         return view('aturan.edit', compact('aturan'));
     }
 
-    // Memperbarui aturan di database
+    // Function untuk update peraturan
     public function update(Request $request, $id)
     {
-        // Validasi data input termasuk file
+        // Validasi input
         $request->validate([
-            'id_namaproduk' => 'required',
-            'id_produsen' => 'required',
-            'id_tahun' => 'required|numeric',
-            'file' => 'nullable|mimes:pdf|max:2048', // Validasi untuk file PDF
+            'id_namaproduk' => 'required|string|max:255',
+            'id_produsen' => 'required|string|max:255',
+            'id_tahun' => 'required|numeric|min:1900|max:' . date('Y'),
+            'file' => 'nullable|mimes:pdf|max:2048' // Validasi opsional untuk PDF
         ]);
 
-        // Mengambil data aturan yang akan diupdate
         $aturan = Aturan::findOrFail($id);
 
-        // Proses upload file jika ada file baru
+        // Handle file upload jika ada
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads'), $filename); // Simpan file baru di folder uploads
-            $aturan->id_filename = $filename; // Update nama file di kolom id_filename
+            $filename = time() . '_' . $file->getClientOriginalName(); // Buat nama unik untuk file
+            $file->move(public_path('uploads'), $filename); // Simpan file ke folder "uploads"
+
+            // Update nama file di database
+            $aturan->update([
+                'id_filename' => $filename
+            ]);
         }
 
         // Update data lainnya
         $aturan->update([
             'id_namaproduk' => $request->id_namaproduk,
             'id_produsen' => $request->id_produsen,
-            'id_tahun' => $request->id_tahun,
+            'id_tahun' => $request->id_tahun
         ]);
 
-        return redirect()->route('aturan')->with('success', 'Peraturan berhasil diupdate.');
+        return redirect()->route('aturan')->with('success', 'Peraturan berhasil diperbarui');
     }
-
     // Menghapus aturan dari database
     public function destroy($id)
     {

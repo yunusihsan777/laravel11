@@ -10,10 +10,14 @@
                     <center>
                         <h2><b>Sumber Aturan</b></h2>
                     </center><br><br>
-                    
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     <!-- Tombol Tambah Peraturan -->
                     <div class="mb-3">
-                        <a href="{{ route('aturan.create') }}" class="btn btn-success">Tambah Peraturan</a>
+                        <a href="{{ route('aturan.create') }}" class="btn btn-sm btn-yellow">Tambah Peraturan</a>
                     </div>
 
                     <table class="table table-bordered table-striped">
@@ -23,26 +27,26 @@
                                 <th>Nama Peraturan</th>
                                 <th>Pemilik</th>
                                 <th>Tahun</th>
-                                <th>Aksi</th> <!-- Kolom aksi -->
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($aturan as $index => $item)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $item->id_namaproduk }}</td>
+                                <td>{{ $item->id_namaproduk }} <br>
+                                   
+
                                 <td>{{ $item->id_produsen }}</td>
                                 <td>{{ $item->id_tahun }}</td>
-                                <td>
-                                    <!-- Tombol Edit -->
-                                    <a href="{{ route('aturan.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <td> <!-- Tombol Edit -->
+                                    <a href="{{ route('aturan.edit', $item->id) }}" class="btn btn-success btn-sm">Edit</a>
                                     <!-- Tombol Hapus -->
                                     <form action="{{ route('aturan.destroy', $item->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus peraturan ini?')">Hapus</button>
-                                    </form>
-                                </td>
+                                    </form></td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -85,5 +89,21 @@
         background-color: #dc3545;
         border-color: #dc3545;
     }
+    .btn-yellow {
+        background-color: #f0bb49; /* Warna kuning */
+        color: white;
+        border-color: #f0bb49;
+    }
+
+    .btn-yellow:hover {
+        background-color: #e0a83c; /* Warna kuning gelap saat hover */
+        border-color: #e0a83c;
+        color: white;
+    }
+
+    .btn-yellow:focus {
+        box-shadow: 0 0 0 0.2rem rgba(240, 187, 73, 0.5); /* Shadow untuk focus state */
+    }
+
 </style>
 @endsection

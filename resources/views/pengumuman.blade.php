@@ -10,16 +10,18 @@
                     <center>
                         <h2><b>Daftar Pengumuman</b></h2>
                     </center>
-                    
-                    <!-- Tambah Pengumuman -->
-                    <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addPengumumanModal">Tambah Pengumuman</button>
-                    
-                    @if(session('success'))
+
+                    <!-- Tombol Tambah Pengumuman Berwarna Kuning -->
+                    <button class="btn btn-sm btn-yellow mb-4" data-bs-toggle="modal"
+                        data-bs-target="#addPengumumanModal">Tambah Pengumuman</button>
+
+
+                    @if (session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
                     @endif
-                    
+
                     <!-- List Pengumuman -->
                     <table class="table table-bordered">
                         <thead>
@@ -30,19 +32,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($pengumuman as $item)
-                            <tr>
-                                <td>{{ $item->judul }}</td>
-                                <td>{{ $item->isi }}</td>
-                                <td>
-                                    <a href="{{ route('pengumuman.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                    <form action="{{ route('pengumuman.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')">Hapus</button>
-                                    </form>
-                                </td>
-                            </tr>
+                            @foreach ($pengumuman as $item)
+                                <tr>
+                                    <td>{{ $item->judul }} <br></td>
+                                    <td>{{ $item->isi }}</td>
+                                    <td>
+                                        <!-- Tombol Edit Berwarna Hijau -->
+                                        <a href="{{ route('pengumuman.edit', $item->id) }}"
+                                            class="btn btn-success btn-sm">Edit</a>
+                                        <form action="{{ route('pengumuman.destroy', $item->id) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')">Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -51,7 +57,8 @@
         </div>
 
         <!-- Modal Tambah Pengumuman -->
-        <div class="modal fade" id="addPengumumanModal" tabindex="-1" aria-labelledby="addPengumumanModalLabel" aria-hidden="true">
+        <div class="modal fade" id="addPengumumanModal" tabindex="-1" aria-labelledby="addPengumumanModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="{{ route('pengumuman.store') }}" method="POST">
@@ -80,3 +87,22 @@
         </div>
     </div>
 @endsection
+
+@section('style')
+    <style>
+.btn-yellow {
+        background-color: #f0bb49; /* Warna kuning */
+        color: white;
+        border-color: #f0bb49;
+    }
+
+    .btn-yellow:hover {
+        background-color: #e0a83c; /* Warna kuning gelap saat hover */
+        border-color: #e0a83c;
+        color: white;
+    }
+
+    .btn-yellow:focus {
+        box-shadow: 0 0 0 0.2rem rgba(240, 187, 73, 0.5); /* Shadow untuk focus state */
+    }
+    </style>

@@ -49,7 +49,7 @@
         transform: translateY(0);
     }
 </style>
-    @if (!auth()->check())
+    {{-- @if (!auth()->check())
     
 <div class="container mt-5">
         <div class="d-flex justify-content-center align-items-center min-vh-100">
@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-    @else
+    @else --}}
 <!DOCTYPE html>
 <html lang="en">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -80,4 +80,4 @@
     @include('layouts.footer')
 </body>
     
-@endif
+{{-- @endif --}}
