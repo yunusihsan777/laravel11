@@ -13,7 +13,7 @@
                     </center><br><br>
                     <div class="text mb-4">
                         <center>
-                            <h5><b>Upload Keputusan Tim Pelaksana AKIP</b></h5>
+                            <h5><b>Keputusan Tim Pelaksana AKIP Tahun {{ $tahun }}</b></h5>
                             <p>Hai sobat adhyaksa, untuk memulai mengisikan pelaksanaan AKIP anda harus upload terlebih
                                 dahulu Keputusan Tim Pelaksana AKIP. Anda pasti tahu bahwa komponen indikator dalam AKIP
                                 adalah seluruh bidang atau bagian yang ada pada satker anda yang dapat menuangkan
@@ -28,9 +28,9 @@
                     </center>
 
                     @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
+                        <center><div class="alert alert-success">{{ session('success') }}</div></center>
                     @elseif (session('error'))
-                        <div class="alert alert-danger">{{ session('error') }}</div>
+                        <center><div class="alert alert-danger">{{ session('error') }}</div></center>
                     @endif
 
                     @if (!$kep)
@@ -71,7 +71,7 @@
                     @else
                         <center>
                             <div class="alert alert-success">
-                                Anda sudah mengupload Surat Keputusan TIM SAKIP untuk satker ini.
+                                Anda sudah mengupload Surat Keputusan TIM SAKIP Tahun {{ $tahun }} untuk satker ini.
                             </div>
                         </center>
                     @endif

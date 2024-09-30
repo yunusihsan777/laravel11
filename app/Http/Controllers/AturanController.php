@@ -10,11 +10,18 @@ class AturanController extends Controller
 {
     public function index()
     {
+        // Cek apakah tahun sudah dipilih
+        if (!session()->has('tahun_terpilih')) {
+            return redirect()->route('pilih.tahun');
+        }
+        // Ambil tahun yang dipilih dari session
+        $tahun = session('tahun_terpilih');
+        
         // $aturan = Aturan::all();
         $aturan = DB::table('sinori_sakip_literasi') // Atau gunakan model jika ada
             ->orderBy('id_tahun', 'asc') // Urutkan berdasarkan kolom 'id_tahun'
             ->get();
-        return view('aturan', compact('aturan'));
+        return view('aturan', ['aturan' => $aturan, 'tahun' => $tahun]);
     }
     // Function untuk menampilkan halaman tambah peraturan
     public function create()

@@ -18,6 +18,19 @@ Route::post('/login', [LoginController::class, 'login']);
 // Handle Logout
 Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
+//Handle Pilih Tahun
+// use App\Http\Controllers\YearSelectionController;
+// Route::get('/select-year', [YearSelectionController::class, 'index'])->name('select.year');
+// Route::post('/select-year', [YearSelectionController::class, 'store'])->name('store.year');
+
+// Handle pemilihan tahun
+Route::get('/pilih-tahun', [App\Http\Controllers\TahunController::class, 'showTahunForm'])->name('pilih.tahun');
+// Route untuk menangani pemilihan tahun
+Route::post('/pilih2-tahun', [App\Http\Controllers\TahunController::class, 'setTahun'])->name('set.tahun');
+
+Route::post('/pilih-tahun', [App\Http\Controllers\TahunController::class, 'pilihTahun'])->name('pilih.tahun');
+// Route untuk dashboard, data berdasarkan tahun yang dipilih
+// Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
 use App\Http\Controllers\DashboardController;
 
@@ -25,6 +38,11 @@ use App\Http\Controllers\KepController;
 Route::post('kep', [KepController::class, 'store'])->name('kep.store');
 
 use App\Http\Controllers\PerencanaanController;
+Route::post('/perencanaan/upload-renstra', [PerencanaanController::class, 'uploadRenstra'])->name('upload.renstra');
+Route::post('/perencanaan/upload-iku', [PerencanaanController::class, 'uploadIku'])->name('upload.iku');
+Route::post('/perencanaan/upload-renja', [PerencanaanController::class, 'uploadRenja'])->name('upload.renja');
+Route::post('/perencanaan/upload-rkakl', [PerencanaanController::class, 'uploadRkakl'])->name('upload.rkakl');
+Route::post('/perencanaan/upload-dipa', [PerencanaanController::class, 'uploadDipa'])->name('upload.dipa');
 
 use App\Http\Controllers\PengukuranController;
 
@@ -75,9 +93,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Handle file upload menu keputusan
-use App\Http\Controllers\FileUploadController;
+// use App\Http\Controllers\FileUploadController;
 // Route::get('/keputusan', [FileUploadController::class, 'index'])->name('keputusan');
-Route::post('/upload-file', [FileUploadController::class, 'upload'])->name('upload.file');
+// Route::post('/upload-file', [FileUploadController::class, 'upload'])->name('upload.file');
 
 // Handle file upload menu Renstra
 // use App\Http\Controllers\RenstraController;

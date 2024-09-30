@@ -6,7 +6,6 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <h2>Evaluasi</h2>
-            <div class="container mt-5">
                 <div class="card border-light shadow-sm">
                     <div class="card-body">
                         <!-- Tabs Navigation -->
@@ -47,7 +46,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 @endsection

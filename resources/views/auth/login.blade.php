@@ -117,7 +117,7 @@
         </form>
 
         <br>
-        <center><p>Powered by Kejaksaan RI @2024</p></center>
+        <center><p>Panev BiroCana Kejaksaan RI @2024</p></center>
     </div>
 
     <!-- Include Bootstrap JS and dependencies -->

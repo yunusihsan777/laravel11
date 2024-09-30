@@ -3,7 +3,6 @@
 @section('title', 'Dashboard')
 
 @section('content')
-
     <!-- Main Content -->
     <div class="content" id="content">
         <div class="container-fluid">

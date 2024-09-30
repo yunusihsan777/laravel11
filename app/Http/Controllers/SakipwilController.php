@@ -8,6 +8,12 @@ class SakipwilController extends Controller
 {
     public function index()
     {
-        return view('sakipwil');
+        // Cek apakah tahun sudah dipilih
+        if (!session()->has('tahun_terpilih')) {
+            return redirect()->route('pilih.tahun');
+        }
+        // Ambil tahun yang dipilih dari session
+        $tahun = session('tahun_terpilih');
+        return view('sakipwil', ['tahun' => $tahun]);
     }
 }

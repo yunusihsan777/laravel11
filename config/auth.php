@@ -63,7 +63,7 @@ return [
     'users' => [
         'driver' => 'eloquent',
         'model' => env('AUTH_MODEL', App\Models\User::class),
-        'table' => 'sinori_login', // Nama tabel login custom Anda
+        'table' => 'sinori_login', // Nama tabel login 
     ],
 
 

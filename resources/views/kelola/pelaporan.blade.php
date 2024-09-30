@@ -6,7 +6,6 @@
 <div class="content" id="content">
     <div class="container-fluid">
         <h2>Pelaporan</h2>
-    <div class="container mt-5">
         <div class="card border-light shadow-sm">
             <div class="card-body">
                 <!-- Tabs Navigation -->
@@ -28,6 +27,9 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" id="lkjip-tab" data-bs-toggle="tab" href="#lkjip" role="tab" aria-controls="lkjip" aria-selected="false">Laporan Kinerja (LKJiP)</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="validasi-apip-tab" data-bs-toggle="tab" href="#validasi-apip" role="tab" aria-controls="validasi-apip" aria-selected="false">Validasi APIP</a>
                     </li>
                 </ul>
 
@@ -57,9 +59,12 @@
                         <h5>Laporan Kinerja (LKJiP)</h5>
                         <p>Content for Laporan Kinerja (LKJiP) goes here.</p>
                     </div>
+                    <div class="tab-pane fade" id="validasi-apip" role="tabpanel" aria-labelledby="validasi-apip-tab">
+                        <h2>IKU</h2>
+                        <p>Content for IKU goes here...</p>
+                    </div>
                 </div>
             </div>
-        </div>
     </div>
 </div>
 </div>

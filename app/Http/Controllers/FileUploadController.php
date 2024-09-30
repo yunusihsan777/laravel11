@@ -9,22 +9,22 @@ class FileUploadController extends Controller
 {
     public function index()
     {
-        return view('kelola.keputusan');
+        // return view('kelola.keputusan');
     }
 
     public function upload(Request $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:pdf|max:2048', // Max size 2MB
-        ]);
+        // $request->validate([
+        //     'file' => 'required|mimes:pdf|max:2048', // Max size 2MB
+        // ]);
 
-        // Store the file
-        $file = $request->file('file');
-        $path = $file->store('uploads', 'public');
+        // // Store the file
+        // $file = $request->file('file');
+        // $path = $file->store('uploads', 'public');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'File has been uploaded successfully!',
-        ]);
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'File has been uploaded successfully!',
+        // ]);
     }
 }

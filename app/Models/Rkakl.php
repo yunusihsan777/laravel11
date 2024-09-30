@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Kep extends Model
+class Rkakl extends Model
 {
     use HasFactory;
-    protected $table = 'sinori_sakip_keputusan';
-
+    protected $table = 'sinori_sakip_rkakl';
     public $timestamps = false;
 
     protected $fillable = [
+        'id_filename',
+        'id_periode',
+        'id_perubahan',
+        'id_tglupload',
         'id_satker',
-        'id_nomorsurat',
-        'id_filesurat',
-        'id_tglsurat',
-        'id_tahun',
     ];
 }

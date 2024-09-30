@@ -8,13 +8,17 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth'); // Menerapkan middleware di seluruh metode controller
-    // }
-
     public function index()
     {
+        // Cek apakah tahun sudah dipilih
+        if (!session()->has('tahun_terpilih')) {
+            return redirect()->route('pilih.tahun');
+        }
+        // Ambil tahun yang dipilih dari session
+        $tahun = session('tahun_terpilih');
+        // Lanjutkan dengan logika untuk menampilkan data berdasarkan tahun
+        // return view('dashboard', ['tahun' => $tahun]);
+
         $pengumuman = DB::table('sinori_sakip_inbox')->get();
         $jumlahAturan = DB::table('sinori_sakip_literasi')->count(); // Hitung jumlah aturan
         // Data untuk chart
@@ -25,6 +29,7 @@ class DashboardController extends Controller
         ];
 
         // Kirim data ke view
-        return view('dashboard', compact('pengumuman', 'jumlahAturan', 'data'));
+        // return view('dashboard', compact('pengumuman', 'jumlahAturan', 'data', ['tahun' => $tahun]));
+        return view('dashboard', ['pengumuman' => $pengumuman, 'jumlahAturan' => $jumlahAturan, 'data' => $data,'tahun' => $tahun]);
     }
 }
