@@ -10,8 +10,15 @@ class PengumumanController extends Controller
     // Menampilkan halaman pengumuman dengan list pengumuman
     public function index()
     {
+         // Cek apakah tahun sudah dipilih
+         if (!session()->has('tahun_terpilih')) {
+            return redirect()->route('pilih.tahun');
+        }
+
+        $tahun = session('tahun_terpilih');
         $pengumuman = Pengumuman::all();
-        return view('pengumuman', compact('pengumuman'));
+        return view('pengumuman', ['pengumuman' => $pengumuman, 'tahun' => $tahun]);
+        
     }
 
     // Menyimpan pengumuman baru

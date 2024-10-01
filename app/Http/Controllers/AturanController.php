@@ -26,7 +26,13 @@ class AturanController extends Controller
     // Function untuk menampilkan halaman tambah peraturan
     public function create()
     {
-        return view('aturan.create');
+         // Cek apakah tahun sudah dipilih
+         if (!session()->has('tahun_terpilih')) {
+            return redirect()->route('pilih.tahun');
+        }
+
+        $tahun = session('tahun_terpilih');
+        return view('aturan.create', ['tahun' => $tahun]);
     }
 
     // Function untuk menyimpan peraturan baru
@@ -61,8 +67,15 @@ class AturanController extends Controller
     // Function untuk menampilkan halaman edit
     public function edit($id)
     {
+         // Cek apakah tahun sudah dipilih
+         if (!session()->has('tahun_terpilih')) {
+            return redirect()->route('pilih.tahun');
+        }
+
+        $tahun = session('tahun_terpilih');
         $aturan = Aturan::findOrFail($id);
-        return view('aturan.edit', compact('aturan'));
+        return view('aturan.edit', ['aturan' => $aturan, 'tahun' => $tahun]);
+        
     }
 
     // Function untuk update peraturan

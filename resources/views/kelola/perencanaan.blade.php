@@ -15,26 +15,34 @@
                     <!-- Tabs Navigation -->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $activeTab == 'renstra' ? 'active' : '' }}" id="renstra-tab" data-bs-toggle="tab" href="#renstra" role="tab" aria-controls="renstra" aria-selected="{{ $activeTab == 'renstra' ? 'true' : 'false' }}">Renstra</a>
+                            <a class="nav-link {{ $activeTab == 'renstra' ? 'active' : '' }}" id="renstra-tab"
+                                data-bs-toggle="tab" href="#renstra" role="tab" aria-controls="renstra"
+                                aria-selected="{{ $activeTab == 'renstra' ? 'true' : 'false' }}">Renstra</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $activeTab == 'iku' ? 'active' : '' }}" id="iku-tab" data-bs-toggle="tab" href="#iku" role="tab" aria-controls="iku" aria-selected="{{ $activeTab == 'iku' ? 'true' : 'false' }}">IKU</a>
+                            <a class="nav-link {{ $activeTab == 'iku' ? 'active' : '' }}" id="iku-tab"
+                                data-bs-toggle="tab" href="#iku" role="tab" aria-controls="iku"
+                                aria-selected="{{ $activeTab == 'iku' ? 'true' : 'false' }}">IKU</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $activeTab == 'renja' ? 'active' : '' }}" id="renja-tab" data-bs-toggle="tab" href="#renja" role="tab"
-                                aria-controls="renja" aria-selected="{{ $activeTab == 'renja' ? 'true' : 'false' }}">Renja</a>
+                            <a class="nav-link {{ $activeTab == 'renja' ? 'active' : '' }}" id="renja-tab"
+                                data-bs-toggle="tab" href="#renja" role="tab" aria-controls="renja"
+                                aria-selected="{{ $activeTab == 'renja' ? 'true' : 'false' }}">Renja</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="rkakl-tab" data-bs-toggle="tab" href="#rkakl" role="tab"
-                                aria-controls="rkakl" aria-selected="false">RKAKL</a>
+                            <a class="nav-link {{ $activeTab == 'rkakl' ? 'active' : '' }}" id="rkakl-tab"
+                                data-bs-toggle="tab" href="#rkakl" role="tab" aria-controls="rkakl"
+                                aria-selected="{{ $activeTab == 'rkakl' ? 'true' : 'false' }}">RKAKL</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="dipa-tab" data-bs-toggle="tab" href="#dipa" role="tab"
-                                aria-controls="dipa" aria-selected="false">DIPA</a>
+                            <a class="nav-link {{ $activeTab == 'dipa' ? 'active' : '' }}" id="dipa-tab"
+                                data-bs-toggle="tab" href="#dipa" role="tab" aria-controls="dipa"
+                                aria-selected="{{ $activeTab == 'dipa' ? 'true' : 'false' }}">DIPA</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="rencana-aksi-tab" data-bs-toggle="tab" href="#rencana-aksi"
-                                role="tab" aria-controls="rencana-aksi" aria-selected="false">Rencana Aksi</a>
+                            <a class="nav-link {{ $activeTab == 'renaksi' ? 'active' : '' }}" id="renaksi-tab" 
+                            data-bs-toggle="tab" href="#renaksi" role="tab"
+                                aria-controls="{{ $activeTab == 'renaksi' ? 'true' : 'false' }}" aria-selected="false">Rencana Aksi</a>
                         </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja"
@@ -49,7 +57,8 @@
 
                     <!-- Tab Content -->
                     <div class="tab-content mt-3" id="myTabContent">
-                        <div class="tab-pane fade {{ $activeTab == 'renstra' ? 'show active' : '' }}" id="renstra" role="tabpanel" aria-labelledby="renstra-tab">
+                        <div class="tab-pane fade {{ $activeTab == 'renstra' ? 'show active' : '' }}" id="renstra"
+                            role="tabpanel" aria-labelledby="renstra-tab">
                             <div class="renstra-content">
                                 <h3>Rencana Strategis (Renstra) Tahun 2024 - 2029</h3>
                                 <p>Rencana Strategis (Renstra) merupakan dokumen perencanaan yang menetapkan tujuan,
@@ -101,7 +110,7 @@
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
                                                                 <td>
-                                                                    <a href="{{ asset('uploads/renstra/renstra_' . $item->id_perubahan . '_' . $item->id_satker . '_' .$tahun . '.pdf') }}"
+                                                                    <a href="{{ asset('uploads/renstra/renstra_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
                                                                         target="_blank"
                                                                         style="text-decoration: none; color: inherit;">
                                                                         {{ $item->id_periode == 'P1' ? 'Periode 2020 - 2024' : 'Periode 2025 - 2029' }}
@@ -120,7 +129,8 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade {{ $activeTab == 'iku' ? 'show active' : '' }}" id="iku" role="tabpanel" aria-labelledby="iku-tab">
+                        <div class="tab-pane fade {{ $activeTab == 'iku' ? 'show active' : '' }}" id="iku"
+                            role="tabpanel" aria-labelledby="iku-tab">
                             <div class="iku-content">
                                 <h3>Indikator Kinerja Utama (IKU)</h3>
                                 <p>Indikator Kinerja Utama (IKU) merupakan dokumen ....</p>
@@ -169,7 +179,7 @@
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
                                                                 <td>
-                                                                    <a href="{{ asset('uploads/iku/IKU_' . $item->id_perubahan . '_' . $item->id_satker .'_'.$item->id_periode.'.pdf') }}"
+                                                                    <a href="{{ asset('uploads/iku/IKU_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $item->id_periode . '.pdf') }}"
                                                                         target="_blank"
                                                                         style="text-decoration: none; color: inherit;">
                                                                         {{ $item->id_periode }}
@@ -188,7 +198,8 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade {{ $activeTab == 'renja' ? 'show active' : '' }}" id="renja" role="tabpanel" aria-labelledby="renja-tab">
+                        <div class="tab-pane fade {{ $activeTab == 'renja' ? 'show active' : '' }}" id="renja"
+                            role="tabpanel" aria-labelledby="renja-tab">
                             <div class="renja-content">
                                 <h3>Rencana Kerja Tahunan</h3>
                                 <p>Rencana Kinerja Tahunan (RKT) merupakan penjabaran dari sasaran dan program yang telah
@@ -217,7 +228,8 @@
                                                 enctype="multipart/form-data" class="mb-4">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label for="renja_file" class="form-label">Upload File PDF Renja</label>
+                                                    <label for="renja_file" class="form-label">Upload File PDF
+                                                        Renja</label>
                                                     <input type="file" class="form-control" id="renja_file"
                                                         name="renja_file" accept=".pdf" required>
                                                 </div>
@@ -249,7 +261,7 @@
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
                                                                 <td>
-                                                                    <a href="{{ asset('uploads/renja/renja_' . $item->id_perubahan . '_' . $item->id_satker .'_'. $tahun.'.pdf') }}"
+                                                                    <a href="{{ asset('uploads/renja/renja_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
                                                                         target="_blank"
                                                                         style="text-decoration: none; color: inherit;">
                                                                         {{ $item->id_periode }}
@@ -268,7 +280,8 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="rkakl" role="tabpanel" aria-labelledby="rkakl-tab">
+                        <div class="tab-pane fade {{ $activeTab == 'rkakl' ? 'show active' : '' }}" id="rkakl"
+                            role="tabpanel" aria-labelledby="rkakl-tab">
                             <div class="rkakl-content">
                                 <h3>Rencana Kerja Anggaran Kementerian atau Lembaga</h3>
                                 <p>Data Kebutuhan Riil (Periode Awal tahun dengan rumus -1 TA) silahkan masukkan data
@@ -283,12 +296,12 @@
                                 <div>
                                     <div class="card shadow-sm">
                                         <div class="card-header text-white" style="background-color: #e6bf3e;">
-                                            <h4 class="mb-0">UPLOAD Rencana Kerja Anggaran Kementerian atau Lembaga SATKER ANDA</h4>
+                                            <h4 class="mb-0">UPLOAD File RKAKL</h4>
                                         </div>
                                         <div class="card-body">
                                             <!-- Form Upload File Rkakl -->
-                                            <form action="" method="POST" enctype="multipart/form-data"
-                                                class="mb-4">
+                                            <form action="{{ route('upload.rkakl') }}" method="POST"
+                                                enctype="multipart/form-data" class="mb-4">
                                                 @csrf
                                                 <div class="mb-3">
                                                     <label for="rkakl_file" class="form-label">Upload File PDF
@@ -321,19 +334,19 @@
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($rkakl as $index => $item)
-                                                        <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>
-                                                                <a href="{{ asset('uploads/rkakl/rkakl_' . $item->id_perubahan . '_' . $item->id_satker .'_'. $tahun.'.pdf') }}"
-                                                                    target="_blank"
-                                                                    style="text-decoration: none; color: inherit;">
-                                                                    {{ $item->id_periode }}
-                                                                </a>
-                                                            </td>
+                                                            <tr>
+                                                                <td>{{ $index + 1 }}</td>
+                                                                <td>
+                                                                    <a href="{{ asset('uploads/rkakl/rkakl_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
+                                                                        target="_blank"
+                                                                        style="text-decoration: none; color: inherit;">
+                                                                        {{ $item->id_periode }}
+                                                                    </a>
+                                                                </td>
 
-                                                            <td>{{ $item->id_perubahan }}</td>
-                                                            <td>{{ $item->id_tglupload }}</td>
-                                                    @endforeach
+                                                                <td>{{ $item->id_perubahan }}</td>
+                                                                <td>{{ $item->id_tglupload }}</td>
+                                                        @endforeach
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -343,8 +356,9 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="dipa" role="tabpanel" aria-labelledby="dipa-tab">
-                            <div class="rkakl-content">
+                        <div class="tab-pane fade {{ $activeTab == 'dipa' ? 'show active' : '' }}" id="dipa"
+                            role="tabpanel" aria-labelledby="dipa-tab">
+                            <div class="dipa-content">
                                 <h3>Daftar Isian Pelaksanaan Anggaran (DIPA)</h3>
                                 <p>Daftar Isian Pelaksanaan Anggaran (DIPA) ...</p>
 
@@ -356,17 +370,17 @@
                                         </div>
                                         <div class="card-body">
                                             <!-- Form Upload File Dipa -->
-                                            <form action="" method="POST" enctype="multipart/form-data"
-                                                class="mb-4">
-                                                @csrf
-                                                <div class="mb-3">
-                                                    <label for="dipa_file" class="form-label">Upload File PDF
-                                                        Dipa</label>
-                                                    <input type="file" class="form-control" id="dipa_file"
-                                                        name="dipa_file" accept=".pdf" required>
-                                                </div>
-                                                <button type="submit" class="btn btn-warning btn-block">Upload
-                                                    File</button>
+                                            {{-- <form action="{{ route('upload.dipa') }}" method="POST" enctype="multipart/form-data" --}}
+                                            class="mb-4">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label for="dipa_file" class="form-label">Upload File PDF
+                                                    Dipa</label>
+                                                <input type="file" class="form-control" id="dipa_file"
+                                                    name="dipa_file" accept=".pdf" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning btn-block">Upload
+                                                File</button>
                                             </form>
 
                                             <!-- Alert for success -->
@@ -383,26 +397,32 @@
                                                         <tr>
                                                             <th>No</th>
                                                             <th>File Dipa</th>
+                                                            <th>Total Pagu</th>
+                                                            <th>Program Penegakan dan Pelayanan Hukum</th>
+                                                            <th>Program Dukungan Manajemen</th>
                                                             <th>Versi</th>
                                                             <th>Tanggal Upload</th>
                                                             {{-- <th>Aksi</th> --}}
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach ($dipa as $index => $item)
-                                                        <tr>
-                                                            <td>{{ $index + 1 }}</td>
-                                                            <td>
-                                                                <a href="{{ asset('uploads/dipa/dipa_' . $item->id_perubahan . '_' . $item->id_satker .'_'. $tahun.'.pdf') }}"
-                                                                    target="_blank"
-                                                                    style="text-decoration: none; color: inherit;">
-                                                                    {{ $item->id_periode }}
-                                                                </a>
-                                                            </td>
+                                                        {{-- @foreach ($dipa as $index => $item)
+                                                            <tr>
+                                                                <td>{{ $index + 1 }}</td>
+                                                                <td>
+                                                                    <a href="{{ asset('uploads/dipa/dipa_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
+                                                                        target="_blank"
+                                                                        style="text-decoration: none; color: inherit;">
+                                                                        {{ $item->id_periode }}
+                                                                    </a>
+                                                                </td>
 
-                                                            <td>{{ $item->id_perubahan }}</td>
-                                                            <td>{{ $item->id_tglupload }}</td>
-                                                    @endforeach
+                                                                <td>{{ $item->id_pagu }}</td>
+                                                                <td>{{ $item->id_gakyakum }}</td>
+                                                                <td>{{ $item->id_dukman }}</td>
+                                                                <td>{{ $item->id_perubahan }}</td>
+                                                                <td>{{ $item->id_tglupload }}</td>
+                                                        @endforeach --}}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -412,9 +432,79 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="rencana-aksi" role="tabpanel" aria-labelledby="rencana-aksi-tab">
-                            <h2>Rencana Aksi</h2>
-                            <p>Content for Rencana Aksi goes here...</p>
+                        <div class="tab-pane fade {{ $activeTab == 'renaksi' ? 'show active' : '' }}" id="renaksi"
+                            role="tabpanel" aria-labelledby="renaksi-tab">
+                            <div class="renaksi-content">
+                                <h3>Rencana Kerja Anggaran Kementerian atau Lembaga</h3>
+                                <p>Data Kebutuhan Riil (Periode Awal tahun dengan rumus -1 TA) silahkan masukkan data
+                                    kebutuhan RIIL satker anda.
+                                    Rencana Kerja Anggaran (RKA) bertujuan untuk merencanakan penganggaran kebutuhan dana
+                                    dari berbagai program dan kegiatan di masa yang akan datang. Dengan Penyusunan RKA dapat
+                                    merencanakan penggunaan dana agar bisa seefisien mungkin. program-program yang
+                                    direncanakan dan akan dilaksanakan menghasilkan output dan outcome yang bermanfaat bagi
+                                    kepentingan publik </p>
+
+                                <!-- Form Upload File -->
+                                <div>
+                                    <div class="card shadow-sm">
+                                        <div class="card-header text-white" style="background-color: #e6bf3e;">
+                                            <h4 class="mb-0">UPLOAD File RENCANA AKSI</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <!-- Form Upload File renaksi -->
+                                            <form action="{{ route('upload.renaksi') }}" method="POST"
+                                                enctype="multipart/form-data" class="mb-4">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label for="renaksi_file" class="form-label">Upload File PDF
+                                                        Rencana Aksi</label>
+                                                    <input type="file" class="form-control" id="renaksi_file"
+                                                        name="renaksi_file" accept=".pdf" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-warning btn-block">Upload
+                                                    File</button>
+                                            </form>
+
+                                            <!-- Alert for success -->
+                                            @if (session('success'))
+                                                <div class="alert alert-success" id="success-alert">
+                                                    {{ session('success') }}
+                                                </div>
+                                            @endif
+
+                                            <!-- Tabel renaksi -->
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-striped">
+                                                    <thead class="table-warning">
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>File Rencana Aksi</th>
+                                                            <th>Versi</th>
+                                                            <th>Tanggal Upload</th>
+                                                            {{-- <th>Aksi</th> --}}
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($renaksi as $index => $item)
+                                                            <tr>
+                                                                <td>{{ $index + 1 }}</td>
+                                                                <td>
+                                                                    <a href="{{ asset('uploads/renaksi/renaksi_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
+                                                                        target="_blank"
+                                                                        style="text-decoration: none; color: inherit;">
+                                                                        Renaksi Tahun {{ $item->id_periode }}
+                                                                    </a>
+                                                                </td>
+                                                                <td>{{ $item->id_perubahan }}</td>
+                                                                <td>{{ $item->id_tglupload }}</td>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="tab-pane fade" id="perjanjian-kinerja" role="tabpanel"

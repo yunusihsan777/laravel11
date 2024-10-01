@@ -28,7 +28,7 @@ Route::get('/pilih-tahun', [App\Http\Controllers\TahunController::class, 'showTa
 // Route untuk menangani pemilihan tahun
 Route::post('/pilih2-tahun', [App\Http\Controllers\TahunController::class, 'setTahun'])->name('set.tahun');
 
-Route::post('/pilih-tahun', [App\Http\Controllers\TahunController::class, 'pilihTahun'])->name('pilih.tahun');
+Route::post('/pilih-tahun', [App\Http\Controllers\TahunController::class, 'pilihTahun'])->name('pilih_tahun');
 // Route untuk dashboard, data berdasarkan tahun yang dipilih
 // Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
@@ -42,7 +42,8 @@ Route::post('/perencanaan/upload-renstra', [PerencanaanController::class, 'uploa
 Route::post('/perencanaan/upload-iku', [PerencanaanController::class, 'uploadIku'])->name('upload.iku');
 Route::post('/perencanaan/upload-renja', [PerencanaanController::class, 'uploadRenja'])->name('upload.renja');
 Route::post('/perencanaan/upload-rkakl', [PerencanaanController::class, 'uploadRkakl'])->name('upload.rkakl');
-Route::post('/perencanaan/upload-dipa', [PerencanaanController::class, 'uploadDipa'])->name('upload.dipa');
+// Route::post('/perencanaan/upload-dipa', [PerencanaanController::class, 'uploadDipa'])->name('upload.dipa');
+Route::post('/perencanaan/upload-renaksi', [PerencanaanController::class, 'uploadRenaksi'])->name('upload.renaksi');
 
 use App\Http\Controllers\PengukuranController;
 

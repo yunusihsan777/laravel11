@@ -8,6 +8,12 @@ class ChatsupportController extends Controller
 {
     public function index()
     {
-        return view('chatsupport');
+        // Cek apakah tahun sudah dipilih
+        if (!session()->has('tahun_terpilih')) {
+            return redirect()->route('pilih.tahun');
+        }
+
+        $tahun = session('tahun_terpilih');
+        return view('chatsupport', ['tahun' => $tahun]);
     }
 }
