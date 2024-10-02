@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'SAKIP Wilayah')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 @section('content')
     <div class="content" id="content">
@@ -12,59 +13,70 @@
                     </center><br>
 
                     <!-- List Pengumuman -->
-                    <table class="table table-bordered table-striped table-center">
-                        <thead class="table-warning">
-                            <tr>
-                                <th>No</th>
-                                <th>ID Satker</th>
-                                <th>Nama Satker</th>
-                                <th>Keputusan</th>
-                                <th>Renstra</th>
-                                <th>Renja</th>
-                                <th>Perjanjian Kinerja</th>
-                                <th>Jumlah Indikator Kinerja</th>
-                                <th>Status Pengukuran Kinerja</th>
-                                <th>IKU</th>
-                                <th>Dipa</th>
-                                <th>Renaksi</th>
-                                <th>LKjIP</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if ($data->isNotEmpty())
-                                @foreach ($data as $index => $row)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ $row->id_satker }}</td>
-                                        <td style="text-align: left;">{{ $satkernamaList[$index] }}</td>
-                                        <td>
-                                            @if (!empty($sortedKepList[$index]))
-                                                <a href="{{ asset('uploads/keputusan/' . $row->id_satker . '_' . $tahun . '.pdf') }}"
-                                                    target="_blank" class="no-link">
-                                                    &#10003; <!-- Tanda centang -->
-                                                </a>
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                        {{-- <td>{{ $row->renstra }}</td>
-                                    <td>{{ $row->renja }}</td>
-                                    <td>{{ $row->perjanjian_kinerja }}</td>
-                                    <td>{{ $row->jumlah_indikator_kinerja }}</td>
-                                    <td>{{ $row->status_pengukuran_kinerja }}</td>
-                                    <td>{{ $row->iku }}</td>
-                                    <td>{{ $row->dipa }}</td>
-                                    <td>{{ $row->renaksi }}</td>
-                                    <td>{{ $row->lkjip }}</td> --}}
-                                    </tr>
-                                @endforeach
-                            @else
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover text-center rounded">
+                            <thead class="table-warning">
                                 <tr>
-                                    <td colspan="3">Tidak ada data yang tersedia.</td> <!-- Pesan jika tidak ada data -->
+                                    <th>No</th>
+                                    <th>ID Satker</th>
+                                    <th>Nama Satker</th>
+                                    <th>Keputusan</th>
+                                    <th>Renstra</th>
+                                    <th>Renja</th>
+                                    <th>Perjanjian Kinerja</th>
+                                    <th>Jumlah Indikator Kinerja</th>
+                                    <th>Status Pengukuran Kinerja</th>
+                                    <th>IKU</th>
+                                    <th>Dipa</th>
+                                    <th>Renaksi</th>
+                                    <th>LKjIP</th>
                                 </tr>
-                            @endif
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @if ($data->isNotEmpty())
+                                    @foreach ($data as $index => $row)
+                                        <tr>
+                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $row->id_satker }}</td>
+                                            <td style="text-align: left;">{{ $satkernamaList[$index] }}</td>
+                                            <td>
+                                                @if (!empty($sortedKepList[$index]))
+                                                    <a href="{{ asset('uploads/keputusan/' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                       target="_blank" class="text-success">
+                                                       &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $row->renstra ?? '-' }}</td>
+                                            <td>{{ $row->renja ?? '-' }}</td>
+                                            <td>{{ $row->perjanjian_kinerja ?? '-' }}</td>
+                                            <td>{{ $row->jumlah_indikator_kinerja ?? '-' }}</td>
+                                            <td>{{ $row->status_pengukuran_kinerja ?? '-' }}</td>
+                                            <td>{{ $row->iku ?? '-' }}</td>
+                                            <td>{{ $row->dipa ?? '-' }}</td>
+                                            <td>{{ $row->renaksi ?? '-' }}</td>
+                                            <td>{{ $row->lkjip ?? '-' }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="13" class="text-center text-danger">Tidak ada data yang tersedia.</td> <!-- Pesan jika tidak ada data -->
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="text-center">Distribusi Keputusan</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -82,7 +94,7 @@
             }
 
             .table thead th {
-                border-bottom: 2px solid #dee2e6;
+                border-bottom: 2px solid #ebca37;
             }
 
             .table td,
@@ -115,4 +127,50 @@
                 /* cursor: default; */
                 /* Mengubah kursor agar tidak menunjukkan sebagai link */
             }
+            
         </style>
+<script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const sortedKepList = @json($sortedKepList); // Mengambil data dari PHP
+
+        // Menghitung jumlah keputusan yang terisi dan belum terisi
+        const terisi = sortedKepList.filter(item => item).length; // Menghitung yang terisi
+        const belumTerisi = sortedKepList.length - terisi; // Menghitung yang belum terisi
+
+        const ctx = document.getElementById('pieChart').getContext('2d');
+        const pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Keputusan Terisi', 'Keputusan Belum Terisi'],
+                datasets: [{
+                    label: 'Jumlah Keputusan',
+                    data: [terisi, belumTerisi],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)', // Warna untuk terisi
+                        'rgba(255, 99, 132, 0.6)', // Warna untuk belum terisi
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>

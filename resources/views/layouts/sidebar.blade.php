@@ -12,7 +12,7 @@
         <i class="fas fa-home"></i> <span class="sidebar-text">Beranda</span>
     </a>
 
-    <a href="#" id="toggle-submenu">
+    <a href="#" id="toggle-submenu" class="toggle-btn">
         <i class="fas fa-tasks"></i> <span class="sidebar-text">Tata Kelola AKIP</span>
         <i class="fas fa-chevron-right arrow-icon"></i>
     </a>
@@ -63,7 +63,7 @@
         <i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span>
     </a>
 
-    <div>
+    <div class="footer">
         <br><br>
         <center>
             <p class="text-dark">Panev BiroCana Kejaksaan RI @2024</p>
@@ -88,8 +88,6 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
                     <span class="nav-link text-dark">
-                        {{-- {{ $satkernama }} {{ $tahun }} --}}
-                        
                         <form action="{{ route('pilih.tahun') }}" method="POST" id="tahunForm" class="d-flex align-items-center">
                             @csrf
                             <label for="tahun" class="me-2 mb-0">{{ $satkernama }} Tahun: </label>
@@ -101,15 +99,14 @@
                             </select>
                         </form>
                     </span>
-                    
                 </li>
                 <li class="nav-item">
                     <span class="nav-link text-dark">
-                    <form action="{{ url('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Logout</button>
-                    </form>
-                </span>
+                        <form action="{{ url('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </span>
                 </li>
             </ul>
         </div>
@@ -118,31 +115,27 @@
 
 <script>
     $(document).ready(function () {
-    $('#toggle-submenu').on('click', function (e) {
-        e.preventDefault(); // Mencegah link default action
-        $('#submenu').toggleClass('open'); // Toggle kelas "open" untuk submenu
-        $(this).find('.arrow-icon').toggleClass('fa-chevron-right fa-chevron-down'); // Ganti ikon
+        $('#toggle-submenu').on('click', function (e) {
+            e.preventDefault(); // Mencegah link default action
+            $('#submenu').slideToggle(); // Toggle submenu dengan efek slide
+            $(this).find('.arrow-icon').toggleClass('fa-chevron-right fa-chevron-down'); // Ganti ikon
+        });
     });
-
-    // Mencegah penutupan toggle jika submenu diklik
-    $('#submenu a').on('click', function (e) {
-        $('#submenu').addClass('open'); // Pastikan submenu tetap terbuka
-    });
-});
-
 </script>
 
 <style>
+    /* Sidebar Style */
     .sidebar {
         background-color: #ffffff;
-        /* Background putih */
         color: #343a40;
-        /* Teks gelap */
         height: 100vh;
         padding: 20px;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        /* Bayangan lembut */
         transition: width 0.3s ease;
+        width: 250px; /* Lebar sidebar normal */
+        position: fixed; /* Sidebar tetap di sisi kiri */
+        z-index: 1000; /* Pastikan di atas konten lain */
+        overflow-y: auto; /* Scroll jika konten lebih dari tinggi */
     }
 
     .sidebar a {
@@ -150,39 +143,32 @@
         align-items: center;
         padding: 10px;
         color: #343a40;
-        /* Teks gelap */
         text-decoration: none;
         border-radius: 5px;
         transition: background-color 0.3s;
     }
 
     .sidebar a:hover {
-        background-color: #e2df8b;
-        /* Warna lebih terang pada hover */
+        background-color: #e2df8b; /* Warna lebih terang saat hover */
     }
 
     .sidebar a.active {
-        background-color: #e6bf3e;
-        /* Warna biru untuk aktif */
-        color: #ffffff;
-        /* Teks putih untuk aktif */
+        background-color: #e6bf3e; /* Warna untuk link aktif */
+        color: #ffffff; /* Teks putih untuk link aktif */
     }
 
     .submenu {
         transition: max-height 0.3s ease, opacity 0.3s ease;
         overflow: hidden;
-        /* Mencegah overflow */
     }
 
     .submenu a {
         padding-left: 30px;
-        background-color: #f8f9fa;
-        /* Warna submenu */
+        background-color: #f8f9fa; /* Warna submenu */
     }
 
     .submenu a:hover {
-        background-color: #e2df8b;
-        /* Warna lebih terang saat hover pada submenu */
+        background-color: #e2df8b; /* Warna lebih terang saat hover pada submenu */
     }
 
     .arrow-icon {
@@ -190,31 +176,52 @@
         transition: transform 0.3s;
     }
 
-    .arrow-icon.open {
-        transform: rotate(90deg);
+    /* Media Queries untuk Responsivitas */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 100%;
+            position: relative; /* Ubah posisi sidebar di perangkat kecil */
+            height: auto; /* Tinggi otomatis */
+        }
+
+        .sidebar a {
+            justify-content: space-between; /* Sesuaikan tampilan link */
+        }
+
+        .navbar {
+            margin-left: 0; /* Menghilangkan margin di navbar */
+        }
+
+        .toggle-btn {
+            display: block; /* Tampilkan tombol toggle di perangkat kecil */
+        }
     }
 
-    .collapsed {
-        width: 80px;
-        transition: width 0.3s ease;
+    .toggler-btn {
+        position: fixed;
+        left: 250px; /* Posisi di samping sidebar */
+        top: 10px;
+        z-index: 1100;
+        transition: left 0.3s ease;
     }
 
-    .collapsed .sidebar-text {
-        display: none;
+    /* Styling untuk tombol toggler */
+    .btn-yellow {
+        background-color: #ffc107; /* Sesuaikan dengan warna tema */
+        color: #ffffff;
     }
 
-    .collapsed .submenu {
-        display: none;
+    /* Mengatur navbar di samping sidebar */
+    .navbar {
+        margin-left: 250px;
+        transition: margin-left 0.3s ease;
     }
 
-    .collapsed .profile-pic {
-        width: 50px;
-        height: 50px;
+    .collapsed + .navbar {
+        margin-left: 80px;
     }
 
-    .profile-pic {
-        border-radius: 50%;
-        /* Gambar profil bulat */
-        margin-bottom: 15px;
+    .footer {
+        margin-top: 20px;
     }
 </style>
