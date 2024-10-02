@@ -14,43 +14,40 @@ class SakipwilController extends Controller
             return redirect()->route('pilih.tahun');
         }
 
-        // Ambil nilai id_satker dari session
-        $id_satker = session('id_satker'); // Mengambil id_kejati dari session
-        $tahun = session('tahun_terpilih'); // Ambil tahun yang dipilih dari session
+        // Ambil nilai dari session
+        $id_satker = session('id_satker');
+        $tahun = session('tahun_terpilih');
 
-        $id = DB::table('sinori_login')
-            ->where('id_satker', $id_satker)
-            ->first();
+        // Ambil data pengguna
+        $id = DB::table('sinori_login')->where('id_satker', $id_satker)->first();
 
+        // Ambil data satkernama dan id_satker sesuai id_kejati
         $data = DB::table('sinori_login')
-            ->where('id_kejati', $id->id_kejati) // Gunakan nilai id_kejati yang diambil
+            ->where('id_kejati', $id->id_kejati)
             ->get();
 
-        // Ambil semua data satkernama yang sesuai dengan id_kejati
-        $satkernamaList = DB::table('sinori_login')
-            ->where('id_kejati', $id->id_kejati)
-            ->pluck('satkernama'); // pluck mengambil semua nilai dari kolom yang ditentukan
-
-        // Ganti underscore dengan spasi untuk setiap satkernama
-        $satkernamaList = $satkernamaList->map(function ($satkernama) {
+        // Ganti underscore dengan spasi dan ambil id_satker
+        $satkernamaList = $data->pluck('satkernama')->map(function ($satkernama) {
             return str_replace('_', ' ', $satkernama);
         });
 
-        $satker = $data->pluck('id_satker');
-        // Ambil data keputusan berdasarkan satker dan tahun
+        // Ambil keputusan berdasarkan satker dan tahun
         $kepList = DB::table('sinori_sakip_keputusan')
-            ->whereIn('id_satker', $satker)
+            ->whereIn('id_satker', $data->pluck('id_satker'))
             ->where('id_tahun', $tahun)
-            ->pluck('id_filesurat', 'id_satker'); // Menggunakan id_satker sebagai kunci
+            ->pluck('id_filesurat', 'id_satker');
 
         // Menyelaraskan urutan kepList dengan satker
-        $sortedKepList = $satker->map(function ($id) use ($kepList) {
-            return $kepList[$id] ?? null; // Mengambil id_filesurat berdasarkan id_satker
+        $sortedKepList = $data->pluck('id_satker')->map(function ($id) use ($kepList) {
+            return $kepList[$id] ?? null;
         });
-        // Debug untuk melihat semua satkernama
-        // dd($satker);
-        // dd($kepList);
-        // dd(session()->all());
-        return view('sakipwil', ['data' => $data, 'tahun' => $tahun, 'satkernamaList' => $satkernamaList, 'sortedKepList' => $sortedKepList]);
+
+        // Kembalikan view dengan data yang diperlukan
+        return view('sakipwil', [
+            'data' => $data,
+            'tahun' => $tahun,
+            'satkernamaList' => $satkernamaList,
+            'sortedKepList' => $sortedKepList,
+        ]);
     }
 }
