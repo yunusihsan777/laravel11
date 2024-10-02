@@ -12,7 +12,7 @@
                     </center><br>
 
                     <!-- List Pengumuman -->
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped table-center">
                         <thead class="table-warning">
                             <tr>
                                 <th>No</th>
@@ -31,14 +31,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            
-                            @foreach ($data as $index => $row)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $row->id_satker }}</td>
-                                    <td>{{ $satkernamaList[$index] }}</td>
-                                    {{-- <td>{{ $row->keputusan }}</td>
-                                    <td>{{ $row->renstra }}</td>
+                            @if ($data->isNotEmpty())
+                                @foreach ($data as $index => $row)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $row->id_satker }}</td>
+                                        <td style="text-align: left;">{{ $satkernamaList[$index] }}</td>
+                                        <td>
+                                            @if (!empty($sortedKepList[$index]))
+                                                <a href="{{ asset('uploads/keputusan/' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                    target="_blank" class="no-link">
+                                                    &#10003; <!-- Tanda centang -->
+                                                </a>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        {{-- <td>{{ $row->renstra }}</td>
                                     <td>{{ $row->renja }}</td>
                                     <td>{{ $row->perjanjian_kinerja }}</td>
                                     <td>{{ $row->jumlah_indikator_kinerja }}</td>
@@ -47,8 +56,13 @@
                                     <td>{{ $row->dipa }}</td>
                                     <td>{{ $row->renaksi }}</td>
                                     <td>{{ $row->lkjip }}</td> --}}
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="3">Tidak ada data yang tersedia.</td> <!-- Pesan jika tidak ada data -->
                                 </tr>
-                            @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -74,5 +88,31 @@
             .table td,
             .table th {
                 vertical-align: middle;
+            }
+
+            .table-center {
+                width: 100%;
+                /* Opsional: sesuaikan lebar tabel */
+                border-collapse: collapse;
+                /* Menghilangkan jarak antara border sel */
+            }
+
+            .table-center th,
+            .table-center td {
+                text-align: center;
+                /* Mengatur teks di tengah */
+                padding: 10px;
+                /* Menambahkan padding untuk estetika */
+                border: 1px solid #ddd;
+                /* Mengatur border pada sel */
+            }
+
+            .no-link {
+                text-decoration: none;
+                /* Menghilangkan garis bawah */
+                color: inherit;
+                /* Menggunakan warna teks dari elemen induk */
+                /* cursor: default; */
+                /* Mengubah kursor agar tidak menunjukkan sebagai link */
             }
         </style>

@@ -10,11 +10,11 @@ class Pengumuman extends Model
     use HasFactory;
 
     protected $table = 'sinori_sakip_inbox';
-    
+    public $timestamps = false;
     protected $fillable = [
         'judul',
         'isi',
+        'tanggal',
+        'tglpost',
     ];
-    const CREATED_AT = 'tanggal';
-    const UPDATED_AT = 'tglpost';
 }

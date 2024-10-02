@@ -32,6 +32,8 @@ class PengumumanController extends Controller
         Pengumuman::create([
             'judul' => $request->judul,
             'isi' => $request->isi,
+            'tanggal' => \Carbon\Carbon::now()->format('d/m/Y h:i A'),
+            'tglpost' => \Carbon\Carbon::now()->format('d/m/Y h:i A'),
         ]);
 
         return redirect()->route('pengumuman')->with('success', 'Pengumuman berhasil ditambahkan.');
@@ -40,8 +42,14 @@ class PengumumanController extends Controller
     // Menampilkan form edit pengumuman
     public function edit($id)
     {
+        // Cek apakah tahun sudah dipilih
+        if (!session()->has('tahun_terpilih')) {
+            return redirect()->route('pilih.tahun');
+        }
+
+        $tahun = session('tahun_terpilih');
         $pengumuman = Pengumuman::findOrFail($id);
-        return view('pengumuman.edit', compact('pengumuman'));
+        return view('pengumuman.edit', ['pengumuman' => $pengumuman, 'tahun' => $tahun]);
     }
 
     // Menyimpan perubahan pengumuman
@@ -61,7 +69,7 @@ class PengumumanController extends Controller
     $pengumuman->isi = $request->isi;
 
     // Format tanggal saat ini ke DD/MM/YYYY dan simpan ke kolom tglpost
-    $pengumuman->tglpost = now(); // Menggunakan format DD/MM/YYYY
+    $pengumuman->tglpost = \Carbon\Carbon::now()->format('d/m/Y h:i A'); // Menggunakan format DD/MM/YYYY
 
     // Simpan perubahan
     $pengumuman->save();

@@ -31,8 +31,8 @@
                                 <label for="file">Upload File (PDF)</label>
                                 <input type="file" class="form-control" id="file" name="file" required>
                             </div>
-                
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                <br>
+                            <button type="submit" class="btn btn-warning">Simpan</button>
                         </form>
                     </div>
                 </div>

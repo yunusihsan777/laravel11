@@ -36,9 +36,21 @@ class SakipwilController extends Controller
             return str_replace('_', ' ', $satkernama);
         });
 
+        $satker = $data->pluck('id_satker');
+        // Ambil data keputusan berdasarkan satker dan tahun
+        $kepList = DB::table('sinori_sakip_keputusan')
+            ->whereIn('id_satker', $satker)
+            ->where('id_tahun', $tahun)
+            ->pluck('id_filesurat', 'id_satker'); // Menggunakan id_satker sebagai kunci
+
+        // Menyelaraskan urutan kepList dengan satker
+        $sortedKepList = $satker->map(function ($id) use ($kepList) {
+            return $kepList[$id] ?? null; // Mengambil id_filesurat berdasarkan id_satker
+        });
         // Debug untuk melihat semua satkernama
-        // dd($satkernamaList);
+        // dd($satker);
+        // dd($kepList);
         // dd(session()->all());
-        return view('sakipwil', ['data' => $data, 'tahun' => $tahun, 'satkernamaList' => $satkernamaList]);
+        return view('sakipwil', ['data' => $data, 'tahun' => $tahun, 'satkernamaList' => $satkernamaList, 'sortedKepList' => $sortedKepList]);
     }
 }
