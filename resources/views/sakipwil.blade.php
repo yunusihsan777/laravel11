@@ -32,11 +32,11 @@
                         </thead>
                         <tbody>
                             
-                            @foreach ($kejati as $index => $row)
+                            @foreach ($data as $index => $row)
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $row->id_satker }}</td>
-                                    <td>{{ $row->satkernama }}</td>
+                                    <td>{{ $satkernamaList[$index] }}</td>
                                     {{-- <td>{{ $row->keputusan }}</td>
                                     <td>{{ $row->renstra }}</td>
                                     <td>{{ $row->renja }}</td>
