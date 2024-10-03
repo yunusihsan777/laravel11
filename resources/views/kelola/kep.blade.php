@@ -53,10 +53,11 @@
                                 <label class="form-label">Surat Keputusan Tim SAKIP yang sudah di TTD KASATKER:</label>
                                 <input type="file" class="form-control" id="file" name="file" accept=".pdf"
                                     required>
+                                    <div class="form-text text-left">Maximum size: 2MB</div>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Upload</button>
-                            <div class="form-text text-center">Maximum size: 2MB</div>
+                           
                         </form><br>
 
 

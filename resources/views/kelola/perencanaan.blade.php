@@ -60,7 +60,14 @@
                         <div class="tab-pane fade {{ $activeTab == 'renstra' ? 'show active' : '' }}" id="renstra"
                             role="tabpanel" aria-labelledby="renstra-tab">
                             <div class="renstra-content">
-                                <h3>Rencana Strategis (Renstra) Tahun 2024 - 2029</h3>
+                                @php
+                                    if($tahun == "2024"){
+                                        $id_tahun = "2019 - 2024";
+                                    }else{
+                                        $id_tahun = "2025 - 2029";
+                                    }
+                                @endphp
+                                <h3>Rencana Strategis (Renstra) Tahun {{ $id_tahun }}</h3>
                                 <p>Rencana Strategis (Renstra) merupakan dokumen perencanaan yang menetapkan tujuan,
                                     sasaran, strategi, kebijakan, program, dan kegiatan pembangunan dalam jangka waktu
                                     lima tahun.</p>
