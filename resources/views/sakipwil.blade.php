@@ -49,7 +49,18 @@
                                                     <span class="text-danger">-</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $row->renstra ?? '-' }}</td>
+                                            <td>  @if (isset($renstra[$row->id_satker]) && $renstra[$row->id_satker]->isNotEmpty())
+                                                <!-- Ambil data renstra pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
+                                                @php
+                                                    $latestRenstra = $renstra[$row->id_satker]->first();
+                                                @endphp
+                                                <a href="{{ asset('uploads/renstra/renstra_' . $latestRenstra->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                   target="_blank" class="text-info">
+                                                    &#10003; <!-- Tanda centang -->
+                                                </a>
+                                            @else
+                                                <span class="text-danger">-</span>
+                                            @endif</td>
                                             <td>{{ $row->renja ?? '-' }}</td>
                                             <td>{{ $row->perjanjian_kinerja ?? '-' }}</td>
                                             <td>{{ $row->jumlah_indikator_kinerja ?? '-' }}</td>

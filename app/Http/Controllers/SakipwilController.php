@@ -36,18 +36,36 @@ class SakipwilController extends Controller
             ->whereIn('id_satker', $data->pluck('id_satker'))
             ->where('id_tahun', $tahun)
             ->pluck('id_filesurat', 'id_satker');
-
+        // dd($kepList);
         // Menyelaraskan urutan kepList dengan satker
         $sortedKepList = $data->pluck('id_satker')->map(function ($id) use ($kepList) {
             return $kepList[$id] ?? null;
         });
+        // dd($sortedkepList);
+        // Memeriksa tahun dan menentukan id_periode
+        if ($tahun == "2024") {
+            $id_periode = "P1";
+        } else {
+            $id_periode = "P2";
+        }
 
+        // Mengambil id_filename berdasarkan id_satker
+        $renstra = DB::table('sinori_sakip_renstra')
+            ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
+            ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
+            ->where('id_periode', $id_periode)
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan terakhir
+            ->get()
+            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
+
+        // dd($renstra);
         // Kembalikan view dengan data yang diperlukan
         return view('sakipwil', [
             'data' => $data,
             'tahun' => $tahun,
             'satkernamaList' => $satkernamaList,
             'sortedKepList' => $sortedKepList,
+            'renstra' => $renstra,
         ]);
     }
 }

@@ -26,15 +26,20 @@ class PerencanaanController extends Controller
 
         // Ambil nilai id_satker dari session
         $id_satker = session('id_satker');
-
+        if($tahun == "2024"){ 
+            $id_periode = "P1";
+        }else{
+            $id_periode = "P2";
+        }
+        
         // Ambil data Renstra, IKU, Renja
         $renstra = DB::table('sinori_sakip_renstra')
             ->where('id_satker', $id_satker)
-            ->where('id_tahun', $tahun)
+            ->where('id_periode', $id_periode)
             ->get();
         $iku = DB::table('sinori_sakip_iku')
             ->where('id_satker', $id_satker)
-            ->where('id_periode', $tahun)
+            ->where('id_periode', $id_periode)
             ->get();
         $renja = DB::table('sinori_sakip_renja')
             ->where('id_satker', $id_satker)
@@ -66,11 +71,17 @@ class PerencanaanController extends Controller
             'renstra_file' => 'required|mimes:pdf|max:2048', // maksimal 2MB
         ]);
 
+        if ($tahun == "2024") {
+            $id_periode = "P1";
+        } elseif ($tahun >= "2025" && $tahun <= "2029") {
+            $id_periode = "P2";
+        }
+
         $idSatker = session('id_satker'); // Ambil id_satker dari session
 
         // Cek id_perubahan yang sudah ada
         $latestRenstra = Renstra::where('id_satker', $idSatker)
-            ->where('id_tahun', $tahun)
+            ->where('id_periode', $id_periode)
             ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc')
             ->first();
 
@@ -79,20 +90,22 @@ class PerencanaanController extends Controller
 
         // Upload file ke folder public/uploads/renstra
         $file = $request->file('renstra_file');
-        $fileName = 'renstra_' . $id_perubahan . '_' . $idSatker . '_' . $tahun .'.pdf'; // Buat nama file
+        $fileName = 'renstra_' . $id_perubahan . '_' . $idSatker . '_' . $id_periode .'.pdf'; // Buat nama file
         $file->move(public_path('uploads/renstra'), $fileName); // Simpan di folder 'renstra' di public
 
         // Format tanggal upload ke d/m/y H:i:s
         $id_tglupload = now()->format('d/m/Y h:i A');
 
+        
+        // dd($id_periode);
         // Simpan data ke database
         Renstra::create([
             'id_satker' => $idSatker,
-            'id_periode' => 'P1', // Sesuaikan dengan data periode 2019 - 2024
+            'id_periode' => $id_periode, // Sesuaikan dengan data periode 2019 - 2024
             'id_perubahan' => $id_perubahan, // Simpan id_perubahan yang baru
             'id_filename' => $fileName,
             'id_tglupload' => $id_tglupload, // Simpan tanggal upload dengan format yang diinginkan
-            'id_tahun' => $tahun,
+            'id_tahun' => "2024",
         ]);
 
         return redirect()->route('perencanaan')->with('success', 'File Renstra berhasil diupload.')->with('active_tab', 'renstra');
