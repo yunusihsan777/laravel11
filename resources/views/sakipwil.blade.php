@@ -22,13 +22,13 @@
                                     <th>Nama Satker</th>
                                     <th>Keputusan</th>
                                     <th>Renstra</th>
+                                    <th>IKU</th>
                                     <th>Renja</th>
+                                    <th>Dipa</th>
+                                    <th>Renaksi</th>
                                     <th>Perjanjian Kinerja</th>
                                     <th>Jumlah Indikator Kinerja</th>
                                     <th>Status Pengukuran Kinerja</th>
-                                    <th>IKU</th>
-                                    <th>Dipa</th>
-                                    <th>Renaksi</th>
                                     <th>LKjIP</th>
                                 </tr>
                             </thead>
@@ -61,13 +61,13 @@
                                             @else
                                                 <span class="text-danger">-</span>
                                             @endif</td>
+                                            <td>{{ $row->iku ?? '-' }}</td>
                                             <td>{{ $row->renja ?? '-' }}</td>
+                                            <td>{{ $row->dipa ?? '-' }}</td>
+                                            <td>{{ $row->renaksi ?? '-' }}</td>
                                             <td>{{ $row->perjanjian_kinerja ?? '-' }}</td>
                                             <td>{{ $row->jumlah_indikator_kinerja ?? '-' }}</td>
                                             <td>{{ $row->status_pengukuran_kinerja ?? '-' }}</td>
-                                            <td>{{ $row->iku ?? '-' }}</td>
-                                            <td>{{ $row->dipa ?? '-' }}</td>
-                                            <td>{{ $row->renaksi ?? '-' }}</td>
                                             <td>{{ $row->lkjip ?? '-' }}</td>
                                         </tr>
                                     @endforeach

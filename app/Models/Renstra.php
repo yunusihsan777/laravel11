@@ -17,6 +17,5 @@ class Renstra extends Model
         'id_perubahan',
         'id_tglupload',
         'id_satker',
-        'id_tahun',
     ];
 }

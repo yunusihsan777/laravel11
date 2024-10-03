@@ -39,7 +39,7 @@ class PerencanaanController extends Controller
             ->get();
         $iku = DB::table('sinori_sakip_iku')
             ->where('id_satker', $id_satker)
-            ->where('id_periode', $id_periode)
+            ->where('id_periode', $tahun)
             ->get();
         $renja = DB::table('sinori_sakip_renja')
             ->where('id_satker', $id_satker)
@@ -90,7 +90,7 @@ class PerencanaanController extends Controller
 
         // Upload file ke folder public/uploads/renstra
         $file = $request->file('renstra_file');
-        $fileName = 'renstra_' . $id_perubahan . '_' . $idSatker . '_' . $id_periode .'.pdf'; // Buat nama file
+        $fileName = 'renstra_' . $id_perubahan . '_' . $idSatker . '_' . $tahun .'.pdf'; // Buat nama file
         $file->move(public_path('uploads/renstra'), $fileName); // Simpan di folder 'renstra' di public
 
         // Format tanggal upload ke d/m/y H:i:s
@@ -105,7 +105,6 @@ class PerencanaanController extends Controller
             'id_perubahan' => $id_perubahan, // Simpan id_perubahan yang baru
             'id_filename' => $fileName,
             'id_tglupload' => $id_tglupload, // Simpan tanggal upload dengan format yang diinginkan
-            'id_tahun' => "2024",
         ]);
 
         return redirect()->route('perencanaan')->with('success', 'File Renstra berhasil diupload.')->with('active_tab', 'renstra');
