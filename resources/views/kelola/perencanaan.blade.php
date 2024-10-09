@@ -40,14 +40,16 @@
                                 aria-selected="{{ $activeTab == 'dipa' ? 'true' : 'false' }}">DIPA</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $activeTab == 'renaksi' ? 'active' : '' }}" id="renaksi-tab" 
-                            data-bs-toggle="tab" href="#renaksi" role="tab"
-                                aria-controls="{{ $activeTab == 'renaksi' ? 'true' : 'false' }}" aria-selected="false">Rencana Aksi</a>
+                            <a class="nav-link {{ $activeTab == 'renaksi' ? 'active' : '' }}" id="renaksi-tab"
+                                data-bs-toggle="tab" href="#renaksi" role="tab"
+                                aria-controls="{{ $activeTab == 'renaksi' ? 'true' : 'false' }}"
+                                aria-selected="false">Rencana Aksi</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja"
-                                role="tab" aria-controls="perjanjian-kinerja" aria-selected="false">Perjanjian
-                                Kinerja</a>
+                            <a class="nav-link {{ $activeTab == 'perjanjian-kinerja' ? 'active' : '' }}"
+                                id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja" role="tab"
+                                aria-controls="{{ $activeTab == 'perjanjian-kinerja' ? 'true' : 'false' }}"
+                                aria-selected="false">Perjanjian Kinerja</a>
                         </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" id="cetak-pk-tab" data-bs-toggle="tab" href="#cetak-pk" role="tab"
@@ -61,10 +63,10 @@
                             role="tabpanel" aria-labelledby="renstra-tab">
                             <div class="renstra-content">
                                 @php
-                                    if($tahun == "2024"){
-                                        $id_tahun = "2019 - 2024";
-                                    }else{
-                                        $id_tahun = "2025 - 2029";
+                                    if ($tahun == '2024') {
+                                        $id_tahun = '2019 - 2024';
+                                    } else {
+                                        $id_tahun = '2025 - 2029';
                                     }
                                 @endphp
                                 <h3>Rencana Strategis (Renstra) Tahun {{ $id_tahun }}</h3>
@@ -514,21 +516,162 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="perjanjian-kinerja" role="tabpanel"
-                            aria-labelledby="perjanjian-kinerja-tab">
-                            <h2>Perjanjian Kinerja</h2>
-                            <p>Content for Perjanjian Kinerja goes here...</p>
+                        <div class="container mt-4">
+
                         </div>
 
-                        <div class="tab-pane fade" id="cetak-pk" role="tabpanel" aria-labelledby="cetak-pk-tab">
-                            <h2>Cetak PK</h2>
-                            <p>Content for Cetak PK goes here...</p>
+
+
+                        <div class="tab-pane  fade {{ $activeTab == 'perjanjian-kinerja' ? 'show active' : '' }}"
+                            id="perjanjian-kinerja" role="tabpanel" aria-labelledby="perjanjian-kinerja-tab">
+                            <!-- Card untuk Bidang Kajari -->
+                            <!-- Alert for success -->
+                            @if (session('success'))
+                                <div class="alert alert-success" id="success-alert">
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                            {{-- <div class="card">
+                                <div class="card-header" style="background-color: #e74a4a; color: white;">
+                                    Kajari
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title p-2" style="background-color: #f1e022; color: black;">
+                                        1. Terwujudnya Upaya
+                                        Pencegahan Tindak
+                                        Pidana Korupsi</h5>
+
+                                    <div class="row">
+                                        <!-- Indikator 2.1 -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card">
+                                                <div class="card-header text-dark">
+                                                    1.1. Persentase Kegiatan yang Mendukung
+                                                    Upaya Pencegahan Tindak Pidana
+                                                    Korupsi
+                                                </div>
+                                                <div class="card-body">
+                                                    <input type="number" class="form-control mb-3"
+                                                        placeholder="Masukkan target dalam %">
+                                                    <button type="submit" class="btn"
+                                                        style="background-color: #39b65c; color: white;">Simpan</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <h5 class="card-title p-2" style="background-color: #f1e022; color: black;">2.
+                                        Meningkatnya Keberhasilan
+                                        Penyelesaian Tindak Pidana</h5>
+
+                                    <div class="row">
+                                        <!-- Indikator 2.1 -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card">
+                                                <div class="card-header text-dark">
+                                                    2.1. Persentase Penyelesaian Tindak Pidana Umum yang Mempunyai
+                                                    Kekuatan Hukum Tetap yang Telah Dieksekusi
+                                                </div>
+                                                <div class="card-body">
+                                                    <input type="number" class="form-control mb-3"
+                                                        placeholder="Masukkan target dalam %">
+                                                    <button type="submit" class="btn"
+                                                        style="background-color: #39b65c; color: white;">Simpan</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Indikator 3.2 -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card">
+                                                <div class="card-header text-dark">
+                                                    2.2. Persentase Penyelesaian Tindak Pidana Khusus yang Mempunyai
+                                                    Kekuatan Hukum Tetap yang Telah Dieksekusi
+                                                </div>
+                                                <div class="card-body">
+                                                    <input type="number" class="form-control mb-3"
+                                                        placeholder="Masukkan target dalam %">
+                                                    <button type="submit" class="btn"
+                                                        style="background-color: #39b65c; color: white;">Simpan</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><br> --}}
+                            
+                            <div class="card">
+                                <div class="card-header" style="background-color: #e74a4a; color: white;">
+                                    Kasi Pidum
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title p-2" style="background-color: #f1e022; color: black;">2.1.
+                                        Persentase Penyelesaian Perkara Tindak Pidana Umum yang Memperoleh Kekuatan Hukum
+                                        Tetap dan Dieksekusi</h5>
+
+                                    <div class="row">
+                                        @foreach ($indikator as $indikator)
+                                            <div class="col-md-6">
+                                                <div class="card mb-3">
+                                                    <div class="card-header">
+                                                        <h6>{{ $indikator->indikator_nama }}</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p><strong>Pembilang:</strong>
+                                                            {{ $indikator->indikator_pembilang }}</p>
+                                                        <p>-------------------------------------------------- x100</p>
+                                                        <p><strong>Penyebut:</strong> {{ $indikator->indikator_penyebut }}
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <!-- Form untuk submit target_indikator -->
+                                                        <form action="{{ route('perencanaan.store') }}" method="POST">
+                                                            @csrf
+                                                            <!-- Hidden input untuk id_indikator -->
+                                                            <input type="hidden" name="id_indikator"
+                                                                value="{{ $indikator->id }}">
+
+                                                            <!-- Hidden input untuk indikator_nama (untuk disimpan di database) -->
+                                                            <input type="hidden" name="indikator"
+                                                                value="{{ $indikator->indikator_nama }}">
+
+                                                            <!-- Input target indikator -->
+                                                            <div class="mb-3 w-50">
+                                                                <div class="input-group">
+                                                                    <input type="number" class="form-control"
+                                                                        name="target_indikator"
+                                                                        placeholder="Masukkan target dalam %"
+                                                                        value="{{ isset($indikator_pidum[$indikator->id]) ? $indikator_pidum[$indikator->id]->target_indikator : '' }}">
+                                                                    <span class="input-group-text">%</span>
+                                                            <button type="submit" class="btn"
+                                                                style="background-color: #39b65c; color: white;">
+                                                                Simpan
+                                                            </button>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+
+
+                                </div>
+                            </div>
                         </div>
+
+
                     </div>
                 </div>
-
             </div>
+
         </div>
+    </div>
     </div>
 @endsection
 
@@ -617,5 +760,26 @@
                 setTimeout(() => successAlert.remove(), 500); // Hapus elemen setelah transisi selesai
             }
         }, 5000); // 5 detik
+    </script>
+    <!-- Script to Show/Hide Sections Based on Selected Bidang -->
+    <script>
+        document.getElementById('bidang').addEventListener('change', function() {
+            var kajariSection = document.getElementById('kajari-section');
+            var pidumSection = document.getElementById('pidum-section');
+
+            if (this.value === 'kajari') {
+                kajariSection.style.display = 'block';
+                pidumSection.style.display = 'none';
+            } else if (this.value === 'pidum') {
+                kajariSection.style.display = 'none';
+                pidumSection.style.display = 'block';
+            } else {
+                kajariSection.style.display = 'none';
+                pidumSection.style.display = 'none';
+            }
+        });
+
+        // Initialize the correct section to be displayed
+        document.getElementById('bidang').dispatchEvent(new Event('change'));
     </script>
 @endsection

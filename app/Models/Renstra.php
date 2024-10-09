@@ -18,4 +18,10 @@ class Renstra extends Model
         'id_tglupload',
         'id_satker',
     ];
+    public static function getData($id_satker, $id_periode)
+    {
+        return self::where('id_satker', $id_satker)
+        ->where('id_periode', $id_periode)
+        ->get();
+    }
 }

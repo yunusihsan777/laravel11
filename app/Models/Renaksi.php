@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Renaksi extends Model
 {
@@ -17,9 +18,12 @@ class Renaksi extends Model
         'id_perubahan',
         'id_tglupload',
         'id_satker',
-        // 'id_pagu',
-        // 'id_gakyankum',
-        // 'id_dukman',
-
+        
     ];
+    public static function getData($idSatker, $tahun)
+    {
+        return self::where('id_satker', $idSatker)
+            ->where('id_periode', $tahun)
+            ->get();
+    }
 }

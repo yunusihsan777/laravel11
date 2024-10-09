@@ -18,4 +18,10 @@ class Iku extends Model
         'id_tglupload',
         'id_satker',
     ];
+    public static function getData($id_satker, $tahun)
+    {
+        return self::where('id_satker', $id_satker)
+        ->where('id_periode', $tahun)
+        ->get();
+    }
 }

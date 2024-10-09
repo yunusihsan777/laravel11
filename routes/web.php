@@ -45,6 +45,9 @@ Route::post('/perencanaan/upload-rkakl', [PerencanaanController::class, 'uploadR
 // Route::post('/perencanaan/upload-dipa', [PerencanaanController::class, 'uploadDipa'])->name('upload.dipa');
 Route::post('/perencanaan/upload-renaksi', [PerencanaanController::class, 'uploadRenaksi'])->name('upload.renaksi');
 
+Route::get('/perencanaan/indikator', [PerencanaanController::class, 'showIndikator'])->name('perencanaan.indikator');
+Route::post('/perencanaan/store', [PerencanaanController::class, 'store'])->name('perencanaan.store');
+
 use App\Http\Controllers\PengukuranController;
 
 use App\Http\Controllers\PelaporanController;
