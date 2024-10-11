@@ -41,8 +41,12 @@ class PerencanaanController extends Controller
         $dipa = Dipa::getData($id_satker, $tahun);
         $renaksi = Renaksi::getData($id_satker, $tahun);
         $indikator = SinoriSakipIndikator::getData();
-        // Panggil method untuk mendapatkan data target indikator
-        $indikator_pidum = SinoriSakipPidum::getData($id_satker, $tahun); // Ubah setelah get() agar bisa menggunakan keyBy()
+        // Panggil method untuk mendapatkan data target indikator 
+
+        $indicatorIds = [22, 23, 24, 25]; // Inisialisasi ID indikator di controller
+        $indikator_pidum = SinoriSakipPidum::getData($id_satker, $tahun, $indicatorIds);
+
+
 
         // return view('perencanaan.input_indikator', compact('indikator', 'pidumTargets'));
         // );
@@ -98,7 +102,7 @@ class PerencanaanController extends Controller
         ]);
 
         // return redirect()->route('perencanaan')->with('success', 'File Renstra berhasil diupload.')->with('active_tab', 'renstra');
-        return redirect()->back()->with('success', 'Data berhasil disimpan!')->with('active_tab', 'renstra');
+        return redirect()->back()->with('success', 'File Renstra berhasil disimpan!')->with('active_tab', 'renstra');
     }
 
     // Fungsi untuk menangani upload file Iku
@@ -289,55 +293,47 @@ class PerencanaanController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $tahun = session('tahun_terpilih');
         $idSatker = session('id_satker');
 
-        // Validasi data input
-        $validated = $request->validate([
-            'id_indikator' => 'required|exists:sinori_sakip_indikator,id', // Pastikan indikator valid
-            'target_indikator' => 'required|numeric',  //target_indikator 
-            'indikator' => 'required|string', // Ambil dari view yang ditampilkan
-        ]);
-
-        // Tambahkan id_satker dan id_tahun ke dalam data yang tervalidasi
-        $validated['id_satker'] = $idSatker;
-        $validated['id_tahun'] = $tahun;
-
         // Cek apakah sudah ada data dengan kombinasi id_satker, id_indikator, dan id_tahun
         $existingRecord = SinoriSakipPidum::where('id_satker', $idSatker)
-            ->where('id_indikator', $validated['id_indikator'])
+            ->where('id_indikator', $request->input('id_indikator'))
             ->where('id_tahun', $tahun)
             ->first();
 
         if ($existingRecord) {
+            // dd('update record');
             // Jika sudah ada, update record yang ada
             $existingRecord->update([
-                'target_indikator' => $validated['target_indikator'],
-                'indikator' => $validated['indikator'],
+                'target_indikator' => $request->input('target_indikator'),
+                'tw1' => $request->input('tw1'),
+                'tw2' => $request->input('tw2'),
+                'tw3' => $request->input('tw3'),
+                'tw4' => $request->input('tw4'),
             ]);
+            return redirect()->route('perencanaan')->with('success', 'Data PK berhasil diupdate!')->with('active_tab', 'perjanjian-kinerja');
+            // dd($existingRecord);
         } else {
+            // dd('Creating new record');
             // Jika belum ada, simpan data baru
-            SinoriSakipPidum::create($validated);
+            SinoriSakipPidum::create([
+                'id_indikator' => $request->input('id_indikator'),
+                'target_indikator' => $request->input('target_indikator'),
+                'indikator' => $request->input('indikator'),
+                'id_satker' => $idSatker,
+                'id_tahun' => $tahun,
+                'tw1' => $request->input('tw1'),
+                'tw2' => $request->input('tw2'),
+                'tw3' => $request->input('tw3'),
+                'tw4' => $request->input('tw4'),
+            ]);
+            return redirect()->route('perencanaan')->with('success', 'Data PK berhasil diinput!')->with('active_tab', 'perjanjian-kinerja');
         }
+        // dd($validated);
 
         // Redirect dengan pesan sukses
-        return redirect()->route('perencanaan')->with('success', 'Data PK berhasil diinput!')->with('active_tab', 'perjanjian-kinerja');
+        // return redirect()->route('perencanaan')->with('success', 'Data PK berhasil diinput!')->with('active_tab', 'perjanjian-kinerja');
     }
-
-    // public function showIndikator()
-    // {
-    //     $idSatker = session('id_satker');
-
-    //     // Ambil indikator PIDUM dan target_indikator yang ada
-    //     $indikator_pidum = SinoriSakipIndikator::all()->map(function ($indikator) use ($idSatker) {
-    //         $target = SinoriSakipPidum::where('id_satker', $idSatker)
-    //             ->where('id_indikator', $indikator->id)
-    //             ->first();
-
-    //         $indikator->target_indikator = $target ? $target->target_indikator : null; // Simpan target jika ada
-    //         return $indikator;
-    //     });
-
-    //     return view('perencanaan.indikator', compact('indikator_pidum'));
-    // }
 }

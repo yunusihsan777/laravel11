@@ -49,6 +49,7 @@ Route::get('/perencanaan/indikator', [PerencanaanController::class, 'showIndikat
 Route::post('/perencanaan/store', [PerencanaanController::class, 'store'])->name('perencanaan.store');
 
 use App\Http\Controllers\PengukuranController;
+Route::post('/pengukuran/store', [PengukuranController::class, 'store'])->name('pengukuran.store');
 
 use App\Http\Controllers\PelaporanController;
 

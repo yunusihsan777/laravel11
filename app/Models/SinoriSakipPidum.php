@@ -16,21 +16,24 @@ class SinoriSakipPidum extends Model
         'target_indikator',
         'indikator',
         'id_tahun',
+        'tw1',
+        'tw2',
+        'tw3',
+        'tw4',
     ];
 
     // Nonaktifkan timestamps
     public $timestamps = false;
-    // Definisikan ID indikator sebagai konstanta
-    const INDICATOR_IDS = [22, 23, 24, 25];
 
-    public static function getData($idSatker, $tahun)
-    {
-        return self::whereIn('id_indikator', self::INDICATOR_IDS)
-            ->where('id_satker', $idSatker)
-            ->where('id_tahun', $tahun)
-            ->get()
-            ->keyBy('id_indikator');
-    }
+    public static function getData($idSatker, $tahun, $indicatorIds = [])
+{
+    $query = self::where('id_satker', $idSatker)
+                 ->where('id_tahun', $tahun);
+                 $query->whereIn('id_indikator', $indicatorIds);
+    return $query->get()->keyBy('id_indikator');
+}
+
+
     // Anda dapat menambahkan relasi jika perlu
     // Misalnya, jika ada relasi dengan model lain, Anda bisa mendefinisikannya di sini
 }

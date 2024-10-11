@@ -599,70 +599,88 @@
                                     </div>
                                 </div>
                             </div><br> --}}
-                            
+
                             <div class="card">
                                 <div class="card-header" style="background-color: #e74a4a; color: white;">
                                     Kasi Pidum
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title p-2" style="background-color: #f1e022; color: black;">2.1.
-                                        Persentase Penyelesaian Perkara Tindak Pidana Umum yang Memperoleh Kekuatan Hukum
-                                        Tetap dan Dieksekusi</h5>
-
+                                    <h5 class="card-title p-2" style="background-color: #f1e022; color: black;">2.1. Persentase Penyelesaian Perkara Tindak Pidana Umum yang Memperoleh Kekuatan Hukum Tetap dan Dieksekusi</h5>
+                            
                                     <div class="row">
-                                        @foreach ($indikator as $indikator)
+                                        @foreach ($indikator as $singleIndikator)
                                             <div class="col-md-6">
                                                 <div class="card mb-3">
                                                     <div class="card-header">
-                                                        <h6>{{ $indikator->indikator_nama }}</h6>
+                                                        <h5>{{ $singleIndikator->indikator_nama }}</h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <p><strong>Pembilang:</strong>
-                                                            {{ $indikator->indikator_pembilang }}</p>
+                                                        <p><strong>Pembilang:</strong> {{ $singleIndikator->indikator_pembilang }}</p>
                                                         <p>-------------------------------------------------- x100</p>
-                                                        <p><strong>Penyebut:</strong> {{ $indikator->indikator_penyebut }}
-                                                        </p>
-                                                    </div>
-
+                                                        <p><strong>Penyebut:</strong> {{ $singleIndikator->indikator_penyebut }}</p>
+                                                    </div> 
                                                     <div class="card-body">
-                                                        <!-- Form untuk submit target_indikator -->
                                                         <form action="{{ route('perencanaan.store') }}" method="POST">
                                                             @csrf
-                                                            <!-- Hidden input untuk id_indikator -->
-                                                            <input type="hidden" name="id_indikator"
-                                                                value="{{ $indikator->id }}">
-
-                                                            <!-- Hidden input untuk indikator_nama (untuk disimpan di database) -->
-                                                            <input type="hidden" name="indikator"
-                                                                value="{{ $indikator->indikator_nama }}">
-
-                                                            <!-- Input target indikator -->
+                                                            <input type="hidden" name="id_indikator" value="{{ $singleIndikator->id }}">
+                                                            <p>Target Per Tahun:</p>
+                                    
+                                                            <!-- Input Target Per Tahun -->
                                                             <div class="mb-3 w-50">
                                                                 <div class="input-group">
-                                                                    <input type="number" class="form-control"
-                                                                        name="target_indikator"
-                                                                        placeholder="Masukkan target dalam %"
-                                                                        value="{{ isset($indikator_pidum[$indikator->id]) ? $indikator_pidum[$indikator->id]->target_indikator : '' }}">
+                                                                    <input type="number" class="form-control" name="target_indikator" placeholder="Masukkan target dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->target_indikator : '' }}">
                                                                     <span class="input-group-text">%</span>
-                                                            <button type="submit" class="btn"
-                                                                style="background-color: #39b65c; color: white;">
-                                                                Simpan
-                                                            </button>
                                                                 </div>
                                                             </div>
-
-
+                                    
+                                                            <!-- Input TW1 - TW4 -->
+                                                            <div class="d-flex flex-row justify-content-between mb-3">
+                                                                <div class="w-25">
+                                                                    <label>Target TW1:</label>
+                                                                    <div class="input-group">
+                                                                        <input type="number" class="form-control" name="tw1" placeholder="Masukkan target TW1 dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw1 : '' }}">
+                                                                        <span class="input-group-text">%</span>
+                                                                    </div>
+                                                                </div>
+                                    
+                                                                <div class="w-25">
+                                                                    <label>Target TW2:</label>
+                                                                    <div class="input-group">
+                                                                        <input type="number" class="form-control" name="tw2" placeholder="Masukkan target TW2 dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw2 : '' }}">
+                                                                        <span class="input-group-text">%</span>
+                                                                    </div>
+                                                                </div>
+                                    
+                                                                <div class="w-25">
+                                                                    <label>Target TW3:</label>
+                                                                    <div class="input-group">
+                                                                        <input type="number" class="form-control" name="tw3" placeholder="Masukkan target TW3 dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw3 : '' }}">
+                                                                        <span class="input-group-text">%</span>
+                                                                    </div>
+                                                                </div>
+                                    
+                                                                <div class="w-25">
+                                                                    <label>Target TW4:</label>
+                                                                    <div class="input-group">
+                                                                        <input type="number" class="form-control" name="tw4" placeholder="Masukkan target TW4 dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw4 : '' }}">
+                                                                        <span class="input-group-text">%</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                    
+                                                            <button type="submit" class="btn" style="background-color: #39b65c; color: white;">
+                                                                Simpan
+                                                            </button>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
-
-
-
+                                    
                                 </div>
                             </div>
+                            
                         </div>
 
 
