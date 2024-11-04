@@ -12,9 +12,10 @@ class SinoriSakipPidumDetail extends Model
     protected $table = 'sinori_sakip_pidum_detail';
 
     protected $fillable = [
+        'id_detail',
         'id', 
         'id_satker', 
-        'indikator', 
+        'matrix', 
         'bulan', 
         'ditangani', 
         'diselesaikan', 

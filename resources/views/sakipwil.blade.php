@@ -61,10 +61,46 @@
                                             @else
                                                 <span class="text-danger">-</span>
                                             @endif</td>
-                                            <td>{{ $row->iku ?? '-' }}</td>
-                                            <td>{{ $row->renja ?? '-' }}</td>
-                                            <td>{{ $row->dipa ?? '-' }}</td>
+                                            <td>
+                                                @if (isset($iku[$row->id_satker]) && $iku[$row->id_satker]->isNotEmpty())
+                                                <!-- Ambil data iku pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
+                                                @php
+                                                    $latestiku = $iku[$row->id_satker]->first();
+                                                @endphp
+                                                <a href="{{ asset('uploads/iku/iku_' . $latestiku->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                   target="_blank" class="text-info">
+                                                    &#10003; <!-- Tanda centang -->
+                                                </a>
+                                            @else
+                                                <span class="text-danger">-</span>
+                                            @endif
+                                            </td>
+                                            <td>@if (isset($renja[$row->id_satker]) && $renja[$row->id_satker]->isNotEmpty())
+                                                <!-- Ambil data renja pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
+                                                @php
+                                                    $latestrenja = $renja[$row->id_satker]->first();
+                                                @endphp
+                                                <a href="{{ asset('uploads/renja/renja_' . $latestrenja->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                   target="_blank" class="text-info">
+                                                    &#10003; <!-- Tanda centang -->
+                                                </a>
+                                            @else
+                                                <span class="text-danger">-</span>
+                                            @endif
+                                        </td>
                                             <td>{{ $row->renaksi ?? '-' }}</td>
+                                            <td>@if (isset($renaksi[$row->id_satker]) && $renaksi[$row->id_satker]->isNotEmpty())
+                                                <!-- Ambil data renaksi pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
+                                                @php
+                                                    $latestrenaksi = $renaksi[$row->id_satker]->first();
+                                                @endphp
+                                                <a href="{{ asset('uploads/renaksi/renaksi_' . $latestrenaksi->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                   target="_blank" class="text-info">
+                                                    &#10003; <!-- Tanda centang -->
+                                                </a>
+                                            @else
+                                                <span class="text-danger">-</span>
+                                            @endif</td>
                                             <td>{{ $row->perjanjian_kinerja ?? '-' }}</td>
                                             <td>{{ $row->jumlah_indikator_kinerja ?? '-' }}</td>
                                             <td>{{ $row->status_pengukuran_kinerja ?? '-' }}</td>

@@ -58,7 +58,31 @@ class SakipwilController extends Controller
             ->get()
             ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
 
-        // dd($renstra);
+            $iku = DB::table('sinori_sakip_iku')
+            ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
+            ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
+            ->where('id_periode', $tahun) // Ambil data berdasarkan periode
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
+            ->get()
+            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
+        
+            // dd($iku);
+            $renja = DB::table('sinori_sakip_renja')
+            ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
+            ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
+            ->where('id_periode', $tahun) // Ambil data berdasarkan periode
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
+            ->get()
+            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
+
+            $renaksi = DB::table('sinori_sakip_renaksi')
+            ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
+            ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
+            ->where('id_periode', $tahun) // Ambil data berdasarkan periode
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
+            ->get()
+            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
+
         // Kembalikan view dengan data yang diperlukan
         return view('sakipwil', [
             'data' => $data,
@@ -66,6 +90,9 @@ class SakipwilController extends Controller
             'satkernamaList' => $satkernamaList,
             'sortedKepList' => $sortedKepList,
             'renstra' => $renstra,
+            'iku' => $iku,
+            'renja' => $renja,
+            'renaksi' => $renaksi,
         ]);
     }
 }
