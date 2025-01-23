@@ -5,8 +5,11 @@
 @section('content')
     <div class="content" id="content">
         <div class="container-fluid">
-            <h2>Pengukuran</h2>
             <div class="card border-light shadow-sm">
+                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <center>
+                    <h2><b>Pengukuran</b></h2>
+                </center></div>
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center"
                         style="background-color: #e74a4a; color: white;">

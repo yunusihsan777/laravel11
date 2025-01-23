@@ -59,6 +59,9 @@
     <a href="{{ route('faq') }}" class="{{ request()->is('faq') ? 'active' : '' }}">
         <i class="fas fa-question-circle"></i> <span class="sidebar-text">FAQ</span>
     </a>
+    <a href="{{ route('keloladata') }}" class="{{ request()->is('keloladata') ? 'active' : '' }}">
+        <i class="fas fa-question-circle"></i> <span class="sidebar-text">Kelola Data</span>
+    </a>
     <a href="{{ route('ubahpassword') }}" class="{{ request()->is('ubahpassword') ? 'active' : '' }}">
         <i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span>
     </a>

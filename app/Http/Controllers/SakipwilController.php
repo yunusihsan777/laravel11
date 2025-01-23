@@ -58,16 +58,7 @@ class SakipwilController extends Controller
             ->get()
             ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
 
-            $iku = DB::table('sinori_sakip_iku')
-            ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
-            ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
-            ->where('id_periode', $tahun) // Ambil data berdasarkan periode
-            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
-            ->get()
-            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
-        
-            // dd($iku);
-            $renja = DB::table('sinori_sakip_renja')
+        $iku = DB::table('sinori_sakip_iku')
             ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
             ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
             ->where('id_periode', $tahun) // Ambil data berdasarkan periode
@@ -75,13 +66,31 @@ class SakipwilController extends Controller
             ->get()
             ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
 
-            $renaksi = DB::table('sinori_sakip_renaksi')
+        // dd($iku);
+        $renja = DB::table('sinori_sakip_renja')
             ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
             ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
             ->where('id_periode', $tahun) // Ambil data berdasarkan periode
             ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
             ->get()
             ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
+
+        $renaksi = DB::table('sinori_sakip_renaksi')
+            ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
+            ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
+            ->where('id_periode', $tahun) // Ambil data berdasarkan periode
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
+            ->get()
+            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
+
+        // $pk = DB::table('sinori_sakip_penetapan')
+        //     ->select('id_satker', $tahun)
+        //     ->whereIn('id_satker', $data->pluck('id_satker'))
+        //     ->where('id_hide', '!=', '0') // Memeriksa id_hide tidak sama dengan '0'
+        //     ->orderBy(DB::raw('CAST(id AS UNSIGNED)'), 'desc') // Mengurutkan berdasarkan id numerik
+        //     ->get()
+        //     ->groupBy('id_satker'); // Mengelompokkan data berdasarkan id_satker
+
 
         // Kembalikan view dengan data yang diperlukan
         return view('sakipwil', [
@@ -93,6 +102,7 @@ class SakipwilController extends Controller
             'iku' => $iku,
             'renja' => $renja,
             'renaksi' => $renaksi,
+            // 'pk' => $pk,
         ]);
     }
 }

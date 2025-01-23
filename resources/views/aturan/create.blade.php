@@ -6,8 +6,11 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
+                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                    <center>
+                        <h2><b>Tambah Peraturan</b></h2>
+                    </center></div>
                 <div class="card-body">
-                        <h2>Tambah Peraturan</h2>
 
                         <form action="{{ route('aturan.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf

@@ -77,6 +77,15 @@ use App\Http\Controllers\LiterasiController;
 
 use App\Http\Controllers\FaqController;
 
+use App\Http\Controllers\KeloladataController;
+Route::post('/keloladata/indikator', [KeloladataController::class, 'indikator'])->name('indikator.store');
+Route::post('/keloladata/bidang', [KeloladataController::class, 'Bidang'])->name('bidang.store');
+Route::post('/keloladata/saspro', [KeloladataController::class, 'saspro'])->name('saspro.store');
+Route::post('/keloladata/storeOrUpdateBidang', [KelolaDataController::class, 'storeOrUpdateBidang'])->name('bidang.storeOrUpdateBidang');
+// Route::get('/keloladata', [KelolaDataController::class, 'search'])->name('keloladata');
+Route::get('/keloladata/edit/{id}', [KelolaDataController::class, 'edit'])->name('bidang.edit');
+Route::delete('/keloladata/destroy/{id}', [KelolaDataController::class, 'destroy'])->name('bidang.destroy');
+
 use App\Http\Controllers\UbahpasswordController;
 // Handle Auth
 Route::middleware(['auth'])->group(function () {
@@ -94,6 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/aturan', [AturanController::class, 'index'])->name('aturan');
     Route::get('/literasi', [LiterasiController::class, 'index'])->name('literasi');
     Route::get('/faq', [FaqController::class, 'index'])->name('faq');
+    Route::get('/keloladata', [KeloladataController::class, 'index'])->name('keloladata');
     Route::get('/ubahpassword', [UbahpasswordController::class, 'index'])->name('ubahpassword');
 });
 

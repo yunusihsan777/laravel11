@@ -5,8 +5,11 @@
 @section('content')
 <div class="content" id="content">
     <div class="container-fluid">
-        <h2>Pelaporan</h2>
         <div class="card border-light shadow-sm">
+            <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+            <center>
+                <h2><b>Pelaporan</b></h2>
+            </center></div>
             <div class="card-body">
                 <!-- Tabs Navigation -->
                 <ul class="nav nav-tabs" id="myTab" role="tablist">

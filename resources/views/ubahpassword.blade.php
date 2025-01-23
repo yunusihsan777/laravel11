@@ -6,10 +6,11 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
+                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <center>
+                    <h2><b>Kelola Data</b></h2>
+                </center></div>
                 <div class="card-body">
-                    <center>
-                        <h2><b>Ubah Password</b></h2>
-                    </center><br><br>
                     <div class="text mb-4">
                         <p>Her content for Ubah Password...</p>
                     </div>

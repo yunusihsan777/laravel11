@@ -6,10 +6,11 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
-                <div class="card-body">
+                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
                     <center>
                         <h2><b>FAQ<br>Penggunaan Aplikasi SAKIP Kejaksaan RI</b></h2>
-                    </center><br><br>
+                    </center></div>
+                <div class="card-body">
                     <div class="faq-section">
                         <h4>1. Bagaimana cara login?</h4>
                         <p><strong>Jawaban:</strong> Untuk login gunakan akun sebagaimana telah diberikan.</p>

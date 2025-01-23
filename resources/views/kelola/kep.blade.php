@@ -5,12 +5,15 @@
 @section('content')
     <div class="content" id="content">
         <div class="container-fluid">
-            <h2>Keputusan</h2>
             <div class="card border-light shadow-sm">
+                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <center>
+                    <h2><b>Keputusan</b></h2>
+                </center></div>
                 <div class="card-body">
                     <center>
                         <h2><b>Sinergi Continuous Improvement - AKIP Kejaksaan RI</b></h2>
-                    </center><br><br>
+                    </center><br>
                     <div class="text mb-4">
                         <center>
                             <h5><b>Keputusan Tim Pelaksana AKIP Tahun {{ $tahun }}</b></h5>

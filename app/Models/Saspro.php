@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Saspro extends Model
+{
+    use HasFactory;
+
+    protected $table = 'sinori_sakip_saspro';
+
+    protected $fillable = [
+        'link',
+        'saspro_nama',
+        'saspro_penjelasan',
+        'lingkup',
+    ];
+    // Jika tidak ada timestamps
+    public $timestamps = false;
+}

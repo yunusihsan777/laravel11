@@ -5,8 +5,11 @@
 @section('content')
     <div class="content" id="content">
         <div class="container-fluid">
-            <h2>Perencanaan</h2>
             <div class="card" style="width: 100%;">
+                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <center>
+                    <h2><b>Perencanaan</b></h2>
+                </center></div>
                 <div class="card-body">
                     <!-- Cek tab aktif dari session atau default ke renstra -->
                     @php
@@ -717,6 +720,7 @@
                                                     <div class="col-md-6">
                                                         <div class="card mb-3">
                                                             <div class="card-header">
+                                                                
                                                                 <h5>{{ $singleIndikator->indikator_nama }}</h5>
                                                             </div>
                                                             <div class="card-body">
@@ -734,7 +738,7 @@
                                                                     <input type="hidden" name="id_indikator"
                                                                         value="{{ $singleIndikator->id }}">
                                                                     <p>Target Per Tahun:</p>
-
+                                                                    <input type="hidden" name="indikator_nama" value="{{ $singleIndikator->indikator_nama }}">
                                                                     <!-- Input Target Per Tahun -->
                                                                     <div class="mb-3 w-50">
                                                                         <div class="input-group">

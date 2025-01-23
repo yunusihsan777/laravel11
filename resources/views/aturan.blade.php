@@ -6,10 +6,11 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
-                <div class="card-body">
+                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
                     <center>
                         <h2><b>Sumber Aturan</b></h2>
-                    </center><br><br>
+                    </center></div>
+                <div class="card-body">
                     @if(session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}

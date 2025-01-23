@@ -6,7 +6,6 @@
     <!-- Main Content -->
     <div class="content" id="content">
         <div class="container-fluid">
-            <h2>Beranda</h2>
             {{-- <p class="lead">Overview of your account and activities.</p> --}}
 
             <!-- Dashboard Cards -->
@@ -15,8 +14,11 @@
 
                 <div class="col-md-12">
                     <div class="card shadow-sm mb-4">
+                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                        <center>
+                            <h2><b>Pengumuman</b></h2>
+                        </center></div>
                         <div class="card-body">
-                            <center><h4 class="card-title"><b>Pengumuman</b></h4></center>
                             @foreach ($pengumuman as $item)
                                 <div class="card shadow-sm mb-4">
                                     <div class="card-body">
@@ -144,10 +146,11 @@
                 <!-- Card untuk Gambar 1:1 -->
                 <div class="col-md-12">
                     <div class="card shadow-sm mb-4">
+                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                        <center>
+                            <h4><b>Gambaran Alur SAKIP</b></h4>
+                        </center></div>
                         <div class="card-body">
-                            <center>
-                                <h5 class="card-title"><b>Gambaran Alur SAKIP</b></h5>
-                                <center>
                                     <img src="{{ asset('gambar/sakip.png') }}" class="img-fluid" alt="sakip">
                         </div>
                     </div>
@@ -156,10 +159,11 @@
                 <!-- Card untuk Gambar 1:2 -->
                 <div class="col-md-6">
                     <div class="card shadow-sm mb-4">
+                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                        <center>
+                            <h4><b>Gambar SMART Goals for Project Management</b></h4>
+                        </center></div><br>
                         <div class="card-body">
-                            <center>
-                                <h5 class="card-title"><br><b>Gambar SMART Goals for Project Management</b></h5>
-                            </center>
                             <img src="{{ asset('gambar/smart.png') }}" class="img-fluid" alt="smart">
                         </div>
                     </div>
@@ -168,12 +172,13 @@
                 <!-- Card untuk Teks 1:2 -->
                 <div class="col-md-6">
                     <div class="card shadow-sm mb-4">
+                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                        <center>
+                            <h4><b>SMART Goals for Project Management</b></h4>
+                        </center></div><br>
                         <div class="card-body">
                             {{-- <h5 class="card-title"><b>Teks 1:2</b></h5> --}}
                             <p class="card-text">
-                                <center>
-                                    <h3><b>SMART Goals for Project Management</b></h3>
-                                </center>
 
                             <h4>1. Specific</h4>
                             <p>Ketika menetapkan tujuan untuk proyek yang akan kamu lakukan, tujuan tersebut harus jelas

@@ -1,16 +1,18 @@
 @extends('layouts.app')
 
 @section('title', 'SAKIP Wilayah')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
 
 @section('content')
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
-                <div class="card-body">
+                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
                     <center>
                         <h2><b>DATA PERENCANAAN AKIP SATUAN KERJA KEJAKSAAN RI</b></h2>
-                    </center><br>
+                    </center></div>
+                <div class="card-body">                    
 
                     <!-- List Pengumuman -->
                     <div class="table-responsive">
@@ -42,65 +44,71 @@
                                             <td>
                                                 @if (!empty($sortedKepList[$index]))
                                                     <a href="{{ asset('uploads/keputusan/' . $row->id_satker . '_' . $tahun . '.pdf') }}"
-                                                       target="_blank" class="text-success">
-                                                       &#10003; <!-- Tanda centang -->
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
                                                     </a>
                                                 @else
                                                     <span class="text-danger">-</span>
                                                 @endif
                                             </td>
-                                            <td>  @if (isset($renstra[$row->id_satker]) && $renstra[$row->id_satker]->isNotEmpty())
-                                                <!-- Ambil data renstra pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
-                                                @php
-                                                    $latestRenstra = $renstra[$row->id_satker]->first();
-                                                @endphp
-                                                <a href="{{ asset('uploads/renstra/renstra_' . $latestRenstra->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
-                                                   target="_blank" class="text-info">
-                                                    &#10003; <!-- Tanda centang -->
-                                                </a>
-                                            @else
-                                                <span class="text-danger">-</span>
-                                            @endif</td>
+                                            <td>
+                                                @if (isset($renstra[$row->id_satker]) && $renstra[$row->id_satker]->isNotEmpty())
+                                                    <!-- Ambil data renstra pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
+                                                    @php
+                                                        $latestRenstra = $renstra[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/renstra/renstra_' . $latestRenstra->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
                                             <td>
                                                 @if (isset($iku[$row->id_satker]) && $iku[$row->id_satker]->isNotEmpty())
-                                                <!-- Ambil data iku pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
-                                                @php
-                                                    $latestiku = $iku[$row->id_satker]->first();
-                                                @endphp
-                                                <a href="{{ asset('uploads/iku/iku_' . $latestiku->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
-                                                   target="_blank" class="text-info">
-                                                    &#10003; <!-- Tanda centang -->
-                                                </a>
-                                            @else
-                                                <span class="text-danger">-</span>
-                                            @endif
+                                                    <!-- Ambil data iku pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
+                                                    @php
+                                                        $latestiku = $iku[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/iku/iku_' . $latestiku->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
                                             </td>
-                                            <td>@if (isset($renja[$row->id_satker]) && $renja[$row->id_satker]->isNotEmpty())
-                                                <!-- Ambil data renja pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
+                                            <td>
+                                                @if (isset($renja[$row->id_satker]) && $renja[$row->id_satker]->isNotEmpty())
+                                                    <!-- Ambil data renja pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
+                                                    @php
+                                                        $latestrenja = $renja[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/renja/renja_' . $latestrenja->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ $row->dipa?? '-' }}</td>
+                                            <td>
+                                                @if (isset($renaksi[$row->id_satker]) && $renaksi[$row->id_satker]->isNotEmpty())
                                                 @php
-                                                    $latestrenja = $renja[$row->id_satker]->first();
+                                                    // Ambil data renaksi pertama untuk id_satker tertentu
+                                                    $latestRenaksi = $renaksi[$row->id_satker]->first();
                                                 @endphp
-                                                <a href="{{ asset('uploads/renja/renja_' . $latestrenja->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
-                                                   target="_blank" class="text-info">
+                                                <a href="{{ asset('uploads/renaksi/renaksi_' . $latestRenaksi->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                    target="_blank" class="text-success" style="text-decoration: none;">
                                                     &#10003; <!-- Tanda centang -->
                                                 </a>
                                             @else
                                                 <span class="text-danger">-</span>
                                             @endif
-                                        </td>
-                                            <td>{{ $row->renaksi ?? '-' }}</td>
-                                            <td>@if (isset($renaksi[$row->id_satker]) && $renaksi[$row->id_satker]->isNotEmpty())
-                                                <!-- Ambil data renaksi pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
-                                                @php
-                                                    $latestrenaksi = $renaksi[$row->id_satker]->first();
-                                                @endphp
-                                                <a href="{{ asset('uploads/renaksi/renaksi_' . $latestrenaksi->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
-                                                   target="_blank" class="text-info">
-                                                    &#10003; <!-- Tanda centang -->
-                                                </a>
-                                            @else
-                                                <span class="text-danger">-</span>
-                                            @endif</td>
+                                            
+                                            </td>
                                             <td>{{ $row->perjanjian_kinerja ?? '-' }}</td>
                                             <td>{{ $row->jumlah_indikator_kinerja ?? '-' }}</td>
                                             <td>{{ $row->status_pengukuran_kinerja ?? '-' }}</td>
@@ -109,21 +117,23 @@
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="13" class="text-center text-danger">Tidak ada data yang tersedia.</td> <!-- Pesan jika tidak ada data -->
+                                        <td colspan="13" class="text-center text-danger">Tidak ada data yang tersedia.
+                                        </td> <!-- Pesan jika tidak ada data -->
                                     </tr>
                                 @endif
                             </tbody>
                         </table>
                     </div>
                     <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="text-center">Distribusi Keputusan</h5>
-                        </div>
+                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                            <center>
+                                <h2><b>Distribusi Keputusan</b></h2>
+                            </center></div>
                         <div class="card-body">
                             <canvas id="pieChart"></canvas>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -132,6 +142,10 @@
 
     @section('style')
         <style>
+            .link-no-underline {
+    text-decoration: none;
+}
+
             .table-hover tbody tr:hover {
                 background-color: #f1f1f1;
             }
@@ -174,50 +188,49 @@
                 /* cursor: default; */
                 /* Mengubah kursor agar tidak menunjukkan sebagai link */
             }
-            
         </style>
-<script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const sortedKepList = @json($sortedKepList); // Mengambil data dari PHP
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const sortedKepList = @json($sortedKepList); // Mengambil data dari PHP
 
-        // Menghitung jumlah keputusan yang terisi dan belum terisi
-        const terisi = sortedKepList.filter(item => item).length; // Menghitung yang terisi
-        const belumTerisi = sortedKepList.length - terisi; // Menghitung yang belum terisi
+                // Menghitung jumlah keputusan yang terisi dan belum terisi
+                const terisi = sortedKepList.filter(item => item).length; // Menghitung yang terisi
+                const belumTerisi = sortedKepList.length - terisi; // Menghitung yang belum terisi
 
-        const ctx = document.getElementById('pieChart').getContext('2d');
-        const pieChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['Keputusan Terisi', 'Keputusan Belum Terisi'],
-                datasets: [{
-                    label: 'Jumlah Keputusan',
-                    data: [terisi, belumTerisi],
-                    backgroundColor: [
-                        'rgba(75, 192, 192, 0.6)', // Warna untuk terisi
-                        'rgba(255, 99, 132, 0.6)', // Warna untuk belum terisi
-                    ],
-                    borderColor: [
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(255, 99, 132, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
+                const ctx = document.getElementById('pieChart').getContext('2d');
+                const pieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Keputusan Terisi', 'Keputusan Belum Terisi'],
+                        datasets: [{
+                            label: 'Jumlah Keputusan',
+                            data: [terisi, belumTerisi],
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.6)', // Warna untuk terisi
+                                'rgba(255, 99, 132, 0.6)', // Warna untuk belum terisi
+                            ],
+                            borderColor: [
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(255, 99, 132, 1)',
+                            ],
+                            borderWidth: 1
+                        }]
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
-        });
-    });
-</script>
+                });
+            });
+        </script>

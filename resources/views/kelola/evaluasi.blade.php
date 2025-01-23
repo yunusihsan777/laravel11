@@ -5,47 +5,50 @@
 @section('content')
     <div class="content" id="content">
         <div class="container-fluid">
-            <h2>Evaluasi</h2>
-                <div class="card border-light shadow-sm">
-                    <div class="card-body">
-                        <!-- Tabs Navigation -->
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link active" id="evaluasi-internal-tab" data-bs-toggle="tab"
-                                    href="#evaluasi-internal" role="tab" aria-controls="evaluasi-internal"
-                                    aria-selected="true">Evaluasi Internal</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="evaluasi-rencana-tab" data-bs-toggle="tab" href="#evaluasi-rencana"
-                                    role="tab" aria-controls="evaluasi-rencana" aria-selected="false">Evaluasi Rencana
-                                    Aksi</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="radar-capaian-tab" data-bs-toggle="tab" href="#radar-capaian"
-                                    role="tab" aria-controls="radar-capaian" aria-selected="false">Radar Capaian</a>
-                            </li>
-                        </ul>
+            <div class="card border-light shadow-sm">
+                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                    <center>
+                        <h2><b>Evaluasi</b></h2>
+                    </center>
+                </div>
+                <div class="card-body">
+                    <!-- Tabs Navigation -->
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="evaluasi-internal-tab" data-bs-toggle="tab"
+                                href="#evaluasi-internal" role="tab" aria-controls="evaluasi-internal"
+                                aria-selected="true">Evaluasi Internal</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="evaluasi-rencana-tab" data-bs-toggle="tab" href="#evaluasi-rencana"
+                                role="tab" aria-controls="evaluasi-rencana" aria-selected="false">Evaluasi Rencana
+                                Aksi</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="radar-capaian-tab" data-bs-toggle="tab" href="#radar-capaian"
+                                role="tab" aria-controls="radar-capaian" aria-selected="false">Radar Capaian</a>
+                        </li>
+                    </ul>
 
-                        <!-- Tabs Content -->
-                        <div class="tab-content mt-3" id="myTabContent">
-                            <div class="tab-pane fade show active" id="evaluasi-internal" role="tabpanel"
-                                aria-labelledby="evaluasi-internal-tab">
-                                <h5>Evaluasi Internal</h5>
-                                <p>Content for Evaluasi Internal goes here.</p>
-                            </div>
-                            <div class="tab-pane fade" id="evaluasi-rencana" role="tabpanel"
-                                aria-labelledby="evaluasi-rencana-tab">
-                                <h5>Evaluasi Rencana Aksi</h5>
-                                <p>Content for Evaluasi Rencana Aksi goes here.</p>
-                            </div>
-                            <div class="tab-pane fade" id="radar-capaian" role="tabpanel"
-                                aria-labelledby="radar-capaian-tab">
-                                <h5>Radar Capaian</h5>
-                                <p>Content for Radar Capaian goes here.</p>
-                            </div>
+                    <!-- Tabs Content -->
+                    <div class="tab-content mt-3" id="myTabContent">
+                        <div class="tab-pane fade show active" id="evaluasi-internal" role="tabpanel"
+                            aria-labelledby="evaluasi-internal-tab">
+                            <h5>Evaluasi Internal</h5>
+                            <p>Content for Evaluasi Internal goes here.</p>
+                        </div>
+                        <div class="tab-pane fade" id="evaluasi-rencana" role="tabpanel"
+                            aria-labelledby="evaluasi-rencana-tab">
+                            <h5>Evaluasi Rencana Aksi</h5>
+                            <p>Content for Evaluasi Rencana Aksi goes here.</p>
+                        </div>
+                        <div class="tab-pane fade" id="radar-capaian" role="tabpanel" aria-labelledby="radar-capaian-tab">
+                            <h5>Radar Capaian</h5>
+                            <p>Content for Radar Capaian goes here.</p>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 @endsection

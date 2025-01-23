@@ -321,7 +321,7 @@ class PerencanaanController extends Controller
             SinoriSakipPidum::create([
                 'id_indikator' => $request->input('id_indikator'),
                 'target_indikator' => $request->input('target_indikator'),
-                'indikator' => $request->input('indikator'),
+                'indikator' => $request->input('indikator_nama'),
                 'id_satker' => $idSatker,
                 'id_tahun' => $tahun,
                 'tw1' => $request->input('tw1'),
