@@ -22,15 +22,17 @@ Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout
 // use App\Http\Controllers\YearSelectionController;
 // Route::get('/select-year', [YearSelectionController::class, 'index'])->name('select.year');
 // Route::post('/select-year', [YearSelectionController::class, 'store'])->name('store.year');
-
+use App\Http\Controllers\TahunController;
 // Handle pemilihan tahun
-Route::get('/pilih-tahun', [App\Http\Controllers\TahunController::class, 'showTahunForm'])->name('pilih.tahun');
+Route::get('/pilih-tahun', [TahunController::class, 'showTahunForm'])->name('pilih.tahun');
 // Route untuk menangani pemilihan tahun
-Route::post('/pilih2-tahun', [App\Http\Controllers\TahunController::class, 'setTahun'])->name('set.tahun');
+Route::post('/pilih2-tahun', [TahunController::class, 'setTahun'])->name('set.tahun');
 
-Route::post('/pilih-tahun', [App\Http\Controllers\TahunController::class, 'pilihTahun'])->name('pilih_tahun');
+Route::post('/pilih-tahun', [TahunController::class, 'pilihTahun'])->name('pilih_tahun');
 // Route untuk dashboard, data berdasarkan tahun yang dipilih
 // Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+
+Route::post('/set-bulan', [TahunController::class, 'setBulan'])->name('set.bulan');
 
 use App\Http\Controllers\DashboardController;
 
@@ -47,9 +49,12 @@ Route::post('/perencanaan/upload-renaksi', [PerencanaanController::class, 'uploa
 
 Route::get('/perencanaan/indikator', [PerencanaanController::class, 'showIndikator'])->name('perencanaan.indikator');
 Route::post('/perencanaan/store', [PerencanaanController::class, 'store'])->name('perencanaan.store');
+Route::post('/target/store', [PerencanaanController::class, 'storetarget'])->name('target.store');
 
 use App\Http\Controllers\PengukuranController;
+// Route::post('/pengukuran/store', [PengukuranController::class, 'store'])->name('pengukuran.store');
 Route::post('/pengukuran/store', [PengukuranController::class, 'store'])->name('pengukuran.store');
+Route::get('/pengukuran/indikator', [PengukuranController::class, 'getIndikator'])->name('pengukuran.getIndikator');
 
 use App\Http\Controllers\PelaporanController;
 
@@ -85,6 +90,16 @@ Route::post('/keloladata/storeOrUpdateBidang', [KelolaDataController::class, 'st
 // Route::get('/keloladata', [KelolaDataController::class, 'search'])->name('keloladata');
 Route::get('/keloladata/edit/{id}', [KelolaDataController::class, 'edit'])->name('bidang.edit');
 Route::delete('/keloladata/destroy/{id}', [KelolaDataController::class, 'destroy'])->name('bidang.destroy');
+// Route::delete('/saspro/{id}', [KelolaDataController::class, 'destroySaspro'])->name('saspro.destroy');
+// Route::put('/saspro/{id}', [KeloladataController::class, 'sasproUpdate'])->name('saspro.update');
+// Route::put('/keloladata/{id}', [KeloladataController::class, 'sasproUpdate'])->name('saspro.update');
+Route::post('/keloladata/update/{id}', [KeloladataController::class, 'sasproUpdate'])->name('saspro.update');
+Route::delete('/keloladata/delete/{id}', [KeloladataController::class, 'destroySaspro'])->name('saspro.destroy');
+Route::post('/indikator/store', [KelolaDataController::class, 'storeIndikator'])->name('indikator.store');
+Route::get('/kelola-data', [KelolaDataController::class, 'index'])->name('kelola_data.index');
+Route::post('/indikator/delete/{id}', [KelolaDataController::class, 'deleteIndikator'])->name('indikator.delete');
+Route::post('/indikator/update/{id}', [KelolaDataController::class, 'updateIndikator'])->name('indikator.update');
+
 
 use App\Http\Controllers\UbahpasswordController;
 // Handle Auth

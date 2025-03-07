@@ -15,16 +15,28 @@ class Indikator extends Model
     // Kolom yang dapat diisi
     protected $fillable = [
         'id_bidang',
-        'tipe',
+        // 'tipe',
         'link',
         'lingkup',
         'indikator_nama',
         'indikator_pembilang',
         'indikator_penyebut',
         'indikator_penjelasan',
-        'matrix',
+        'sub_indikator',
     ];
 
     // Jika tidak ada timestamps
     public $timestamps = false;
+
+    // Relasi berdasarkan id_bidang
+    public function bidangById()
+    {
+        return $this->belongsTo(Bidang::class, 'id_bidang', 'id');
+    }
+
+    // Relasi berdasarkan link dan rumpun
+    public function bidangByLink()
+    {
+        return $this->belongsTo(Bidang::class, 'link', 'rumpun');
+    }
 }

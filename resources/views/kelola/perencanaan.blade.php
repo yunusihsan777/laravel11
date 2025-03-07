@@ -7,9 +7,10 @@
         <div class="container-fluid">
             <div class="card" style="width: 100%;">
                 <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
-                <center>
-                    <h2><b>Perencanaan</b></h2>
-                </center></div>
+                    <center>
+                        <h2><b>Perencanaan</b></h2>
+                    </center>
+                </div>
                 <div class="card-body">
                     <!-- Cek tab aktif dari session atau default ke renstra -->
                     @php
@@ -73,7 +74,9 @@
                                     }
                                 @endphp
                                 <h3><strong>Rencana Strategis (Renstra) Tahun {{ $id_tahun }}</strong></h3>
-                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Rencana Strategis (Renstra) merupakan dokumen perencanaan yang menetapkan tujuan, sasaran, strategi, kebijakan, program, dan kegiatan pembangunan dalam jangka waktu lima tahun.</p>
+                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Rencana Strategis
+                                    (Renstra) merupakan dokumen perencanaan yang menetapkan tujuan, sasaran, strategi,
+                                    kebijakan, program, dan kegiatan pembangunan dalam jangka waktu lima tahun.</p>
 
                                 <!-- Form Upload File -->
                                 <div>
@@ -143,7 +146,8 @@
                             role="tabpanel" aria-labelledby="iku-tab">
                             <div class="iku-content">
                                 <h3><strong>Indikator Kinerja Utama (IKU)</strong></h3>
-                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Indikator Kinerja Utama (IKU) merupakan dokumen ....</p>
+                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Indikator
+                                    Kinerja Utama (IKU) merupakan dokumen ....</p>
 
                                 <!-- Form Upload File -->
                                 <div>
@@ -212,9 +216,11 @@
                             role="tabpanel" aria-labelledby="renja-tab">
                             <div class="renja-content">
                                 <h3><strong>Rencana Kerja Tahunan</strong></h3>
-                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Rencana Kinerja Tahunan (RKT) merupakan penjabaran dari sasaran dan program yang telah
+                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Rencana Kinerja
+                                    Tahunan (RKT) merupakan penjabaran dari sasaran dan program yang telah
                                     ditetapkan dalam Iku, dan akan dilaksanakan oleh satuan organisasi/kerja melalui
-                                    berbagai kegiatan tahunan. <br> Rencana Kinerja Tahunan (RKT) adalah dokumen perencanaan untuk periode 1 (satu) tahun
+                                    berbagai kegiatan tahunan. <br> Rencana Kinerja Tahunan (RKT) adalah dokumen perencanaan
+                                    untuk periode 1 (satu) tahun
                                     sebagai penjabaran dari sasaran dan program yang telah ditetapkan dalam Rencana
                                     Startegis (Iku) mencangkup periode tahunan yang sifatnya sangat strategis karena
                                     menjembatani perencanaan strategis jangka menengah dengan perencanaan tahunan. Dengan
@@ -292,7 +298,8 @@
                             role="tabpanel" aria-labelledby="rkakl-tab">
                             <div class="rkakl-content">
                                 <h3><strong>Rencana Kerja Anggaran Kementerian atau Lembaga</strong></h3>
-                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Data Kebutuhan Riil (Periode Awal tahun dengan rumus -1 TA) silahkan masukkan data
+                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Data Kebutuhan
+                                    Riil (Periode Awal tahun dengan rumus -1 TA) silahkan masukkan data
                                     kebutuhan RIIL satker anda.
                                     Rencana Kerja Anggaran (RKA) bertujuan untuk merencanakan penganggaran kebutuhan dana
                                     dari berbagai program dan kegiatan di masa yang akan datang. Dengan Penyusunan RKA dapat
@@ -368,7 +375,8 @@
                             role="tabpanel" aria-labelledby="dipa-tab">
                             <div class="dipa-content">
                                 <h3><strong>Daftar Isian Pelaksanaan Anggaran (DIPA)</strong></h3>
-                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Daftar Isian Pelaksanaan Anggaran (DIPA) ...</p>
+                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Daftar Isian
+                                    Pelaksanaan Anggaran (DIPA) ...</p>
 
                                 <!-- Form Upload File -->
                                 <div>
@@ -444,7 +452,8 @@
                             role="tabpanel" aria-labelledby="renaksi-tab">
                             <div class="renaksi-content">
                                 <h3><strong>Rencana Kerja Anggaran Kementerian atau Lembaga</strong></h3>
-                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Data Kebutuhan Riil (Periode Awal tahun dengan rumus -1 TA) silahkan masukkan data
+                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Data Kebutuhan
+                                    Riil (Periode Awal tahun dengan rumus -1 TA) silahkan masukkan data
                                     kebutuhan RIIL satker anda.
                                     Rencana Kerja Anggaran (RKA) bertujuan untuk merencanakan penganggaran kebutuhan dana
                                     dari berbagai program dan kegiatan di masa yang akan datang. Dengan Penyusunan RKA dapat
@@ -519,8 +528,6 @@
 
                         </div>
 
-
-
                         <div class="tab-pane  fade {{ $activeTab == 'perjanjian-kinerja' ? 'show active' : '' }}"
                             id="perjanjian-kinerja" role="tabpanel" aria-labelledby="perjanjian-kinerja-tab">
                             <!-- Card untuk Bidang Kajari -->
@@ -531,402 +538,203 @@
                                 </div>
                             @endif
                             <h3><strong>Perjanjian Kinerja</strong></h3>
-                            <div class="card">
+                            <p class="card-title p-2" style="background-color: #f1e022; color: black;">Pengisian Target Perjanjian Kinerja</p>
+                                                        @php
+                            // Ambil bidang yang memiliki bidang_lokasi = id_sakip_level (hanya jika session id_sakip_level = 3)
+                            $bidangs = session('id_sakip_level') == 3 ? \App\Models\Bidang::where('bidang_lokasi', 3)->get() : [];
+                        @endphp
+                        
+                        @foreach ($bidangs as $index => $bidang)
+                            @php
+                                // Ambil indikator yang memiliki link sesuai dengan rumpun bidang
+                                $indikators = \App\Models\Indikator::where('link', $bidang->rumpun)->get();
+                            @endphp
+                        
+                            <div class="card mb-2">
                                 <div class="card-header d-flex justify-content-between align-items-center"
-                                    style="background-color: #e74a4a; color: white;">
-                                    Kajari
-                                    <a data-bs-toggle="collapse" href="#collapseKajari" role="button"
-                                        aria-expanded="false" aria-controls="collapseKajari">
-                                        <i class="bi bi-chevron-down text-white"></i> <!-- Menggunakan ikon Bootstrap -->
+                                    style="background-color: #e6bf3e; color: white;">
+                                    {{ $bidang->bidang_nama }}
+                                    <a data-bs-toggle="collapse" href="#collapseBidang{{ $index }}" role="button"
+                                        aria-expanded="false" aria-controls="collapseBidang{{ $index }}">
+                                        <i class="bi bi-chevron-down text-white"></i> <!-- Ikon Bootstrap -->
                                     </a>
                                 </div>
-
-                                <div id="collapseKajari" class="collapse">
+                        
+                                <div id="collapseBidang{{ $index }}" class="collapse">
                                     <div class="card-body">
-                                        <h5 class="card-title p-2" style="background-color: #f1e022; color: black;">
-                                            1. Terwujudnya Upaya
-                                            Pencegahan Tindak
-                                            Pidana Korupsi</h5>
-
-                                        {{-- <div class="row">
-                                        <!-- Indikator 2.1 -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="card">
-                                                <div class="card-header text-dark">
-                                                    1.1. Persentase Kegiatan yang Mendukung
-                                                    Upaya Pencegahan Tindak Pidana
-                                                    Korupsi
-                                                </div>
-                                                <div class="card-body">
-                                                    <input type="number" class="form-control mb-3"
-                                                        placeholder="Masukkan target dalam %">
-                                                    <button type="submit" class="btn"
-                                                        style="background-color: #39b65c; color: white;">Simpan</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <h5 class="card-title p-2" style="background-color: #f1e022; color: black;">2.
-                                        Meningkatnya Keberhasilan
-                                        Penyelesaian Tindak Pidana</h5>
-
-                                    <div class="row">
-                                        <!-- Indikator 2.1 -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="card">
-                                                <div class="card-header text-dark">
-                                                    2.1. Persentase Penyelesaian Tindak Pidana Umum yang Mempunyai
-                                                    Kekuatan Hukum Tetap yang Telah Dieksekusi
-                                                </div>
-                                                <div class="card-body">
-                                                    <input type="number" class="form-control mb-3"
-                                                        placeholder="Masukkan target dalam %">
-                                                    <button type="submit" class="btn"
-                                                        style="background-color: #39b65c; color: white;">Simpan</button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Indikator 3.2 -->
-                                        <div class="col-md-6 mb-3">
-                                            <div class="card">
-                                                <div class="card-header text-dark">
-                                                    2.2. Persentase Penyelesaian Tindak Pidana Khusus yang Mempunyai
-                                                    Kekuatan Hukum Tetap yang Telah Dieksekusi
-                                                </div>
-                                                <div class="card-body">
-                                                    <input type="number" class="form-control mb-3"
-                                                        placeholder="Masukkan target dalam %">
-                                                    <button type="submit" class="btn"
-                                                        style="background-color: #39b65c; color: white;">Simpan</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
-                                    </div>
-                                </div><br>
-
-                                <div class="card">
-                                    <div class="card-header d-flex justify-content-between align-items-center"
-                                        style="background-color: #e74a4a; color: white;">
-                                        Kasubagbin
-                                        <a data-bs-toggle="collapse" href="#collapseBidangPembinaan" role="button"
-                                            aria-expanded="false" aria-controls="collapseBidangPembinaan">
-                                            <i class="bi bi-chevron-down text-white"></i>
-                                            <!-- Menggunakan ikon Bootstrap -->
-                                        </a>
-                                    </div>
-
-                                    <div id="collapseBidangPembinaan" class="collapse">
-                                        <div class="card-body">
-                                            <h5 class="card-title p-2" style="background-color: #f1e022; color: black;">
-                                                2.1. Persentase Penyelesaian Perkara Tindak Pidana Umum yang Memperoleh
-                                                Kekuatan Hukum Tetap dan Dieksekusi</h5>
-
-                                            {{-- <div class="row">
-                                        @foreach ($indikator as $singleIndikator)
-                                            <div class="col-md-6">
-                                                <div class="card mb-3">
-                                                    <div class="card-header">
-                                                        <h5>{{ $singleIndikator->indikator_nama }}</h5>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <p><strong>Pembilang:</strong> {{ $singleIndikator->indikator_pembilang }}</p>
-                                                        <p>-------------------------------------------------- x100</p>
-                                                        <p><strong>Penyebut:</strong> {{ $singleIndikator->indikator_penyebut }}</p>
-                                                    </div> 
-                                                    <div class="card-body">
-                                                        <form action="{{ route('perencanaan.store') }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="id_indikator" value="{{ $singleIndikator->id }}">
-                                                            <p>Target Per Tahun:</p>
-                                    
-                                                            <!-- Input Target Per Tahun -->
-                                                            <div class="mb-3 w-50">
-                                                                <div class="input-group">
-                                                                    <input type="number" class="form-control" name="target_indikator" placeholder="Masukkan target dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->target_indikator : '' }}">
-                                                                    <span class="input-group-text">%</span>
-                                                                </div>
-                                                            </div>
-                                    
-                                                            <!-- Input TW1 - TW4 -->
-                                                            <div class="d-flex flex-row justify-content-between mb-3">
-                                                                <div class="w-25">
-                                                                    <label>Target TW1:</label>
-                                                                    <div class="input-group">
-                                                                        <input type="number" class="form-control" name="tw1" placeholder="Masukkan target TW1 dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw1 : '' }}">
-                                                                        <span class="input-group-text">%</span>
-                                                                    </div>
-                                                                </div>
-                                    
-                                                                <div class="w-25">
-                                                                    <label>Target TW2:</label>
-                                                                    <div class="input-group">
-                                                                        <input type="number" class="form-control" name="tw2" placeholder="Masukkan target TW2 dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw2 : '' }}">
-                                                                        <span class="input-group-text">%</span>
-                                                                    </div>
-                                                                </div>
-                                    
-                                                                <div class="w-25">
-                                                                    <label>Target TW3:</label>
-                                                                    <div class="input-group">
-                                                                        <input type="number" class="form-control" name="tw3" placeholder="Masukkan target TW3 dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw3 : '' }}">
-                                                                        <span class="input-group-text">%</span>
-                                                                    </div>
-                                                                </div>
-                                    
-                                                                <div class="w-25">
-                                                                    <label>Target TW4:</label>
-                                                                    <div class="input-group">
-                                                                        <input type="number" class="form-control" name="tw4" placeholder="Masukkan target TW4 dalam %" value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw4 : '' }}">
-                                                                        <span class="input-group-text">%</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                    
-                                                            <button type="submit" class="btn" style="background-color: #39b65c; color: white;">
-                                                                Simpan
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div> --}}
-
-                                        </div>
-                                    </div>
-
-                                    <div class="card">
-                                        <div class="card-header d-flex justify-content-between align-items-center"
-                                            style="background-color: #e74a4a; color: white;">
-                                            Kasi Pidum
-                                            <a data-bs-toggle="collapse" href="#collapseBidangPidum" role="button"
-                                                aria-expanded="false" aria-controls="collapseBidangPidum">
-                                                <i class="bi bi-chevron-down text-white"></i>
-                                                <!-- Menggunakan ikon Bootstrap -->
-                                            </a>
-                                        </div>
-
-                                        {{-- <div id="collapseBidangPidum" class="collapse"> --}}
-                                        <div class="card-body">
-                                            <h5 class="card-title p-2" style="background-color: #f1e022; color: black;">
-                                                2.1. Persentase Penyelesaian Perkara Tindak Pidana Umum yang Memperoleh
-                                                Kekuatan Hukum Tetap dan Dieksekusi</h5>
-
+                                        @if ($indikators->isNotEmpty())
                                             <div class="row">
-                                                @foreach ($indikator as $singleIndikator)
+                                                @foreach ($indikators as $key => $indikator)
                                                     <div class="col-md-6">
-                                                        <div class="card mb-3">
-                                                            <div class="card-header">
-                                                                
-                                                                <h5>{{ $singleIndikator->indikator_nama }}</h5>
-                                                            </div>
+                                                        <div class="card mb-2">
                                                             <div class="card-body">
-                                                                <p><strong>Pembilang:</strong>
-                                                                    {{ $singleIndikator->indikator_pembilang }}</p>
-                                                                <p>-------------------------------------------------- x100
-                                                                </p>
-                                                                <p><strong>Penyebut:</strong>
-                                                                    {{ $singleIndikator->indikator_penyebut }}</p>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <form action="{{ route('perencanaan.store') }}"
-                                                                    method="POST">
+                                                                <!-- Indikator Nama -->
+                                                                <h5 class="text-center" style="font-weight: bold; color: black;">
+                                                                    {{ $indikator->indikator_nama }}
+                                                                </h5>
+                        
+                        
+                                                                <!-- Form Target -->
+                                                                <form method="POST" action="{{ route('target.store') }}">
                                                                     @csrf
-                                                                    <input type="hidden" name="id_indikator"
-                                                                        value="{{ $singleIndikator->id }}">
-                                                                    <p>Target Per Tahun:</p>
-                                                                    <input type="hidden" name="indikator_nama" value="{{ $singleIndikator->indikator_nama }}">
-                                                                    <!-- Input Target Per Tahun -->
-                                                                    <div class="mb-3 w-50">
-                                                                        <div class="input-group">
-                                                                            <input type="number" class="form-control"
-                                                                                name="target_indikator"
-                                                                                placeholder="Masukkan target dalam %"
-                                                                                value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->target_indikator : '' }}">
-                                                                            <span class="input-group-text">%</span>
-                                                                        </div>
+                                                                    <input type="hidden" name="indikator_id" value="{{ $indikator->id }}">
+                        
+                                                                   
+                                                                    <div class="mb-2">
+                                                                        <label class="form-label">Target Pertahun (%)</label>
+                                                                        <input type="number" class="form-control" name="target_tahun" 
+                                                                            value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
                                                                     </div>
-
-                                                                    <!-- Input TW1 - TW4 -->
-                                                                    <div
-                                                                        class="d-flex flex-row justify-content-between mb-3">
-                                                                        <div class="w-25">
-                                                                            <label>Target TW1:</label>
-                                                                            <div class="input-group">
-                                                                                <input type="number" class="form-control"
-                                                                                    name="tw1"
-                                                                                    placeholder="Masukkan target TW1 dalam %"
-                                                                                    value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw1 : '' }}">
-                                                                                <span class="input-group-text">%</span>
+                                                                    
+                                                                    <div class="row">
+                                                                        @for ($i = 1; $i <= 4; $i++)
+                                                                            <div class="col-md-6">
+                                                                                <label class="form-label">Triwulan {{ $i }} (%)</label>
+                                                                                <input type="number" class="form-control" name="target_triwulan_{{ $i }}" 
+                                                                                    value="{{ $target[$indikator->id]->{'target_triwulan_'.$i} ?? '' }}">
                                                                             </div>
-                                                                        </div>
-
-                                                                        <div class="w-25">
-                                                                            <label>Target TW2:</label>
-                                                                            <div class="input-group">
-                                                                                <input type="number" class="form-control"
-                                                                                    name="tw2"
-                                                                                    placeholder="Masukkan target TW2 dalam %"
-                                                                                    value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw2 : '' }}">
-                                                                                <span class="input-group-text">%</span>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="w-25">
-                                                                            <label>Target TW3:</label>
-                                                                            <div class="input-group">
-                                                                                <input type="number" class="form-control"
-                                                                                    name="tw3"
-                                                                                    placeholder="Masukkan target TW3 dalam %"
-                                                                                    value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw3 : '' }}">
-                                                                                <span class="input-group-text">%</span>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="w-25">
-                                                                            <label>Target TW4:</label>
-                                                                            <div class="input-group">
-                                                                                <input type="number" class="form-control"
-                                                                                    name="tw4"
-                                                                                    placeholder="Masukkan target TW4 dalam %"
-                                                                                    value="{{ isset($indikator_pidum[$singleIndikator->id]) ? $indikator_pidum[$singleIndikator->id]->tw4 : '' }}">
-                                                                                <span class="input-group-text">%</span>
-                                                                            </div>
-                                                                        </div>
+                                                                        @endfor
                                                                     </div>
+                                                                    
 
-                                                                    <button type="submit" class="btn"
-                                                                        style="background-color: #39b65c; color: white;">
-                                                                        Simpan
-                                                                    </button>
+                        
+                                                                    <br>
+                                                                    <button type="submit" class="btn btn-success w-100">Simpan</button>
                                                                 </form>
                                                             </div>
                                                         </div>
                                                     </div>
+                        
+                                                    @if(($key + 1) % 2 == 0)
+                                                        </div><div class="row"> <!-- Tutup & Buka Row Setiap 2 Indikator -->
+                                                    @endif
                                                 @endforeach
                                             </div>
-
-                                        </div>
+                                        @else
+                                            <p><i>Tidak ada indikator terkait</i></p>
+                                        @endif
                                     </div>
-
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        @endforeach
+                        
 
-                </div>
+
             </div>
+
         </div>
-    @endsection
+    </div>
 
-    @section('styles')
-        <style>
-            /* Ensure the container and card take full width */
-            .container {
-                max-width: 100%;
+    </div>
+    </div>
+    </div>
+@endsection
+
+@section('styles')
+    <style>
+        /* Ensure the container and card take full width */
+        .container {
+            max-width: 100%;
+        }
+
+        /* Full-width tabs with 100% width card */
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        /* Styling for the tabs */
+        .nav-tabs .nav-link {
+            width: 12.5%;
+            /* Make each tab take equal space */
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+        }
+
+        /* Active tab styling */
+        .nav-tabs .nav-link.active {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        /* Hover effect for the tabs */
+        .nav-tabs .nav-link:hover {
+            border-color: #007bff;
+        }
+
+        /* Styling for tab content */
+        .tab-content {
+            border-top: 1px solid #ddd;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #fff;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+        .table-bordered {
+            border: 1px solid #dee2e6;
+        }
+
+        .table thead th {
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+        }
+    </style>
+@endsection
+
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Menghilangkan alert setelah 5 detik
+        setTimeout(function() {
+            let successAlert = document.getElementById('success-alert');
+            if (successAlert) {
+                successAlert.style.transition = 'opacity 0.5s ease';
+                successAlert.style.opacity = '0';
+                setTimeout(() => successAlert.remove(), 500); // Hapus elemen setelah transisi selesai
             }
+        }, 5000); // 5 detik
+    </script>
+    <!-- Script to Show/Hide Sections Based on Selected Bidang -->
+    <script>
+        document.getElementById('bidang').addEventListener('change', function() {
+            var kajariSection = document.getElementById('kajari-section');
+            var pidumSection = document.getElementById('pidum-section');
 
-            /* Full-width tabs with 100% width card */
-            .card {
-                border-radius: 15px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                background-color: #fff;
+            if (this.value === 'kajari') {
+                kajariSection.style.display = 'block';
+                pidumSection.style.display = 'none';
+            } else if (this.value === 'pidum') {
+                kajariSection.style.display = 'none';
+                pidumSection.style.display = 'block';
+            } else {
+                kajariSection.style.display = 'none';
+                pidumSection.style.display = 'none';
             }
+        });
 
-            /* Styling for the tabs */
-            .nav-tabs .nav-link {
-                width: 12.5%;
-                /* Make each tab take equal space */
-                text-align: center;
-                border: 1px solid #ddd;
-                border-radius: 0.25rem;
-            }
-
-            /* Active tab styling */
-            .nav-tabs .nav-link.active {
-                color: #fff;
-                background-color: #007bff;
-                border-color: #007bff;
-            }
-
-            /* Hover effect for the tabs */
-            .nav-tabs .nav-link:hover {
-                border-color: #007bff;
-            }
-
-            /* Styling for tab content */
-            .tab-content {
-                border-top: 1px solid #ddd;
-                padding: 15px;
-                background-color: #f8f9fa;
-            }
-
-            .table-hover tbody tr:hover {
-                background-color: #f1f1f1;
-            }
-
-            .btn-warning {
-                background-color: #ffc107;
-                border-color: #ffc107;
-                color: #fff;
-            }
-
-            .btn-warning:hover {
-                background-color: #e0a800;
-                border-color: #d39e00;
-            }
-
-            .table-bordered {
-                border: 1px solid #dee2e6;
-            }
-
-            .table thead th {
-                border-bottom: 2px solid #dee2e6;
-            }
-
-            .table td,
-            .table th {
-                vertical-align: middle;
-            }
-        </style>
-    @endsection
-
-    @section('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-        <script>
-            // Menghilangkan alert setelah 5 detik
-            setTimeout(function() {
-                let successAlert = document.getElementById('success-alert');
-                if (successAlert) {
-                    successAlert.style.transition = 'opacity 0.5s ease';
-                    successAlert.style.opacity = '0';
-                    setTimeout(() => successAlert.remove(), 500); // Hapus elemen setelah transisi selesai
-                }
-            }, 5000); // 5 detik
-        </script>
-        <!-- Script to Show/Hide Sections Based on Selected Bidang -->
-        <script>
-            document.getElementById('bidang').addEventListener('change', function() {
-                var kajariSection = document.getElementById('kajari-section');
-                var pidumSection = document.getElementById('pidum-section');
-
-                if (this.value === 'kajari') {
-                    kajariSection.style.display = 'block';
-                    pidumSection.style.display = 'none';
-                } else if (this.value === 'pidum') {
-                    kajariSection.style.display = 'none';
-                    pidumSection.style.display = 'block';
-                } else {
-                    kajariSection.style.display = 'none';
-                    pidumSection.style.display = 'none';
-                }
-            });
-
-            // Initialize the correct section to be displayed
-            document.getElementById('bidang').dispatchEvent(new Event('change'));
-        </script>
-    @endsection
+        // Initialize the correct section to be displayed
+        document.getElementById('bidang').dispatchEvent(new Event('change'));
+    </script>
+@endsection

@@ -38,4 +38,16 @@ class TahunController extends Controller
         // Redirect ke dashboard
         return redirect()->back();
     }
+
+    public function setBulan(Request $request)
+{
+    $request->validate([
+        'bulan' => 'required|integer|min:1|max:12',
+    ]);
+
+    session(['bulan_terpilih' => $request->bulan]); // Simpan bulan ke session
+
+    return response()->json(['success' => true, 'bulan' => $request->bulan]);
+}
+
 }

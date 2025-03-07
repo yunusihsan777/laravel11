@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\SinoriSakipPidum;
-use App\Models\SinoriSakipPidumDetail;
-use Illuminate\Support\Facades\DB;
+use App\Models\Indikator;
+use App\Models\Pengukuran;
 
 class PengukuranController extends Controller
 {
@@ -16,93 +15,121 @@ class PengukuranController extends Controller
             return redirect()->route('pilih.tahun');
         }
 
-        // Ambil tahun yang dipilih dari session
-        $tahun = session('tahun_terpilih');
-        // Ambil nilai id_satker dari session
-        $id_satker = session('id_satker');
-        $indicatorIds = [22, 23, 24, 25]; // Inisialisasi ID indikator di controller
-        $indikator_pidum = SinoriSakipPidum::getData($id_satker, $tahun, $indicatorIds);
-
-        // Ambil data dari tabel sinori_sakip_pidum dan sinori_sakip_indikator yang digabungkan
-        $indikators = DB::table('sinori_sakip_pidum')
-            ->join('sinori_sakip_indikator', 'sinori_sakip_pidum.id_indikator', '=', 'sinori_sakip_indikator.id')
-            ->where('sinori_sakip_pidum.id_satker', $id_satker)
-            ->where('sinori_sakip_pidum.id_tahun', $tahun)
-            ->whereIn('sinori_sakip_pidum.id_indikator', $indicatorIds)
-            ->select('sinori_sakip_pidum.*', 'sinori_sakip_indikator.*')
-            ->get();
-        // dd($indikators);
-        // Proses data untuk memisahkan nilai matrix berdasarkan tanda titik (.)
-        foreach ($indikators as $indikator) {
-            $matrix_parts = explode(',', $indikator->matrix);
-
-            // Cek jika ada lebih dari satu bagian setelah pemisahan
-            if (count($matrix_parts) > 1) {
-                $indikator->before_dot = $matrix_parts[0]; // Sebelum titik
-                $indikator->after_dot = $matrix_parts[1];  // Setelah titik
-            } else {
-                $indikator->before_dot = $indikator->matrix; // Tidak ada titik
-                $indikator->after_dot = null;  // Kosongkan jika tidak ada
-            }
-        }
-
-        // Ambil tahun yang dipilih dari session
-        $tahun = session('tahun_terpilih');
-        // dd($indikator_pidum);
-        return view('kelola.pengukuran', ['tahun' => $tahun, 'indikator_pidum' => $indikator_pidum, 'indikator' => $indikator, 'indikators' => $indikators]);
+        return view('kelola.pengukuran', [
+            'tahun' => session('tahun_terpilih')
+        ]);
     }
 
-    public function store(Request $request)
+   // Fungsi untuk mendapatkan indikator berdasarkan bidang (AJAX)
+   public function getIndikator(Request $request)
 {
-    $bulan = $request->input('bulan');
-    $idSatker = session('id_satker');
-    $tahun = session('tahun_terpilih');
-    $idIndikator = $request->input('id_indikator');
-    if (is_null($bulan)) {
-        return redirect()->back()->withErrors(['bulan' => 'Bulan tidak ditemukan.']);
+    $bidang_id = $request->bidang_id;
+    $bulan = $request->bulan ?? date('n'); // Gunakan bulan sekarang jika tidak dipilih
+
+    $indikators = \App\Models\Indikator::where('link', $bidang_id)
+        ->whereNotNull('sub_indikator')
+        ->where('sub_indikator', '!=', '')
+        ->get();
+
+    if ($indikators->isEmpty()) {
+        return '<p class="text-center"><i>Tidak ada indikator tersedia.</i></p>';
     }
-    // Mengambil indikator spesifik berdasarkan id_indikator yang disubmit
-    $indikator = DB::table('sinori_sakip_pidum')
-        ->join('sinori_sakip_indikator', 'sinori_sakip_pidum.id_indikator', '=', 'sinori_sakip_indikator.id')
-        ->where('sinori_sakip_pidum.id_satker', $idSatker)
-        ->where('sinori_sakip_pidum.id_tahun', $tahun)
-        ->where('sinori_sakip_pidum.id_indikator', $idIndikator)
-        ->select('sinori_sakip_pidum.*', 'sinori_sakip_indikator.*')
-        ->first();
 
-    if ($indikator) {
-        // Update atau Insert
-        $existingData = SinoriSakipPidumDetail::where([
-            'id' => $idIndikator,
-            'id_satker' => $idSatker,
-            'bulan' => $bulan,
-        ])->first();
+    $html = '';
+    foreach ($indikators as $indikator) {
+        $sub_indikators = explode(',', $indikator->sub_indikator);
 
-        $data = [
-            'ditangani' => $request->input('ditangani_before', 0) + $request->input('ditangani_after', 0),
-            'diselesaikan' => $request->input('diselesaikan_before', 0) + $request->input('diselesaikan_after', 0),
-            'faktor' => $request->input('faktor'),
-            'upaya' => $request->input('upaya'),
-            'updated_at' => now(),
-        ];
+        $html .= "<h5 class='mt-4 p-2 bg-warning text-dark'><strong>📌 Indikator: {$indikator->indikator_nama}</strong></h5>";
+        $html .= "<form action='" . route('pengukuran.store') . "' method='POST'>";
+        $html .= csrf_field();
+        $html .= "<input type='hidden' name='indikator_id' value='{$indikator->id}'>";
+        $html .= "<input type='hidden' name='bulan' value='{$bulan}'>"; // Simpan bulan yang dipilih
+        $html .= "<table class='table'>
+                    <thead>
+                        <tr>
+                            <th>Sub Indikator</th>
+                            <th>Ditangani</th>
+                            <th>Diselesaikan</th>
+                            <th>Uraian Capaian</th>
+                            <th>Faktor</th>
+                            <th>Langkah Optimalisasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
 
-        if ($existingData) {
-            $existingData->update($data);
-        } else {
-            $data = array_merge($data, [
-                'id' => $idIndikator,
-                'id_satker' => $idSatker,
-                'matrix' => $indikator->indikator,
-                'bulan' => $bulan,
-                'created_at' => now(),
-            ]);
-            SinoriSakipPidumDetail::create($data);
+        foreach ($sub_indikators as $index => $sub) {
+            $pengukuran = \App\Models\Pengukuran::where([
+                ['indikator_id', '=', $indikator->id],
+                ['id_satker', '=', session('id_satker')],
+                ['tahun', '=', session('tahun_terpilih')],
+                ['bulan', '=', $bulan], // Tambahkan filter berdasarkan bulan
+                ['sub_indikator', '=', trim($sub)]
+            ])->first();
+
+            $ditangani = $pengukuran->ditangani ?? '';
+            $diselesaikan = $pengukuran->diselesaikan ?? '';
+            $uraian_capaian = $pengukuran->uraian_capaian ?? '';
+            $faktor = $pengukuran->faktor ?? '';
+            $langkah_optimalisasi = $pengukuran->langkah_optimalisasi ?? '';
+
+            $html .= "<tr>
+                        <td style='width:150px'>{$sub}</td>
+                        <td><input type='number' name='ditangani[{$index}]' class='form-control' style='width:100px' value='{$ditangani}'></td>
+                        <td><input type='number' name='diselesaikan[{$index}]' class='form-control' style='width:100px' value='{$diselesaikan}'></td>
+                        <td><textarea name='uraian_capaian[{$index}]' class='form-control' style='height:150px'>{$uraian_capaian}</textarea></td>
+                        <td><textarea name='faktor[{$index}]' class='form-control' style='height:150px'>{$faktor}</textarea></td>
+                        <td><textarea name='langkah_optimalisasi[{$index}]' class='form-control' style='height:150px'>{$langkah_optimalisasi}</textarea></td>
+                    </tr>";
         }
+
+        $html .= "</tbody></table>";
+        $html .= "<button type='submit' class='btn btn-success'>Simpan</button>";
+        $html .= "</form>";
     }
 
-    return redirect()->route('pengukuran')->with('success', 'Data berhasil disimpan');
+    return $html;
 }
 
-
-
+   // Fungsi untuk menyimpan data
+   public function store(Request $request)
+   {
+    
+       $request->validate([
+           'indikator_id' => 'required|exists:sinori_sakip_indikator,id',
+           'bulan' => 'required|integer|min:1|max:12', // Pastikan bulan disertakan dan valid
+           'ditangani.*' => 'nullable|numeric',
+           'diselesaikan.*' => 'nullable|numeric',
+           'uraian_capaian.*' => 'nullable|string',
+           'faktor.*' => 'nullable|string',
+           'langkah_optimalisasi.*' => 'nullable|string',
+       ]);
+    //    dd($request->bulan);
+       $indikator = Indikator::findOrFail($request->indikator_id);
+       $sub_indikators = explode(',', $indikator->sub_indikator);
+       $bulanDipilih = $request->bulan;
+       
+       foreach ($sub_indikators as $index => $sub) {
+           Pengukuran::updateOrCreate(
+               [
+                   'indikator_id' => $request->indikator_id,
+                   'id_satker' => session('id_satker'),
+                   'tahun' => session('tahun_terpilih'),
+                   'bulan' => $bulanDipilih, // Simpan bulan yang dipilih
+                   'sub_indikator' => trim($sub),
+               ],
+               [
+                   'ditangani' => $request->ditangani[$index] ?? null,
+                   'diselesaikan' => $request->diselesaikan[$index] ?? null,
+                   'uraian_capaian' => $request->uraian_capaian[$index] ?? '-',
+                   'faktor' => $request->faktor[$index] ?? '-',
+                   'langkah_optimalisasi' => $request->langkah_optimalisasi[$index] ?? '-',
+               ]
+           );
+           
+       }
+    //    dd($bulanDipilih);
+       return redirect()->back()->with('success', 'Data berhasil disimpan!');
+   }
+   
+        
 }

@@ -13,6 +13,7 @@ use App\Models\Dipa;
 use App\Models\Renaksi;
 use App\Models\SinoriSakipPidum;
 use App\Models\SinoriSakipIndikator;
+use App\Models\TargetPK;
 
 class PerencanaanController extends Controller
 {
@@ -46,14 +47,18 @@ class PerencanaanController extends Controller
         $indicatorIds = [22, 23, 24, 25]; // Inisialisasi ID indikator di controller
         $indikator_pidum = SinoriSakipPidum::getData($id_satker, $tahun, $indicatorIds);
 
-
+        // Ambil data target berdasarkan indikator_id, id_satker, dan tahun
+        $target = TargetPK::where('id_satker', $id_satker)
+            ->where('tahun', $tahun)
+            ->get()
+            ->keyBy('indikator_id'); // Agar mudah diakses di Blade
 
         // return view('perencanaan.input_indikator', compact('indikator', 'pidumTargets'));
         // );
 
         // dd ($indikator_pidum);
         // Kembalikan view beserta data yang telah difilter
-        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'indikator' => $indikator, 'indikator_pidum' => $indikator_pidum]);
+        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'indikator' => $indikator, 'indikator_pidum' => $indikator_pidum, 'target' => $target]);
     }
 
     // Fungsi untuk menangani upload file Renstra
@@ -291,49 +296,53 @@ class PerencanaanController extends Controller
         return redirect()->route('perencanaan')->with('success', 'File renaksi berhasil diupload.')->with('active_tab', 'renaksi');
     }
 
-    public function store(Request $request)
+    public function storetarget(Request $request)
     {
-        // dd($request->all());
-        $tahun = session('tahun_terpilih');
-        $idSatker = session('id_satker');
+        $request->validate([
+            'indikator_id' => 'required|exists:sinori_sakip_indikator,id',
+            'target_tahun' => 'required|numeric',
+            'target_triwulan_1' => 'required|numeric',
+            'target_triwulan_2' => 'required|numeric',
+            'target_triwulan_3' => 'required|numeric',
+            'target_triwulan_4' => 'required|numeric',
+        ]);
 
-        // Cek apakah sudah ada data dengan kombinasi id_satker, id_indikator, dan id_tahun
-        $existingRecord = SinoriSakipPidum::where('id_satker', $idSatker)
-            ->where('id_indikator', $request->input('id_indikator'))
-            ->where('id_tahun', $tahun)
+        // Ambil session id_satker dan tahun
+        $id_satker = session('id_satker');
+        $tahun = session('tahun_terpilih');
+        // Cek apakah data sudah ada
+        $existingTarget = TargetPK::where('indikator_id', $request->indikator_id)
+            ->where('id_satker', $id_satker)
+            ->where('tahun', $tahun)
             ->first();
 
-        if ($existingRecord) {
-            // dd('update record');
-            // Jika sudah ada, update record yang ada
-            $existingRecord->update([
-                'target_indikator' => $request->input('target_indikator'),
-                'tw1' => $request->input('tw1'),
-                'tw2' => $request->input('tw2'),
-                'tw3' => $request->input('tw3'),
-                'tw4' => $request->input('tw4'),
+        if ($existingTarget) {
+            // Jika sudah ada, update data
+            $existingTarget->update([
+                'target_tahun' => $request->target_tahun,
+                'target_triwulan_1' => $request->target_triwulan_1,
+                'target_triwulan_2' => $request->target_triwulan_2,
+                'target_triwulan_3' => $request->target_triwulan_3,
+                'target_triwulan_4' => $request->target_triwulan_4,
             ]);
-            return redirect()->route('perencanaan')->with('success', 'Data PK berhasil diupdate!')->with('active_tab', 'perjanjian-kinerja');
-            // dd($existingRecord);
-        } else {
-            // dd('Creating new record');
-            // Jika belum ada, simpan data baru
-            SinoriSakipPidum::create([
-                'id_indikator' => $request->input('id_indikator'),
-                'target_indikator' => $request->input('target_indikator'),
-                'indikator' => $request->input('indikator_nama'),
-                'id_satker' => $idSatker,
-                'id_tahun' => $tahun,
-                'tw1' => $request->input('tw1'),
-                'tw2' => $request->input('tw2'),
-                'tw3' => $request->input('tw3'),
-                'tw4' => $request->input('tw4'),
-            ]);
-            return redirect()->route('perencanaan')->with('success', 'Data PK berhasil diinput!')->with('active_tab', 'perjanjian-kinerja');
-        }
-        // dd($validated);
 
-        // Redirect dengan pesan sukses
-        // return redirect()->route('perencanaan')->with('success', 'Data PK berhasil diinput!')->with('active_tab', 'perjanjian-kinerja');
+            // return redirect()->back()->with('success', 'Target berhasil diperbarui!');
+            return redirect()->route('perencanaan')->with('success', 'Target berhasil diperbarui!')->with('active_tab', 'perjanjian-kinerja');
+        }
+
+        // Jika belum ada, buat data baru
+        TargetPK::create([
+            'indikator_id' => $request->indikator_id,
+            'id_satker' => $id_satker,
+            'tahun' => $tahun,
+            'target_tahun' => $request->target_tahun,
+            'target_triwulan_1' => $request->target_triwulan_1,
+            'target_triwulan_2' => $request->target_triwulan_2,
+            'target_triwulan_3' => $request->target_triwulan_3,
+            'target_triwulan_4' => $request->target_triwulan_4,
+        ]);
+
+        // return redirect()->back()->with('success', 'Target berhasil disimpan!');
+        return redirect()->route('perencanaan')->with('success', 'Target berhasil disimpan!')->with('active_tab', 'perjanjian-kinerja');
     }
 }

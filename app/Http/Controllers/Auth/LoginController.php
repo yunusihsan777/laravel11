@@ -33,6 +33,7 @@ class LoginController extends Controller
         // Store user data in session
         $request->session()->put('id_satker', $user->id_satker);
         $request->session()->put('satkernama', str_replace('_', ' ', $user->satkernama));
+        $request->session()->put('id_sakip_level', $user->id_sakip_level);
 
         // Mark the user as logged in manually
         auth()->loginUsingId($user->id_satker);
@@ -40,9 +41,9 @@ class LoginController extends Controller
         return redirect()->route('dashboard');
     }
 
-    return back()->withErrors(['email' => 'Invalid credentials']);
+    return back()->withErrors(['email' => 'User atau Password yang dimasukan salah!']);
 }
-
+ 
 
     // Menangani logout
     public function logout(Request $request)

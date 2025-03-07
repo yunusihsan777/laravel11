@@ -22,4 +22,10 @@ class Bidang extends Model
         'rumpun',
         'hide',
     ];
+
+    public function indikator()
+{
+    return $this->hasMany(Indikator::class, 'link', 'rumpun');
+}
+
 }

@@ -11,11 +11,14 @@ class DashboardController extends Controller
     public function index()
     {
         // Cek apakah tahun sudah dipilih
-        if (!session()->has('tahun_terpilih')) {
-            return redirect()->route('pilih.tahun');
-        }
-        // Ambil tahun yang dipilih dari session
-        $tahun = session('tahun_terpilih');
+        // if (!session()->has('tahun_terpilih')) {
+        //     return redirect()->route('pilih.tahun');
+        // }
+
+        // Set tahun_terpilih ke tahun sekarang jika belum ada di session
+        $tahun = session('tahun_terpilih', date('Y'));
+        session(['tahun_terpilih' => $tahun]);
+        
         // Lanjutkan dengan logika untuk menampilkan data berdasarkan tahun
         // return view('dashboard', ['tahun' => $tahun]);
 
