@@ -3,6 +3,9 @@
 @section('title', 'Sumber Aturan')
 
 @section('content')
+@php
+        $levelSakip = session('id_sakip_level', 0);
+@endphp
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
@@ -27,7 +30,8 @@
                                 <th>No</th> <!-- Kolom nomor -->
                                 <th>Nama Peraturan</th>
                                 <th>Pemilik</th>
-                                <th>Tahun</th>
+                                @if ($levelSakip == 99)
+                                <th>Tahun</th> @endif
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -35,11 +39,18 @@
                             @foreach($aturan as $index => $item)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $item->id_namaproduk }} <br>
-                                   
-
+                                <td>
+                                    @if(isset($item->file_path) && !empty($item->file_path))
+                                        <a href="{{ asset('uploads/aturan/' . $item->file_path) }}" target="_blank">
+                                            {{ $item->id_namaproduk }}
+                                        </a>
+                                    @else
+                                        {{ $item->id_namaproduk }}
+                                    @endif
+                                </td>
                                 <td>{{ $item->id_produsen }}</td>
                                 <td>{{ $item->id_tahun }}</td>
+                                @if ($levelSakip == 99)
                                 <td> <!-- Tombol Edit -->
                                     <a href="{{ route('aturan.edit', $item->id) }}" class="btn btn-success btn-sm">Edit</a>
                                     <!-- Tombol Hapus -->
@@ -47,6 +58,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus peraturan ini?')">Hapus</button>
+                                    @endif
                                     </form></td>
                             </tr>
                             @endforeach
@@ -105,6 +117,5 @@
     .btn-yellow:focus {
         box-shadow: 0 0 0 0.2rem rgba(240, 187, 73, 0.5); /* Shadow untuk focus state */
     }
-
 </style>
 @endsection

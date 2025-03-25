@@ -15,9 +15,10 @@
                 <div class="col-md-12">
                     <div class="card shadow-sm mb-4">
                         <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
-                        <center>
-                            <h2><b>Pengumuman</b></h2>
-                        </center></div>
+                            <center>
+                                <h2><b>Pengumuman</b></h2>
+                            </center>
+                        </div>
                         <div class="card-body">
                             @foreach ($pengumuman as $item)
                                 <div class="card shadow-sm mb-4">
@@ -35,90 +36,115 @@
                 </div>
 
                 {{-- Chart --}}
+                <div class="row">
+                    <!-- Keputusan Tim SAKIP -->
+                    <div class="col-md-12">
+                        <div class="card shadow-sm mb-4"
+                            style="background-color: {{ $keputusanTimSakipTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                            <div class="card-body">
+                                <center><h5 class="card-title"><b>Keputusan Tim SAKIP</b></h5>
+                                <p class="card-text">
+                                    {{ $keputusanTimSakipTerisi ? 'Keputusan Tim SAKIP sudah diupload' : 'Keputusan Tim SAKIP belum diupload' }}
+                                </p></center>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Card Renstra (1:3) -->
-                <div class="col-md-4">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title"><b>Pengisian Renstra</b></h5>
-                            <p class="card-text">Pengisian Renstra sudah dilakukan sebanyak 30 %</p>
-                            <p class="card-text">Pengisian Renstra sudah dilakukan sebanyak 70 %</p>
+                    <!-- Renstra -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm mb-4"
+                            style="background-color: {{ $renstraTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Pengisian Renstra</b></h5>
+                                <p class="card-text">
+                                    {{ $renstraTerisi ? 'Pengisian Renstra sudah dilakukan' : 'Pengisian Renstra belum dilakukan' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- IKU -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm mb-4"
+                            style="background-color: {{ $ikuTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Pengisian IKU</b></h5>
+                                <p class="card-text">
+                                    {{ $ikuTerisi ? 'Pengisian IKU sudah dilakukan' : 'Pengisian IKU belum dilakukan' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Renja -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm mb-4"
+                            style="background-color: {{ $renjaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Pengisian Renja</b></h5>
+                                <p class="card-text">
+                                    {{ $renjaTerisi ? 'Pengisian Renja sudah dilakukan' : 'Pengisian Renja belum dilakukan' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RKAKL -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm mb-4"
+                            style="background-color: {{ $rkaklTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Pengisian RKAKL</b></h5>
+                                <p class="card-text">
+                                    {{ $rkaklTerisi ? 'Pengisian RKAKL sudah dilakukan' : 'Pengisian RKAKL belum dilakukan' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DIPA -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm mb-4"
+                            style="background-color: {{ $dipaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Pengisian DIPA</b></h5>
+                                <p class="card-text">
+                                    {{ $dipaTerisi ? 'Pengisian DIPA sudah dilakukan' : 'Pengisian DIPA belum dilakukan' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rencana Aksi -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm mb-4"
+                            style="background-color: {{ $rencanaAksiTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                            <div class="card-body">
+                                <h5 class="card-title"><b>Pengisian Rencana Aksi</b></h5>
+                                <p class="card-text">
+                                    {{ $rencanaAksiTerisi ? 'Pengisian Rencana Aksi sudah dilakukan' : 'Pengisian Rencana Aksi belum dilakukan' }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card IKU (1:3) -->
-                <div class="col-md-4">
+
+                {{-- Card --}}
+                <!-- Card Sumber Aturan (1:3) -->
+
+                <div class="col-md-6">
                     <div class="card shadow-sm mb-4">
                         <div class="card-body">
-                            <h5 class="card-title"><b>IKU Sudah di otentikasi</b></h5>
-                            <p class="card-text">IKU Sudah di otentikasi sebanyak 50 %</p>
-                            <p class="card-text">IKU Sudah di otentikasi sebanyak 50 %</p>
+                            <h5 class="card-title"><b>Sumber Aturan</b></h5>
+                            <p class="card-text">Lihat sumber aturan dan referensi hukum yang relevan.</p>
+                            {{-- <p class="card-text"><b>Jumlah Aturan:</b> {{ $jumlahAturan }} Dokumen</p> --}}
+                            <!-- Menampilkan jumlah aturan -->
+                            <a href="{{ route('aturan') }}" class="btn btn-yellow">Lihat Sumber Aturan</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card Renja (1:3) -->
-                <div class="col-md-4">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title"><b>Renja Sudah di otentikasi</b></h5>
-                            <p class="card-text">Renja Sudah di otentikasi sebanyak 20 %</p>
-                            <p class="card-text">Renja Sudah di otentikasi sebanyak 80 %</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card PK (1:3) -->
-                <div class="col-md-4">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title"><b>Pengisian PK</b></h5>
-                            <p class="card-text">Pengisian PK sudah dilakukan sebanyak 80 %</p>
-                            <p class="card-text">Pengisian PK sudah dilakukan sebanyak 20 %</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card TW1 (1:3) -->
-                <div class="col-md-4">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title"><b>TW1 Sudah di otentikasi</b></h5>
-                            <p class="card-text">TW1 Sudah di otentikasi sebanyak 50 %</p>
-                            <p class="card-text">TW1 Sudah di otentikasi sebanyak 50 %</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card TW2 (1:3) -->
-                <div class="col-md-4">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title"><b>TW2 Sudah di otentikasi</b></h5>
-                            <p class="card-text">TW2 Sudah di otentikasi sebanyak 50 %</p>
-                            <p class="card-text">TW2 Sudah di otentikasi sebanyak 50 %</p>
-                        </div>
-                    </div>
-                </div>
-            
-
-            {{-- Card --}}
-            <!-- Card Sumber Aturan (1:3) -->
-
-            <div class="col-md-4">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title"><b>Sumber Aturan</b></h5>
-                        <p class="card-text">Lihat sumber aturan dan referensi hukum yang relevan.</p>
-                        <p class="card-text"><b>Jumlah Aturan:</b> {{ $jumlahAturan }} Dokumen</p>
-                        <!-- Menampilkan jumlah aturan -->
-                        <a href="{{ route('aturan') }}" class="btn btn-yellow">Lihat Sumber Aturan</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card Sumber Literasi (1:3) -->
+                {{-- <!-- Card Sumber Literasi (1:3) -->
             <div class="col-md-4">
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
@@ -127,19 +153,19 @@
                         <a href="{{ route('literasi') }}" class="btn btn-yellow">Lihat Sumber Literasi</a>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
-            <!-- Card FAQ (1:3) -->
-            <div class="col-md-4">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title"><b>FAQ</b></h5>
-                        <p class="card-text">Lihat pertanyaan yang sering diajukan tentang sistem ini.</p>
-                        <a href="{{ route('faq') }}" class="btn btn-yellow">Lihat FAQ</a>
+                <!-- Card FAQ (1:3) -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>FAQ</b></h5>
+                            <p class="card-text">Lihat pertanyaan yang sering diajukan tentang sistem ini.</p>
+                            <a href="{{ route('faq') }}" class="btn btn-yellow">Lihat FAQ</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
             <!-- New Cards Below -->
             <div class="row">
@@ -147,11 +173,12 @@
                 <div class="col-md-12">
                     <div class="card shadow-sm mb-4">
                         <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
-                        <center>
-                            <h4><b>Gambaran Alur SAKIP</b></h4>
-                        </center></div>
+                            <center>
+                                <h4><b>Gambaran Alur SAKIP</b></h4>
+                            </center>
+                        </div>
                         <div class="card-body">
-                                    <img src="{{ asset('gambar/sakip.png') }}" class="img-fluid" alt="sakip">
+                            <img src="{{ asset('gambar/sakip.png') }}" class="img-fluid" alt="sakip">
                         </div>
                     </div>
                 </div>
@@ -160,9 +187,10 @@
                 <div class="col-md-6">
                     <div class="card shadow-sm mb-4">
                         <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
-                        <center>
-                            <h4><b>Gambar SMART Goals for Project Management</b></h4>
-                        </center></div><br>
+                            <center>
+                                <h4><b>Gambar SMART Goals for Project Management</b></h4>
+                            </center>
+                        </div><br>
                         <div class="card-body">
                             <img src="{{ asset('gambar/smart.png') }}" class="img-fluid" alt="smart">
                         </div>
@@ -173,9 +201,10 @@
                 <div class="col-md-6">
                     <div class="card shadow-sm mb-4">
                         <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
-                        <center>
-                            <h4><b>SMART Goals for Project Management</b></h4>
-                        </center></div><br>
+                            <center>
+                                <h4><b>SMART Goals for Project Management</b></h4>
+                            </center>
+                        </div><br>
                         <div class="card-body">
                             {{-- <h5 class="card-title"><b>Teks 1:2</b></h5> --}}
                             <p class="card-text">

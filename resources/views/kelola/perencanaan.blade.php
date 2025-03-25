@@ -3,6 +3,9 @@
 @section('title', 'Perencanaan')
 
 @section('content')
+    @php
+        $levelSakip = session('id_sakip_level', 0);
+    @endphp
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card" style="width: 100%;">
@@ -49,16 +52,19 @@
                                 aria-controls="{{ $activeTab == 'renaksi' ? 'true' : 'false' }}"
                                 aria-selected="false">Rencana Aksi</a>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $activeTab == 'perjanjian-kinerja' ? 'active' : '' }}"
-                                id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja" role="tab"
-                                aria-controls="{{ $activeTab == 'perjanjian-kinerja' ? 'true' : 'false' }}"
-                                aria-selected="false">Perjanjian Kinerja</a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="cetak-pk-tab" data-bs-toggle="tab" href="#cetak-pk" role="tab"
-                                aria-controls="cetak-pk" aria-selected="false">Cetak PK</a>
-                        </li>
+                        @if ($levelSakip == 99)
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {{ $activeTab == 'perjanjian-kinerja' ? 'active' : '' }}"
+                                    id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja"
+                                    role="tab"
+                                    aria-controls="{{ $activeTab == 'perjanjian-kinerja' ? 'true' : 'false' }}"
+                                    aria-selected="false">Perjanjian Kinerja</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="cetak-pk-tab" data-bs-toggle="tab" href="#cetak-pk" role="tab"
+                                    aria-controls="cetak-pk" aria-selected="false">Cetak PK</a>
+                            </li>
+                        @endif
                     </ul>
 
                     <!-- Tab Content -->
@@ -371,82 +377,152 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade {{ $activeTab == 'dipa' ? 'show active' : '' }}" id="dipa"
-                            role="tabpanel" aria-labelledby="dipa-tab">
+                        <div class="tab-pane fade {{ session('active_tab') == 'dipa' ? 'show active' : '' }}"
+                            id="dipa" role="tabpanel" aria-labelledby="dipa-tab">
                             <div class="dipa-content">
                                 <h3><strong>Daftar Isian Pelaksanaan Anggaran (DIPA)</strong></h3>
-                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">Daftar Isian
-                                    Pelaksanaan Anggaran (DIPA) ...</p>
+                                <p class="card-title p-2" style="background-color: #f1e022; color: black;">
+                                    Daftar Isian Pelaksanaan Anggaran (DIPA) Kejaksaan menjadi dasar bagi Satuan Kerja (Satker) Kejaksaan untuk melaksanakan kegiatan yang telah direncanakan.
+                                </p>
+
+                                <!-- Alert Notifikasi -->
+                                @if (session('success'))
+                                    <div class="alert alert-success">{{ session('success') }}</div>
+                                @endif
+                                @if (session('error'))
+                                    <div class="alert alert-danger">{{ session('error') }}</div>
+                                @endif
 
                                 <!-- Form Upload File -->
-                                <div>
-                                    <div class="card shadow-sm">
-                                        <div class="card-header text-white" style="background-color: #e6bf3e;">
-                                            <h4 class="mb-0">UPLOAD DIPA SATKER ANDA</h4>
-                                        </div>
-                                        <div class="card-body">
-                                            <!-- Form Upload File Dipa -->
-                                            {{-- <form action="{{ route('upload.dipa') }}" method="POST" enctype="multipart/form-data" --}}
-                                            class="mb-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-header text-white" style="background-color: #e6bf3e;">
+                                        <h4 class="mb-0">UPLOAD DIPA SATKER ANDA</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="{{ route('upload.dipa') }}" method="POST"
+                                            enctype="multipart/form-data">
                                             @csrf
                                             <div class="mb-3">
-                                                <label for="dipa_file" class="form-label">Upload File PDF
-                                                    Dipa</label>
+                                                <label for="dipa_file" class="form-label">Upload File PDF DIPA</label>
                                                 <input type="file" class="form-control" id="dipa_file"
                                                     name="dipa_file" accept=".pdf" required>
+                                                @error('dipa_file')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
                                             </div>
-                                            <button type="submit" class="btn btn-warning btn-block">Upload
-                                                File</button>
-                                            </form>
 
-                                            <!-- Alert for success -->
-                                            @if (session('success'))
-                                                <div class="alert alert-success" id="success-alert">
-                                                    {{ session('success') }}
-                                                </div>
-                                            @endif
-
-                                            <!-- Tabel dipa -->
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered table-striped">
-                                                    <thead class="table-warning">
-                                                        <tr>
-                                                            <th>No</th>
-                                                            <th>File Dipa</th>
-                                                            <th>Total Pagu</th>
-                                                            <th>Program Penegakan dan Pelayanan Hukum</th>
-                                                            <th>Program Dukungan Manajemen</th>
-                                                            <th>Versi</th>
-                                                            <th>Tanggal Upload</th>
-                                                            {{-- <th>Aksi</th> --}}
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {{-- @foreach ($dipa as $index => $item)
-                                                            <tr>
-                                                                <td>{{ $index + 1 }}</td>
-                                                                <td>
-                                                                    <a href="{{ asset('uploads/dipa/dipa_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
-                                                                        target="_blank"
-                                                                        style="text-decoration: none; color: inherit;">
-                                                                        {{ $item->id_periode }}
-                                                                    </a>
-                                                                </td>
-
-                                                                <td>{{ $item->id_pagu }}</td>
-                                                                <td>{{ $item->id_gakyakum }}</td>
-                                                                <td>{{ $item->id_dukman }}</td>
-                                                                <td>{{ $item->id_perubahan }}</td>
-                                                                <td>{{ $item->id_tglupload }}</td>
-                                                        @endforeach --}}
-                                                    </tbody>
-                                                </table>
+                                            <div class="mb-3">
+                                                <label for="id_pagu" class="form-label">Total Pagu</label>
+                                                <input type="text" class="form-control format-number" id="id_pagu"
+                                                    name="id_pagu_formatted" required>
+                                                <input type="hidden" id="id_pagu_hidden" name="id_pagu">
                                             </div>
-                                        </div>
+
+                                            <div class="mb-3">
+                                                <label for="id_gakyankum" class="form-label">Program Penegakan dan
+                                                    Pelayanan Hukum</label>
+                                                <input type="text" class="form-control format-number"
+                                                    id="id_gakyankum" name="id_gakyankum_formatted" required>
+                                                <input type="hidden" id="id_gakyankum_hidden" name="id_gakyankum">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="id_dukman" class="form-label">Program Dukungan
+                                                    Manajemen</label>
+                                                <input type="text" class="form-control format-number" id="id_dukman"
+                                                    name="id_dukman_formatted" required>
+                                                <input type="hidden" id="id_dukman_hidden" name="id_dukman">
+                                            </div>
+
+                                            <button type="submit" class="btn btn-warning btn-block">Upload File</button>
+                                        </form>
                                     </div>
+                                </div>
+
+                                <!-- Tabel DIPA -->
+                                <div class="table-responsive mt-4">
+                                    <table class="table table-bordered table-striped">
+                                        <thead class="table-warning">
+                                            <tr>
+                                                <th>No</th>
+                                                <th>File DIPA</th>
+                                                <th>Total Pagu</th>
+                                                <th>Program Penegakan dan Pelayanan Hukum</th>
+                                                <th>Program Dukungan Manajemen</th>
+                                                <th>Versi</th>
+                                                <th>Tanggal Upload</th>
+                                                {{-- <th>Aksi</th> --}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse ($dipa as $index => $item)
+                                                <tr>
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>
+                                                        @if (!empty($item->id_filename) && file_exists(public_path('uploads/dipa/' . $item->id_filename)))
+                                                            @php
+                                                                // Format nama file yang lebih mudah dibaca
+                                                                $namaFile = explode(
+                                                                    '_',
+                                                                    pathinfo($item->id_filename, PATHINFO_FILENAME),
+                                                                );
+                                                                $versi = isset($namaFile[1]) ? $namaFile[1] : '-';
+                                                                $tahun = isset($namaFile[3]) ? $namaFile[3] : '-';
+                                                                $namaTampil = "DIPA Versi $versi ($tahun)";
+                                                            @endphp
+
+                                                            <a href="{{ asset('uploads/dipa/' . $item->id_filename) }}"
+                                                                target="_blank"
+                                                                style="text-decoration: none; color: inherit;">
+                                                                {{ $namaTampil }}
+                                                            </a>
+                                                        @else
+                                                            <span class="text-muted">File belum tersedia</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>Rp.{{ number_format($item->id_pagu, 0, ',', '.') }}</td>
+                                                    <td>Rp.{{ number_format($item->id_gakyankum, 0, ',', '.') }}</td>
+                                                    <td>Rp.{{ number_format($item->id_dukman, 0, ',', '.') }}</td>
+                                                    <td>{{ $item->id_perubahan }}</td>
+                                                    <td>{{ $item->id_tglupload }}</td>
+                                                    {{-- <td>
+                                @if (!empty($item->id_filename) && file_exists(public_path('uploads/dipa/' . $item->id_filename)))
+                                    <a href="{{ asset('uploads/dipa/' . $item->id_filename) }}" class="btn btn-primary btn-sm" target="_blank">Download</a>
+                                @else
+                                    <span class="text-danger">Tidak Ada File</span>
+                                @endif
+                            </td> --}}
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="8" class="text-center">Belum ada data DIPA yang
+                                                        diunggah.</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- JavaScript untuk memformat input angka -->
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                let inputs = document.querySelectorAll('.format-number');
+
+                                inputs.forEach(function(input) {
+                                    input.addEventListener('input', function() {
+                                        let value = this.value.replace(/\D/g, ''); // Hapus semua karakter non-angka
+                                        let formattedValue = new Intl.NumberFormat('id-ID').format(value);
+
+                                        this.value = formattedValue; // Tampilkan format dengan titik
+                                        document.getElementById(this.id + "_hidden").value =
+                                        value; // Simpan nilai asli tanpa titik
+                                    });
+                                });
+                            });
+                        </script>
+
 
                         <div class="tab-pane fade {{ $activeTab == 'renaksi' ? 'show active' : '' }}" id="renaksi"
                             role="tabpanel" aria-labelledby="renaksi-tab">
@@ -524,7 +600,7 @@
                             </div>
                         </div>
 
-                        <div class="container mt-4">
+                        {{-- <div class="container mt-4">
 
                         </div>
 
@@ -605,7 +681,7 @@
                                                         </div>
                                                     </div>
                         
-                                                    @if(($key + 1) % 2 == 0)
+                                                    @if (($key + 1) % 2 == 0)
                                                         </div><div class="row"> <!-- Tutup & Buka Row Setiap 2 Indikator -->
                                                     @endif
                                                 @endforeach
@@ -616,16 +692,12 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
-                        
-
-
+                        @endforeach --}}
+                    </div>
+                </div>
             </div>
 
         </div>
-    </div>
-
-    </div>
     </div>
     </div>
 @endsection
