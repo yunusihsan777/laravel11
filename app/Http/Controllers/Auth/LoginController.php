@@ -29,7 +29,7 @@ class LoginController extends Controller
     $user = DB::table('sinori_login')->where('id_satker', $email)->first();
 
     // Check if user exists and password is correct
-    if ($user && md5($password) === $user->satkerpass) {
+    if ($user && md5($password) === $user->password) {
         // Store user data in session
         $request->session()->put('id_satker', $user->id_satker);
         $request->session()->put('satkernama', str_replace('_', ' ', $user->satkernama));
