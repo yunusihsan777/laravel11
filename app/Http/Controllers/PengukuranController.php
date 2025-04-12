@@ -22,6 +22,7 @@ class PengukuranController extends Controller
 
    // Fungsi untuk mendapatkan indikator berdasarkan bidang (AJAX)
    public function getIndikator(Request $request)
+<<<<<<< HEAD
 {
     $bidang_id = $request->bidang_id;
     $bulan = $request->bulan ?? date('n'); // Gunakan bulan sekarang jika tidak dipilih
@@ -89,6 +90,83 @@ class PengukuranController extends Controller
 
     return $html;
 }
+=======
+   {
+       $bidang_id = $request->bidang_id;
+       $indikators = Indikator::where('link', $bidang_id)
+           ->whereNotNull('sub_indikator')
+           ->where('sub_indikator', '!=', '')
+           ->get();
+   
+       if ($indikators->isEmpty()) {
+           return '<p class="text-center"><i>Tidak ada indikator tersedia.</i></p>';
+       }
+   
+       $html = '';
+   
+       foreach ($indikators as $indikator) {
+           $sub_indikators = explode(',', $indikator->sub_indikator);
+           $html .= "<h5 class='mt-4 p-2 bg-warning text-dark'><strong>📌 Indikator: {$indikator->indikator_nama}</strong></h5>";
+   
+           // Form untuk menyimpan data
+           $html .= "<form action='" . route('pengukuran.store') . "' method='POST'>";
+           $html .= csrf_field();
+           $html .= "<input type='hidden' name='indikator_id' value='{$indikator->id}'>";
+   
+           // Tabel Sub Indikator & Input Data
+           $html .= "<div class='row'>
+                       <div class='col-md-6'>
+                           <table class='table table-bordered'>
+                               <thead class='table-dark'>
+                                   <tr>
+                                       <th>Sub Indikator</th>
+                                       <th>Ditangani</th>
+                                       <th>Diselesaikan</th>
+                                   </tr>
+                               </thead>
+                               <tbody>";
+   
+           foreach ($sub_indikators as $index => $sub) {
+               $html .= "<tr>
+                           <td>{$sub}</td>
+                           <td><input type='number' name='ditangani[{$index}]' class='form-control' style='width:100px'></td>
+                           <td><input type='number' name='diselesaikan[{$index}]' class='form-control' style='width:100px'></td>
+                       </tr>";
+           }
+   
+           $html .= "</tbody></table></div>";
+   
+           // **Kolom kanan** -> Input Ditangani & Diselesaikan per Bulan
+           $html .= "<div class='col-md-6'>
+                       <table class='table table-bordered'>
+                           <thead class='table-dark'>
+                               <tr>
+                                   <th>Bulan</th>
+                                   <th>Ditangani</th>
+                                   <th>Diselesaikan</th>
+                               </tr>
+                           </thead>
+                           <tbody>";
+   
+           for ($bulan = 1; $bulan <= 12; $bulan++) {
+               $html .= "<tr>
+                           <td>" . date('F', mktime(0, 0, 0, $bulan, 1)) . "</td>
+                           <td><input type='number' name='bulan_ditangani[{$bulan}]' class='form-control' style='width:100px'></td>
+                           <td><input type='number' name='bulan_diselesaikan[{$bulan}]' class='form-control' style='width:100px'></td>
+                       </tr>";
+           }
+   
+           $html .= "</tbody></table></div></div>"; // **Tutup row dan col-md-6**
+   
+           // Tombol Simpan
+           $html .= "<button type='submit' class='btn btn-success mt-2'>Simpan</button>";
+           $html .= "</form>";
+       }
+   
+       return $html;
+   }
+   
+>>>>>>> 6a7ccaf2d3b78ce8d57591c9c27fcf086851117c
 
    // Fungsi untuk menyimpan data
    public function store(Request $request)

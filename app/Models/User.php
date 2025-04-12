@@ -20,4 +20,5 @@ class User extends Authenticatable
 
     // Jika Anda menggunakan ID yang bukan auto-increment, tentukan ini
     protected $primaryKey = 'id_satker';
+    public $timestamps = false;
 }

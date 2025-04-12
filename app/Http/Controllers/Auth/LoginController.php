@@ -21,7 +21,7 @@ class LoginController extends Controller
         'email' => 'required',
         'password' => 'required',
     ]);
-
+ 
     $email = $request->input('email');
     $password = $request->input('password');
 
@@ -37,7 +37,7 @@ class LoginController extends Controller
 
         // Mark the user as logged in manually
         auth()->loginUsingId($user->id_satker);
-
+        // dd($user->id_sakip_level); 
         return redirect()->route('dashboard');
     }
 

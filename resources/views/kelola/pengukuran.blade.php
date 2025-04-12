@@ -77,10 +77,10 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    
+
                                 </div>
                             </div>
-<br>
+                            <br>
 
 
                             <div class="card-body overflow-auto" id="indikator-container" style="max-height: 80vh;">
@@ -95,44 +95,43 @@
 
     <!-- AJAX Script -->
     <script>
-       document.addEventListener("DOMContentLoaded", function () {
-    let bidangButtons = document.querySelectorAll('.bidang-item');
-    let indikatorContainer = document.getElementById('indikator-container');
-    let bulanDropdown = document.getElementById('bulanDropdown');
+        document.addEventListener("DOMContentLoaded", function() {
+            let bidangButtons = document.querySelectorAll('.bidang-item');
+            let indikatorContainer = document.getElementById('indikator-container');
+            let bulanDropdown = document.getElementById('bulanDropdown');
 
-    function loadIndikator(bidangId, bulan) {
-        fetch(`/pengukuran/indikator?bidang_id=${bidangId}&bulan=${bulan}`)
-            .then(response => response.text())
-            .then(html => {
-                indikatorContainer.innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                indikatorContainer.innerHTML = '<p class="text-danger">Gagal mengambil data.</p>';
+            function loadIndikator(bidangId, bulan) {
+                fetch(`/pengukuran/indikator?bidang_id=${bidangId}&bulan=${bulan}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        indikatorContainer.innerHTML = html;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        indikatorContainer.innerHTML = '<p class="text-danger">Gagal mengambil data.</p>';
+                    });
+            }
+
+            bidangButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    let bidangId = this.getAttribute('data-id');
+                    let selectedBulan = bulanDropdown.value;
+
+                    // Hapus kelas 'active' dari semua tombol bidang
+                    bidangButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active'); // Tandai bidang yang aktif
+
+                    loadIndikator(bidangId, selectedBulan);
+                });
             });
-    }
 
-    bidangButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            let bidangId = this.getAttribute('data-id');
-            let selectedBulan = bulanDropdown.value;
-
-            // Hapus kelas 'active' dari semua tombol bidang
-            bidangButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active'); // Tandai bidang yang aktif
-
-            loadIndikator(bidangId, selectedBulan);
+            bulanDropdown.addEventListener('change', function() {
+                let bidangId = document.querySelector('.bidang-item.active')?.getAttribute('data-id');
+                if (bidangId) {
+                    loadIndikator(bidangId, this.value);
+                }
+            });
         });
-    });
-
-    bulanDropdown.addEventListener('change', function () {
-        let bidangId = document.querySelector('.bidang-item.active')?.getAttribute('data-id');
-        if (bidangId) {
-            loadIndikator(bidangId, this.value);
-        }
-    });
-});
-
     </script>
 @endsection
 
@@ -158,5 +157,5 @@
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- JavaScript untuk AJAX -->
-    
+
 @endsection

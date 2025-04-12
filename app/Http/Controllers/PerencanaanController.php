@@ -220,45 +220,55 @@ class PerencanaanController extends Controller
 
     // Fungsi untuk menangani upload file Dipa
     public function uploadDipa(Request $request)
-    {
-        $tahun = session('tahun_terpilih');
-        $request->validate([
-            'dipa_file' => 'required|mimes:pdf|max:2048', // Maksimal 2MB
-        ]);
-        $id_pagu = $request->input('id_pagu');
-        $id_gakyankum = $request->input('id_gakyankum');
-        $id_dukman = $request->input('id_dukman');
+{
+    $tahun = session('tahun_terpilih');
+    $idSatker = session('id_satker'); // Ambil id_satker dari session
 
-        $idSatker = session('id_satker'); // Ambil id_satker dari session
+    // Validasi input
+    $request->validate([
+        'dipa_file' => 'required|mimes:pdf|max:2048', // Maksimum 2MB, hanya PDF
+        'id_pagu' => 'required|numeric',
+        'id_gakyankum' => 'required|numeric',
+        'id_dukman' => 'required|numeric',
+    ]);
 
-        // Cek id_perubahan yang sudah ada
-        $latestdipa = Dipa::where('id_satker', $idSatker)
-            ->where('id_periode', $tahun)
-            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc')
-            ->first();
+    // Ambil data perubahan terakhir dari tabel
+    $latestdipa = Dipa::where('id_satker', $idSatker)
+        ->where('id_periode', $tahun)
+        ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc')
+        ->first();
 
-        // Tentukan id_perubahan
-        $id_perubahan = $latestdipa ? $latestdipa->id_perubahan + 1 : 0;
+    // Jika ada data sebelumnya, tambahkan +1 untuk id_perubahan, jika tidak mulai dari 0
+    $id_perubahan = ($latestdipa && is_numeric($latestdipa->id_perubahan)) ? $latestdipa->id_perubahan + 1 : 0;
 
-        // Upload file ke folder public/uploads/dipa
+    // Upload file ke folder public/uploads/dipa
+    try {
         $file = $request->file('dipa_file');
-        $fileName = 'dipa_' . $id_perubahan . '_' . $idSatker . '_' . $tahun . '.pdf';
-        $file->move(public_path('uploads/dipa'), $fileName);
-
-        // Simpan data ke database
-        Dipa::create([
-            'id_satker' => $idSatker,
-            'id_periode' => $tahun,
-            'id_perubahan' => $id_perubahan,
-            'id_filename' => $fileName,
-            'id_pagu' => $id_pagu,
-            'id_gakyankum' => $id_gakyankum,
-            'id_dukman' => $id_dukman,
-            'id_tglupload' => now()->format('d/m/Y h:i A'),
-        ]);
-
-        return redirect()->route('perencanaan')->with('success', 'File dipa berhasil diupload.')->with('active_tab', 'dipa');
+        $fileName = "dipa_{$id_perubahan}_{$idSatker}_{$tahun}.pdf";
+        $destinationPath = public_path('uploads/dipa');
+        
+        // Pindahkan file ke folder tujuan
+        $file->move($destinationPath, $fileName);
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Gagal mengunggah file: ' . $e->getMessage());
     }
+
+    // Simpan data ke database
+    Dipa::create([
+        'id_satker' => $idSatker,
+        'id_periode' => $tahun,
+        'id_perubahan' => $id_perubahan,
+        'id_filename' => $fileName,
+        'id_pagu' => $request->input('id_pagu'),
+        'id_gakyankum' => $request->input('id_gakyankum'),
+        'id_dukman' => $request->input('id_dukman'),
+        'id_tglupload' => now()->format('d/m/Y h:i A'),
+    ]);
+
+    return redirect()->route('perencanaan')
+        ->with('success', 'File DIPA berhasil diupload.')
+        ->with('active_tab', 'dipa');
+}
 
     // Fungsi untuk menangani upload file Dipa
     public function uploadRenaksi(Request $request)

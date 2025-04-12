@@ -52,11 +52,14 @@ Route::post('/perencanaan/store', [PerencanaanController::class, 'store'])->name
 Route::post('/target/store', [PerencanaanController::class, 'storetarget'])->name('target.store');
 
 use App\Http\Controllers\PengukuranController;
-// Route::post('/pengukuran/store', [PengukuranController::class, 'store'])->name('pengukuran.store');
 Route::post('/pengukuran/store', [PengukuranController::class, 'store'])->name('pengukuran.store');
 Route::get('/pengukuran/indikator', [PengukuranController::class, 'getIndikator'])->name('pengukuran.getIndikator');
+Route::get('/pengukuran/get-indikator', [PengukuranController::class, 'getIndikator'])->name('pengukuran.getIndikator');
+Route::get('/pengukuran/{id}', [PengukuranController::class, 'showPengukuran'])->name('pengukuran.show');
 
 use App\Http\Controllers\PelaporanController;
+Route::post('/upload/lkjip', [PelaporanController::class, 'uploadLkjip'])->name('upload.lkjip');
+Route::delete('/delete/lkjip/{id}', [PelaporanController::class, 'deleteLkjip'])->name('delete.lkjip');
 
 use App\Http\Controllers\EvaluasiController;
 
@@ -102,6 +105,8 @@ Route::post('/indikator/update/{id}', [KelolaDataController::class, 'updateIndik
 
 
 use App\Http\Controllers\UbahpasswordController;
+Route::put('/password/update', [UbahpasswordController::class, 'updatePassword'])->name('password.update');
+
 // Handle Auth
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -120,6 +125,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/faq', [FaqController::class, 'index'])->name('faq');
     Route::get('/keloladata', [KeloladataController::class, 'index'])->name('keloladata');
     Route::get('/ubahpassword', [UbahpasswordController::class, 'index'])->name('ubahpassword');
+    Route::post('/upload-dipa', [PerencanaanController::class, 'uploadDipa'])->name('upload.dipa');
 });
 
 // Handle file upload menu keputusan

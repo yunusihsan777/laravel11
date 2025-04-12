@@ -13,8 +13,11 @@ class Dipa extends Model
 
     protected $fillable = [
         'id_filename',
+        'id_pagu',
         'id_periode',
         'id_perubahan',
+        'id_gakyankum',
+        'id_dukman',
         'id_tglupload',
         'id_satker',
     ];
