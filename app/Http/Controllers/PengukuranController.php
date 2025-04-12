@@ -26,7 +26,7 @@ class PengukuranController extends Controller
     $bidang_id = $request->bidang_id;
     $bulan = $request->bulan ?? date('n'); // Gunakan bulan sekarang jika tidak dipilih
 
-    $indikators = \App\Models\Indikator::where('link', $bidang_id)
+    $indikators = Indikator::where('link', $bidang_id)
         ->whereNotNull('sub_indikator')
         ->where('sub_indikator', '!=', '')
         ->get();
@@ -58,7 +58,7 @@ class PengukuranController extends Controller
                     <tbody>";
 
         foreach ($sub_indikators as $index => $sub) {
-            $pengukuran = \App\Models\Pengukuran::where([
+            $pengukuran = Pengukuran::where([
                 ['indikator_id', '=', $indikator->id],
                 ['id_satker', '=', session('id_satker')],
                 ['tahun', '=', session('tahun_terpilih')],
