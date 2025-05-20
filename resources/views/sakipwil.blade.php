@@ -8,12 +8,14 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
-                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                     <center>
                         <h2><b>DATA PERENCANAAN AKIP SATUAN KERJA KEJAKSAAN RI</b></h2>
                     </center></div>
                 <div class="card-body">                    
-
+@php
+        $levelSakip = session('id_sakip_level', 0);
+        @endphp
                     <!-- List Pengumuman -->
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover text-center rounded">
@@ -28,10 +30,12 @@
                                     <th>Renja</th>
                                     <th>Dipa</th>
                                     <th>Renaksi</th>
+                                    @if ($levelSakip == 99)
                                     <th>Perjanjian Kinerja</th>
                                     <th>Jumlah Indikator Kinerja</th>
                                     <th>Status Pengukuran Kinerja</th>
                                     <th>LKjIP</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,7 +47,7 @@
                                             <td style="text-align: left;">{{ $satkernamaList[$index] }}</td>
                                             <td>
                                                 @if (!empty($sortedKepList[$index]))
-                                                    <a href="{{ asset('uploads/keputusan/' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                    <a href="{{ asset('uploads/repository/KEP/' . $row->id_satker . '.pdf') }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
                                                         &#10003; <!-- Tanda centang -->
                                                     </a>
@@ -57,7 +61,7 @@
                                                     @php
                                                         $latestRenstra = $renstra[$row->id_satker]->first();
                                                     @endphp
-                                                    <a href="{{ asset('uploads/renstra/renstra_' . $latestRenstra->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                    <a href="{{ asset('uploads/repository/' . $row->id_satker . '/renstra' . $row->id_tahun . '_' . $row->triwulan . '.pdf') }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
                                                         &#10003; <!-- Tanda centang -->
                                                     </a>
@@ -109,10 +113,12 @@
                                             @endif
                                             
                                             </td>
+                                            @if ($levelSakip == 99)
                                             <td>{{ $row->perjanjian_kinerja ?? '-' }}</td>
                                             <td>{{ $row->jumlah_indikator_kinerja ?? '-' }}</td>
                                             <td>{{ $row->status_pengukuran_kinerja ?? '-' }}</td>
                                             <td>{{ $row->lkjip ?? '-' }}</td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 @else
@@ -124,6 +130,7 @@
                             </tbody>
                         </table>
                     </div>
+                    @if ($levelSakip == 99)
                     <div class="card mb-4">
                         <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
                             <center>
@@ -133,7 +140,7 @@
                             <canvas id="pieChart"></canvas>
                         </div>
                     </div>
-
+@endif
                 </div>
             </div>
         </div>

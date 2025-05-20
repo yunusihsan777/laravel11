@@ -9,7 +9,7 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
-                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                     <center>
                         <h2><b>Sumber Aturan</b></h2>
                     </center></div>
@@ -20,10 +20,11 @@
                         </div>
                     @endif
                     <!-- Tombol Tambah Peraturan -->
+                    @if ($levelSakip == 99)
                     <div class="mb-3">
                         <a href="{{ route('aturan.create') }}" class="btn btn-sm btn-yellow">Tambah Peraturan</a>
                     </div>
-
+@endif
                     <table class="table table-bordered table-striped">
                         <thead class="table-warning">
                             <tr>

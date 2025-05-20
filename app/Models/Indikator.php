@@ -23,6 +23,8 @@ class Indikator extends Model
         'indikator_penyebut',
         'indikator_penjelasan',
         'sub_indikator',
+        'indikator_penghitungan',
+        'tahun'
     ];
 
     // Jika tidak ada timestamps

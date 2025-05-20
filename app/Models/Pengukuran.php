@@ -22,5 +22,11 @@ class Pengukuran extends Model
         'faktor',
         'langkah_optimalisasi',
         'bulan',
+        'sisa_tahun_lalu',
     ];
+
+    public function indikator()
+{
+    return $this->belongsTo(SinoriSakipIndikator::class, 'indikator_id');
+}
 }

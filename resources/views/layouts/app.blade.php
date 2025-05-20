@@ -65,7 +65,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@stack('scripts')
+
 @include('layouts.head')
 <body class="section-with-background" style="background-image: url('{{ asset('gambar/background.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 400px;">
     

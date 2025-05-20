@@ -44,8 +44,8 @@ class PerencanaanController extends Controller
         $indikator = SinoriSakipIndikator::getData();
         // Panggil method untuk mendapatkan data target indikator 
 
-        $indicatorIds = [22, 23, 24, 25]; // Inisialisasi ID indikator di controller
-        $indikator_pidum = SinoriSakipPidum::getData($id_satker, $tahun, $indicatorIds);
+        // $indicatorIds = [22, 23, 24, 25]; // Inisialisasi ID indikator di controller
+        // $indikator_pidum = SinoriSakipPidum::getData($id_satker, $tahun, $indicatorIds);
 
         // Ambil data target berdasarkan indikator_id, id_satker, dan tahun
         $target = TargetPK::where('id_satker', $id_satker)
@@ -58,7 +58,7 @@ class PerencanaanController extends Controller
 
         // dd ($indikator_pidum);
         // Kembalikan view beserta data yang telah difilter
-        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'indikator' => $indikator, 'indikator_pidum' => $indikator_pidum, 'target' => $target]);
+        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'indikator' => $indikator, 'target' => $target]);
     }
 
     // Fungsi untuk menangani upload file Renstra
@@ -87,11 +87,11 @@ class PerencanaanController extends Controller
         // Tentukan id_perubahan
         $id_perubahan = $latestRenstra ? $latestRenstra->id_perubahan + 1 : 0;
 
-        // Upload file ke folder public/uploads/renstra
+        // Upload file ke folder public/uploads/repository/renstra
         $file = $request->file('renstra_file');
-        $fileName = 'renstra_' . $id_perubahan . '_' . $idSatker . '_' . $tahun . '.pdf'; // Buat nama file
-        $file->move(public_path('uploads/renstra'), $fileName); // Simpan di folder 'renstra' di public
-
+        $fileName = 'renstra_' . $tahun . '_'. $id_perubahan .'.pdf'; // Buat nama file
+        $file->move(public_path('uploads/repository/'.$idSatker), $fileName); // Simpan di folder 'renstra' di public
+        // $file->move(base_path('uploads/repository/renstra'), $fileName);
         // Format tanggal upload ke d/m/y H:i:s
         $id_tglupload = now()->format('d/m/Y h:i A');
 
@@ -107,7 +107,7 @@ class PerencanaanController extends Controller
         ]);
 
         // return redirect()->route('perencanaan')->with('success', 'File Renstra berhasil diupload.')->with('active_tab', 'renstra');
-        return redirect()->back()->with('success', 'File Renstra berhasil disimpan!')->with('active_tab', 'renstra');
+        return redirect()->back()->with('success-renstra', 'File Renstra berhasil disimpan!')->with('active_tab', 'renstra');
     }
 
     // Fungsi untuk menangani upload file Iku
@@ -129,10 +129,10 @@ class PerencanaanController extends Controller
         // Tentukan id_perubahan
         $id_perubahan = $latestIku ? $latestIku->id_perubahan + 1 : 0;
 
-        // Upload file ke folder public/uploads/iku
+        // Upload file ke folder public/uploads/repository/iku
         $file = $request->file('iku_file');
-        $fileName = 'IKU_' . $id_perubahan . '_' . $idSatker . '_' . $tahun . '.pdf';
-        $file->move(public_path('uploads/iku'), $fileName);
+        $fileName = 'IKU_' . $tahun . '_' . $id_perubahan .'.pdf';
+        $file->move(public_path('uploads/repository/'. $idSatker), $fileName);
 
         // Simpan data ke database
         Iku::create([
@@ -143,7 +143,7 @@ class PerencanaanController extends Controller
             'id_tglupload' => now()->format('d/m/Y h:i A'),
         ]);
 
-        return redirect()->route('perencanaan')->with('success', 'File IKU berhasil diupload.')->with('active_tab', 'iku');
+        return redirect()->route('perencanaan')->with('success-iku', 'File IKU berhasil diupload.')->with('active_tab', 'iku');
     }
 
     // Fungsi untuk menangani upload file Renja
@@ -165,10 +165,10 @@ class PerencanaanController extends Controller
         // Tentukan id_perubahan
         $id_perubahan = $latestrenja ? $latestrenja->id_perubahan + 1 : 0;
 
-        // Upload file ke folder public/uploads/renja
+        // Upload file ke folder public/uploads/repository/renja
         $file = $request->file('renja_file');
-        $fileName = 'renja_' . $id_perubahan . '_' . $idSatker . '_' . $tahun . '.pdf';
-        $file->move(public_path('uploads/renja'), $fileName);
+        $fileName = 'renja_' . $tahun . '_' . $id_perubahan .'.pdf';
+        $file->move(public_path('uploads/repository/' . $idSatker), $fileName);
 
         // Simpan data ke database
         Renja::create([
@@ -179,7 +179,7 @@ class PerencanaanController extends Controller
             'id_tglupload' => now()->format('d/m/Y h:i A'),
         ]);
 
-        return redirect()->route('perencanaan')->with('success', 'File renja berhasil diupload.')->with('active_tab', 'renja');
+        return redirect()->route('perencanaan')->with('success-renja', 'File renja berhasil diupload.')->with('active_tab', 'renja');
     }
 
     // Fungsi untuk menangani upload file Rkakl
@@ -201,10 +201,10 @@ class PerencanaanController extends Controller
         // Tentukan id_perubahan
         $id_perubahan = $latestrkakl ? $latestrkakl->id_perubahan + 1 : 0;
 
-        // Upload file ke folder public/uploads/rkakl
+        // Upload file ke folder public/uploads/repository/rkakl
         $file = $request->file('rkakl_file');
-        $fileName = 'rkakl_' . $id_perubahan . '_' . $idSatker . '_' . $tahun . '.pdf';
-        $file->move(public_path('uploads/rkakl'), $fileName);
+        $fileName = 'rkakl_' . $tahun . '_'. $id_perubahan . '.pdf';
+        $file->move(public_path('uploads/repository/'.$idSatker), $fileName);
 
         // Simpan data ke database
         Rkakl::create([
@@ -215,7 +215,7 @@ class PerencanaanController extends Controller
             'id_tglupload' => now()->format('d/m/Y h:i A'),
         ]);
 
-        return redirect()->route('perencanaan')->with('success', 'File rkakl berhasil diupload.')->with('active_tab', 'rkakl');
+        return redirect()->route('perencanaan')->with('success-rkakl', 'File rkakl berhasil diupload.')->with('active_tab', 'rkakl');
     }
 
     // Fungsi untuk menangani upload file Dipa
@@ -241,18 +241,18 @@ class PerencanaanController extends Controller
     // Jika ada data sebelumnya, tambahkan +1 untuk id_perubahan, jika tidak mulai dari 0
     $id_perubahan = ($latestdipa && is_numeric($latestdipa->id_perubahan)) ? $latestdipa->id_perubahan + 1 : 0;
 
-    // Upload file ke folder public/uploads/dipa
+    // Upload file ke folder public/uploads/repository/dipa
     try {
         $file = $request->file('dipa_file');
-        $fileName = "dipa_{$id_perubahan}_{$idSatker}_{$tahun}.pdf";
-        $destinationPath = public_path('uploads/dipa');
+        $fileName = 'dipa_' . $tahun . '_'. $id_perubahan . '.pdf';
+        $destinationPath = public_path('uploads/repository/'.$idSatker);
         
         // Pindahkan file ke folder tujuan
         $file->move($destinationPath, $fileName);
     } catch (\Exception $e) {
         return redirect()->back()->with('error', 'Gagal mengunggah file: ' . $e->getMessage());
     }
-
+ 
     // Simpan data ke database
     Dipa::create([
         'id_satker' => $idSatker,
@@ -266,7 +266,7 @@ class PerencanaanController extends Controller
     ]);
 
     return redirect()->route('perencanaan')
-        ->with('success', 'File DIPA berhasil diupload.')
+        ->with('success-dipa', 'File DIPA berhasil diupload.')
         ->with('active_tab', 'dipa');
 }
 
@@ -289,10 +289,10 @@ class PerencanaanController extends Controller
         // Tentukan id_perubahan
         $id_perubahan = $latestrenaksi ? $latestrenaksi->id_perubahan + 1 : 0;
 
-        // Upload file ke folder public/uploads/renaksi
+        // Upload file ke folder public/uploads/repository/renaksi
         $file = $request->file('renaksi_file');
-        $fileName = 'renaksi_' . $id_perubahan . '_' . $idSatker . '_' . $tahun . '.pdf';
-        $file->move(public_path('uploads/renaksi'), $fileName);
+        $fileName = 'renaksi_' . $tahun . '_'. $id_perubahan . '.pdf';;
+        $file->move(public_path('uploads/repository/'.$idSatker), $fileName);
 
         // Simpan data ke database
         Renaksi::create([
@@ -303,7 +303,7 @@ class PerencanaanController extends Controller
             'id_tglupload' => now()->format('d/m/Y h:i A'),
         ]);
 
-        return redirect()->route('perencanaan')->with('success', 'File renaksi berhasil diupload.')->with('active_tab', 'renaksi');
+        return redirect()->route('perencanaan')->with('success-renaksi', 'File renaksi berhasil diupload.')->with('active_tab', 'renaksi');
     }
 
     public function storetarget(Request $request)
@@ -316,7 +316,7 @@ class PerencanaanController extends Controller
             'target_triwulan_3' => 'required|numeric',
             'target_triwulan_4' => 'required|numeric',
         ]);
-
+ 
         // Ambil session id_satker dan tahun
         $id_satker = session('id_satker');
         $tahun = session('tahun_terpilih');
@@ -325,7 +325,7 @@ class PerencanaanController extends Controller
             ->where('id_satker', $id_satker)
             ->where('tahun', $tahun)
             ->first();
-
+          
         if ($existingTarget) {
             // Jika sudah ada, update data
             $existingTarget->update([
@@ -337,7 +337,7 @@ class PerencanaanController extends Controller
             ]);
 
             // return redirect()->back()->with('success', 'Target berhasil diperbarui!');
-            return redirect()->route('perencanaan')->with('success', 'Target berhasil diperbarui!')->with('active_tab', 'perjanjian-kinerja');
+            return redirect()->route('perencanaan')->with('success-pk', 'Target berhasil diperbarui!')->with('active_tab', 'perjanjian-kinerja');
         }
 
         // Jika belum ada, buat data baru
@@ -353,6 +353,6 @@ class PerencanaanController extends Controller
         ]);
 
         // return redirect()->back()->with('success', 'Target berhasil disimpan!');
-        return redirect()->route('perencanaan')->with('success', 'Target berhasil disimpan!')->with('active_tab', 'perjanjian-kinerja');
+        return redirect()->route('perencanaan')->with('success-pk', 'Target berhasil disimpan!')->with('active_tab', 'perjanjian-kinerja');
     }
 }

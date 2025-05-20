@@ -9,7 +9,7 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card" style="width: 100%;">
-                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                     <center>
                         <h2><b>Perencanaan</b></h2>
                     </center>
@@ -22,8 +22,8 @@
                     <!-- Tabs Navigation -->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $activeTab == 'renstra' ? 'active' : '' }}" id="renstra-tab"
-                                data-bs-toggle="tab" href="#renstra" role="tab" aria-controls="renstra"
+                            <a class="nav-link text-orange-600 {{ $activeTab == 'renstra' ? 'active' : '' }}"
+                                id="renstra-tab" data-bs-toggle="tab" href="#renstra" role="tab" aria-controls="renstra"
                                 aria-selected="{{ $activeTab == 'renstra' ? 'true' : 'false' }}">Renstra</a>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -52,14 +52,16 @@
                                 aria-controls="{{ $activeTab == 'renaksi' ? 'true' : 'false' }}"
                                 aria-selected="false">Rencana Aksi</a>
                         </li>
+                        {{-- @if ($levelSakip == 99) --}}
+                        <!--|| $levelSakip == 2 || $levelSakip == 3 -->
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ $activeTab == 'perjanjian-kinerja' ? 'active' : '' }}"
+                                id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja" role="tab"
+                                aria-controls="{{ $activeTab == 'perjanjian-kinerja' ? 'true' : 'false' }}"
+                                aria-selected="false">Perjanjian Kinerja</a>
+                        </li>
+                        {{-- @endif --}}
                         @if ($levelSakip == 99)
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link {{ $activeTab == 'perjanjian-kinerja' ? 'active' : '' }}"
-                                    id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja"
-                                    role="tab"
-                                    aria-controls="{{ $activeTab == 'perjanjian-kinerja' ? 'true' : 'false' }}"
-                                    aria-selected="false">Perjanjian Kinerja</a>
-                            </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link" id="cetak-pk-tab" data-bs-toggle="tab" href="#cetak-pk" role="tab"
                                     aria-controls="cetak-pk" aria-selected="false">Cetak PK</a>
@@ -106,9 +108,9 @@
                                             </form>
 
                                             <!-- Alert for success -->
-                                            @if (session('success'))
+                                            @if (session('success-renstra'))
                                                 <div class="alert alert-success" id="success-alert">
-                                                    {{ session('success') }}
+                                                    {{ session('success-renstra') }}
                                                 </div>
                                             @endif
 
@@ -129,7 +131,7 @@
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
                                                                 <td>
-                                                                    <a href="{{ asset('uploads/renstra/renstra_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
+                                                                    <a href="{{ asset('uploads/repository/' . $item->id_satker . '/renstra_' . $tahun . '_' . $item->id_perubahan . '.pdf') }}"
                                                                         target="_blank"
                                                                         style="text-decoration: none; color: inherit;">
                                                                         {{ $item->id_periode == 'P1' ? 'Periode 2020 - 2024' : 'Periode 2025 - 2029' }}
@@ -153,7 +155,9 @@
                             <div class="iku-content">
                                 <h3><strong>Indikator Kinerja Utama (IKU)</strong></h3>
                                 <p class="card-title p-2" style="background-color: #f1e022; color: black;">Indikator
-                                    Kinerja Utama (IKU) merupakan dokumen ....</p>
+                                    Kinerja Utama (IKU) Kejaksaan adalah ukuran keberhasilan dalam mencapai tujuan dan
+                                    sasaran strategis Kejaksaan, yang digunakan sebagai acuan untuk menyusun rencana
+                                    kinerja, kerja, anggaran, dan evaluasi kinerja</p>
 
                                 <!-- Form Upload File -->
                                 <div>
@@ -176,9 +180,9 @@
                                             </form>
 
                                             <!-- Alert for success -->
-                                            @if (session('success'))
+                                            @if (session('success-iku'))
                                                 <div class="alert alert-success" id="success-alert">
-                                                    {{ session('success') }}
+                                                    {{ session('success-iku') }}
                                                 </div>
                                             @endif
 
@@ -199,7 +203,7 @@
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
                                                                 <td>
-                                                                    <a href="{{ asset('uploads/iku/IKU_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $item->id_periode . '.pdf') }}"
+                                                                    <a href="{{ asset('uploads/repository/' . $item->id_satker . '/IKU_' . $tahun . '_' . $item->id_perubahan . '.pdf') }}"
                                                                         target="_blank"
                                                                         style="text-decoration: none; color: inherit;">
                                                                         {{ $item->id_periode }}
@@ -258,9 +262,9 @@
                                             </form>
 
                                             <!-- Alert for success -->
-                                            @if (session('success'))
+                                            @if (session('success-renja'))
                                                 <div class="alert alert-success" id="success-alert">
-                                                    {{ session('success') }}
+                                                    {{ session('success-renja') }}
                                                 </div>
                                             @endif
 
@@ -281,7 +285,7 @@
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
                                                                 <td>
-                                                                    <a href="{{ asset('uploads/renja/renja_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
+                                                                    <a href="{{ asset('uploads/repository/' . $item->id_satker . '/renja_' . $tahun . '_' . $item->id_perubahan . '.pdf') }}"
                                                                         target="_blank"
                                                                         style="text-decoration: none; color: inherit;">
                                                                         {{ $item->id_periode }}
@@ -335,9 +339,9 @@
                                             </form>
 
                                             <!-- Alert for success -->
-                                            @if (session('success'))
+                                            @if (session('success-rkakl'))
                                                 <div class="alert alert-success" id="success-alert">
-                                                    {{ session('success') }}
+                                                    {{ session('success-rkakl') }}
                                                 </div>
                                             @endif
 
@@ -358,7 +362,7 @@
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
                                                                 <td>
-                                                                    <a href="{{ asset('uploads/rkakl/rkakl_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
+                                                                    <a href="{{ asset('uploads/repository/' . $item->id_satker . '/rkakl_' . $tahun . '_' . $item->id_perubahan . '.pdf') }}"
                                                                         target="_blank"
                                                                         style="text-decoration: none; color: inherit;">
                                                                         {{ $item->id_periode }}
@@ -382,12 +386,13 @@
                             <div class="dipa-content">
                                 <h3><strong>Daftar Isian Pelaksanaan Anggaran (DIPA)</strong></h3>
                                 <p class="card-title p-2" style="background-color: #f1e022; color: black;">
-                                    Daftar Isian Pelaksanaan Anggaran (DIPA) Kejaksaan menjadi dasar bagi Satuan Kerja (Satker) Kejaksaan untuk melaksanakan kegiatan yang telah direncanakan.
+                                    Daftar Isian Pelaksanaan Anggaran (DIPA) Kejaksaan menjadi dasar bagi Satuan Kerja
+                                    (Satker) Kejaksaan untuk melaksanakan kegiatan yang telah direncanakan.
                                 </p>
 
                                 <!-- Alert Notifikasi -->
-                                @if (session('success'))
-                                    <div class="alert alert-success">{{ session('success') }}</div>
+                                @if (session('success-dipa'))
+                                    <div class="alert alert-success">{{ session('success-dipa') }}</div>
                                 @endif
                                 @if (session('error'))
                                     <div class="alert alert-danger">{{ session('error') }}</div>
@@ -437,70 +442,82 @@
                                             <button type="submit" class="btn btn-warning btn-block">Upload File</button>
                                         </form>
                                     </div>
-                                </div>
 
-                                <!-- Tabel DIPA -->
-                                <div class="table-responsive mt-4">
-                                    <table class="table table-bordered table-striped">
-                                        <thead class="table-warning">
-                                            <tr>
-                                                <th>No</th>
-                                                <th>File DIPA</th>
-                                                <th>Total Pagu</th>
-                                                <th>Program Penegakan dan Pelayanan Hukum</th>
-                                                <th>Program Dukungan Manajemen</th>
-                                                <th>Versi</th>
-                                                <th>Tanggal Upload</th>
-                                                {{-- <th>Aksi</th> --}}
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @forelse ($dipa as $index => $item)
-                                                <tr>
-                                                    <td>{{ $index + 1 }}</td>
-                                                    <td>
-                                                        @if (!empty($item->id_filename) && file_exists(public_path('uploads/dipa/' . $item->id_filename)))
-                                                            @php
-                                                                // Format nama file yang lebih mudah dibaca
-                                                                $namaFile = explode(
-                                                                    '_',
-                                                                    pathinfo($item->id_filename, PATHINFO_FILENAME),
-                                                                );
-                                                                $versi = isset($namaFile[1]) ? $namaFile[1] : '-';
-                                                                $tahun = isset($namaFile[3]) ? $namaFile[3] : '-';
-                                                                $namaTampil = "DIPA Versi $versi ($tahun)";
-                                                            @endphp
+                                    <!-- Tabel DIPA -->
+                                    <div class="card-body">
+                                        <div class="table-responsive mt-4">
+                                            <table class="table table-bordered table-striped">
+                                                <thead class="table-warning">
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>File DIPA</th>
+                                                        <th>Total Pagu</th>
+                                                        <th>Program Penegakan dan Pelayanan Hukum</th>
+                                                        <th>Program Dukungan Manajemen</th>
+                                                        <th>Versi</th>
+                                                        <th>Tanggal Upload</th>
+                                                        {{-- <th>Aksi</th> --}}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @forelse ($dipa as $index => $item)
+                                                        <tr>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td>
+                                                                <a href="{{ asset('uploads/repository/' . $item->id_satker . '/dipa_' . $tahun . '_' . $item->id_perubahan . '.pdf') }}"
+                                                                    target="_blank"
+                                                                    style="text-decoration: none; color: inherit;">
+                                                                    {{ $item->id_periode }}
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                Rp.
+                                                                @if (strpos($item->id_pagu, '.') === false)
+                                                                    {{ number_format((float) $item->id_pagu, 0, ',', '.') }}
+                                                                @else
+                                                                    {{ $item->id_pagu }}
+                                                                @endif
+                                                            </td>
 
-                                                            <a href="{{ asset('uploads/dipa/' . $item->id_filename) }}"
-                                                                target="_blank"
-                                                                style="text-decoration: none; color: inherit;">
-                                                                {{ $namaTampil }}
-                                                            </a>
-                                                        @else
-                                                            <span class="text-muted">File belum tersedia</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>Rp.{{ number_format($item->id_pagu, 0, ',', '.') }}</td>
-                                                    <td>Rp.{{ number_format($item->id_gakyankum, 0, ',', '.') }}</td>
-                                                    <td>Rp.{{ number_format($item->id_dukman, 0, ',', '.') }}</td>
-                                                    <td>{{ $item->id_perubahan }}</td>
-                                                    <td>{{ $item->id_tglupload }}</td>
-                                                    {{-- <td>
-                                @if (!empty($item->id_filename) && file_exists(public_path('uploads/dipa/' . $item->id_filename)))
-                                    <a href="{{ asset('uploads/dipa/' . $item->id_filename) }}" class="btn btn-primary btn-sm" target="_blank">Download</a>
+                                                            <td>
+                                                                Rp.
+                                                                @if (strpos($item->id_gakyankum, '.') === false)
+                                                                    {{ number_format((float) $item->id_gakyankum, 0, ',', '.') }}
+                                                                @else
+                                                                    {{ $item->id_gakyankum }}
+                                                                @endif
+                                                            </td>
+
+                                                            <td>
+                                                                Rp.
+                                                                @if (strpos($item->id_dukman, '.') === false)
+                                                                    {{ number_format((float) $item->id_dukman, 0, ',', '.') }}
+                                                                @else
+                                                                    {{ $item->id_dukman }}
+                                                                @endif
+                                                            </td>
+
+                                                            <td>{{ $item->id_perubahan }}</td>
+                                                            <td>{{ $item->id_tglupload }}</td>
+                                                            {{-- <td>
+                                @if (!empty($item->id_filename) && file_exists(public_path('uploads/repository/dipa/' . $item->id_filename)))
+                                    <a href="{{ asset('uploads/repository/dipa/' . $item->id_filename) }}" class="btn btn-primary btn-sm" target="_blank">Download</a>
                                 @else
                                     <span class="text-danger">Tidak Ada File</span>
                                 @endif
                             </td> --}}
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="8" class="text-center">Belum ada data DIPA yang
-                                                        diunggah.</td>
-                                                </tr>
-                                            @endforelse
-                                        </tbody>
-                                    </table>
+                                                        </tr>
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="8" class="text-center">Belum ada data DIPA
+                                                                yang
+                                                                diunggah.</td>
+                                                        </tr>
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -517,7 +534,7 @@
 
                                         this.value = formattedValue; // Tampilkan format dengan titik
                                         document.getElementById(this.id + "_hidden").value =
-                                        value; // Simpan nilai asli tanpa titik
+                                            value; // Simpan nilai asli tanpa titik
                                     });
                                 });
                             });
@@ -559,9 +576,9 @@
                                             </form>
 
                                             <!-- Alert for success -->
-                                            @if (session('success'))
+                                            @if (session('success-renaksi'))
                                                 <div class="alert alert-success" id="success-alert">
-                                                    {{ session('success') }}
+                                                    {{ session('success-renaksi') }}
                                                 </div>
                                             @endif
 
@@ -582,7 +599,7 @@
                                                             <tr>
                                                                 <td>{{ $index + 1 }}</td>
                                                                 <td>
-                                                                    <a href="{{ asset('uploads/renaksi/renaksi_' . $item->id_perubahan . '_' . $item->id_satker . '_' . $tahun . '.pdf') }}"
+                                                                    <a href="{{ asset('uploads/repository/' . $item->id_satker . '/renaksi_' . $tahun . '_' . $item->id_perubahan . '.pdf') }}"
                                                                         target="_blank"
                                                                         style="text-decoration: none; color: inherit;">
                                                                         Renaksi Tahun {{ $item->id_periode }}
@@ -600,104 +617,121 @@
                             </div>
                         </div>
 
-                        {{-- <div class="container mt-4">
-
-                        </div>
+                        <div class="container mt-4"></div>
 
                         <div class="tab-pane  fade {{ $activeTab == 'perjanjian-kinerja' ? 'show active' : '' }}"
                             id="perjanjian-kinerja" role="tabpanel" aria-labelledby="perjanjian-kinerja-tab">
                             <!-- Card untuk Bidang Kajari -->
                             <!-- Alert for success -->
-                            @if (session('success'))
+                            @if (session('success-pk'))
                                 <div class="alert alert-success" id="success-alert">
-                                    {{ session('success') }}
+                                    {{ session('success-pk') }}
                                 </div>
                             @endif
                             <h3><strong>Perjanjian Kinerja</strong></h3>
-                            <p class="card-title p-2" style="background-color: #f1e022; color: black;">Pengisian Target Perjanjian Kinerja</p>
-                                                        @php
-                            // Ambil bidang yang memiliki bidang_lokasi = id_sakip_level (hanya jika session id_sakip_level = 3)
-                            $bidangs = session('id_sakip_level') == 3 ? \App\Models\Bidang::where('bidang_lokasi', 3)->get() : [];
-                        @endphp
-                        
-                        @foreach ($bidangs as $index => $bidang)
+                            <p class="card-title p-2" style="background-color: #f1e022; color: black;">Pengisian Target
+                                Perjanjian Kinerja</p>
                             @php
-                                // Ambil indikator yang memiliki link sesuai dengan rumpun bidang
-                                $indikators = \App\Models\Indikator::where('link', $bidang->rumpun)->get();
-                            @endphp
-                        
-                            <div class="card mb-2">
-                                <div class="card-header d-flex justify-content-between align-items-center"
-                                    style="background-color: #e6bf3e; color: white;">
-                                    {{ $bidang->bidang_nama }}
-                                    <a data-bs-toggle="collapse" href="#collapseBidang{{ $index }}" role="button"
-                                        aria-expanded="false" aria-controls="collapseBidang{{ $index }}">
-                                        <i class="bi bi-chevron-down text-white"></i> <!-- Ikon Bootstrap -->
-                                    </a>
-                                </div>
-                        
-                                <div id="collapseBidang{{ $index }}" class="collapse">
-                                    <div class="card-body">
-                                        @if ($indikators->isNotEmpty())
-                                            <div class="row">
-                                                @foreach ($indikators as $key => $indikator)
-                                                    <div class="col-md-6">
-                                                        <div class="card mb-2">
-                                                            <div class="card-body">
-                                                                <!-- Indikator Nama -->
-                                                                <h5 class="text-center" style="font-weight: bold; color: black;">
-                                                                    {{ $indikator->indikator_nama }}
-                                                                </h5>
-                        
-                        
-                                                                <!-- Form Target -->
-                                                                <form method="POST" action="{{ route('target.store') }}">
-                                                                    @csrf
-                                                                    <input type="hidden" name="indikator_id" value="{{ $indikator->id }}">
-                        
-                                                                   
-                                                                    <div class="mb-2">
-                                                                        <label class="form-label">Target Pertahun (%)</label>
-                                                                        <input type="number" class="form-control" name="target_tahun" 
-                                                                            value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
-                                                                    </div>
-                                                                    
-                                                                    <div class="row">
-                                                                        @for ($i = 1; $i <= 4; $i++)
-                                                                            <div class="col-md-6">
-                                                                                <label class="form-label">Triwulan {{ $i }} (%)</label>
-                                                                                <input type="number" class="form-control" name="target_triwulan_{{ $i }}" 
-                                                                                    value="{{ $target[$indikator->id]->{'target_triwulan_'.$i} ?? '' }}">
-                                                                            </div>
-                                                                        @endfor
-                                                                    </div>
-                                                                    
+                                $level = session('id_sakip_level');
+                                $bidangs = in_array($level, [2, 3])
+                                    ? \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->where('bidang_level', '!=', null) // atau angka tertentu
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get()
+                                    : [];
 
-                        
-                                                                    <br>
-                                                                    <button type="submit" class="btn btn-success w-100">Simpan</button>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                        
-                                                    @if (($key + 1) % 2 == 0)
-                                                        </div><div class="row"> <!-- Tutup & Buka Row Setiap 2 Indikator -->
-                                                    @endif
-                                                @endforeach
-                                            </div>
-                                        @else
-                                            <p><i>Tidak ada indikator terkait</i></p>
-                                        @endif
+                            @endphp
+
+                            @foreach ($bidangs as $index => $bidang)
+                                @php
+                                    // Ambil indikator yang memiliki link sesuai dengan rumpun bidang
+                                    $indikators = \App\Models\Indikator::where('link', $bidang->rumpun)->get();
+                                @endphp
+
+                                <div class="card mb-2">
+                                    <div class="card-header d-flex justify-content-between align-items-center"
+                                        style="background-color: #e6bf3e; color: white;">
+                                        {{ $bidang->bidang_nama }}
+                                        <a data-bs-toggle="collapse" href="#collapseBidang{{ $index }}"
+                                            role="button" aria-expanded="false"
+                                            aria-controls="collapseBidang{{ $index }}"
+                                            class="collapse-toggle d-flex align-items-center">
+                                            <i class="bi bi-chevron-down text-white rotate-icon"></i>
+                                        </a>
                                     </div>
-                                </div>
-                            </div>
-                        @endforeach --}}
+
+                                    <div class="collapse" id="collapseBidang{{ $index }}">
+                                        <div class="card-body">
+                                            <div class="card-body">
+                                                @if ($indikators->isNotEmpty())
+                                                    <div class="row">
+                                                        @foreach ($indikators as $key => $indikator)
+                                                            <div class="col-md-6">
+                                                                <div class="card mb-2">
+                                                                    <div class="card-body">
+                                                                        <!-- Indikator Nama -->
+                                                                        <h5 class="text-center"
+                                                                            style="font-weight: bold; color: black;">
+                                                                            {{ $indikator->indikator_nama }}
+                                                                        </h5>
+
+
+                                                                        <!-- Form Target -->
+                                                                        <form method="POST"
+                                                                            action="{{ route('target.store') }}">
+                                                                            @csrf
+                                                                            <input type="hidden" name="indikator_id"
+                                                                                value="{{ $indikator->id }}">
+
+
+                                                                            <div class="mb-2">
+                                                                                <label class="form-label">Target Pertahun
+                                                                                    (%)
+                                                                                </label>
+                                                                                <input type="number" class="form-control"
+                                                                                    name="target_tahun"
+                                                                                    value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
+                                                                            </div>
+
+                                                                            <div class="row">
+                                                                                @for ($i = 1; $i <= 4; $i++)
+                                                                                    <div class="col-md-6">
+                                                                                        <label class="form-label">Triwulan
+                                                                                            {{ $i }} (%)</label>
+                                                                                        <input type="number"
+                                                                                            class="form-control"
+                                                                                            name="target_triwulan_{{ $i }}"
+                                                                                            value="{{ $target[$indikator->id]->{'target_triwulan_' . $i} ?? '' }}">
+                                                                                    </div>
+                                                                                @endfor
+                                                                            </div>
+
+                                                                            <br>
+                                                                            <button type="submit"
+                                                                                class="btn btn-success w-100">Simpan</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            @if (($key + 1) % 2 == 0)
+                                                    </div>
+                                                    <div class="row"> <!-- Tutup & Buka Row Setiap 2 Indikator -->
+                                                @endif
+                            @endforeach
+                        </div>
+                    @else
+                        <p><i>Tidak ada indikator terkait</i></p>
+                        @endif
                     </div>
                 </div>
             </div>
-
+            @endforeach
         </div>
+    </div>
+    </div>
+
+    </div>
     </div>
     </div>
 @endsection
@@ -772,6 +806,16 @@
             vertical-align: middle;
         }
     </style>
+    <style>
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .rotate-icon.rotate {
+            transform: rotate(180deg);
+        }
+    </style>
+
 @endsection
 
 @section('scripts')
@@ -790,23 +834,42 @@
     </script>
     <!-- Script to Show/Hide Sections Based on Selected Bidang -->
     <script>
-        document.getElementById('bidang').addEventListener('change', function() {
-            var kajariSection = document.getElementById('kajari-section');
-            var pidumSection = document.getElementById('pidum-section');
+        // document.getElementById('bidang').addEventListener('change', function() {
+        //     var kajariSection = document.getElementById('kajari-section');
+        //     var pidumSection = document.getElementById('pidum-section');
 
-            if (this.value === 'kajari') {
-                kajariSection.style.display = 'block';
-                pidumSection.style.display = 'none';
-            } else if (this.value === 'pidum') {
-                kajariSection.style.display = 'none';
-                pidumSection.style.display = 'block';
-            } else {
-                kajariSection.style.display = 'none';
-                pidumSection.style.display = 'none';
-            }
-        });
+        //     if (this.value === 'kajari') {
+        //         kajariSection.style.display = 'block';
+        //         pidumSection.style.display = 'none';
+        //     } else if (this.value === 'pidum') {
+        //         kajariSection.style.display = 'none';
+        //         pidumSection.style.display = 'block';
+        //     } else {
+        //         kajariSection.style.display = 'none';
+        //         pidumSection.style.display = 'none';
+        //     }
+        // });
 
-        // Initialize the correct section to be displayed
-        document.getElementById('bidang').dispatchEvent(new Event('change'));
+        // // Initialize the correct section to be displayed
+        // document.getElementById('bidang').dispatchEvent(new Event('change'));
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event ketika collapse dibuka
+            document.querySelectorAll('.collapse').forEach(function(collapse) {
+                collapse.addEventListener('show.bs.collapse', function() {
+                    const icon = this.previousElementSibling.querySelector('.rotate-icon');
+                    if (icon) icon.classList.add('rotate');
+                });
+
+                // Event ketika collapse ditutup
+                collapse.addEventListener('hide.bs.collapse', function() {
+                    const icon = this.previousElementSibling.querySelector('.rotate-icon');
+                    if (icon) icon.classList.remove('rotate');
+                });
+            });
+        });
+    </script>
+
+
 @endsection

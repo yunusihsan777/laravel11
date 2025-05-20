@@ -6,7 +6,7 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
-                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                     <center>
                         <h2><b>Kelola Data</b></h2>
                     </center>
@@ -45,54 +45,57 @@
                                 <div class="card-header d-flex justify-content-between align-items-center"
                                     style="background-color: #ffcc00; color: black;">
                                     <b>Input Data Bidang</b>
-                                    <a data-bs-toggle="collapse" href="#collapseBidang" role="button"
-                                        aria-expanded="false" aria-controls="collapseBidang">
-                                        <i class="bi bi-chevron-down text-white" id="iconCollapseBidang"></i> <!-- Ikon Bootstrap -->
+                                    <a data-bs-toggle="collapse" href="#collapseBidang" role="button" aria-expanded="false"
+                                        aria-controls="collapseBidang">
+                                        <i class="bi bi-chevron-down text-white" id="iconCollapseBidang"></i>
+                                        <!-- Ikon Bootstrap -->
                                     </a>
                                 </div>
                                 <div class="collapse hide" id="collapseBidang">
                                     <div class="card-body">
                                         {{-- Form Input/Create/Update --}}
-                                        <form action="{{ route('bidang.storeOrUpdateBidang') }}" method="POST" class="mb-4">
+                                        <form action="{{ route('bidang.storeOrUpdateBidang') }}" method="POST"
+                                            class="mb-4">
                                             @csrf
                                             <input type="hidden" name="id" value="{{ $bidang->id ?? '' }}">
-                            
+
                                             <div class="mb-3">
                                                 <label for="bidang_nama" class="form-label">Nama Bidang</label>
-                                                <input type="text" class="form-control" id="bidang_nama" name="bidang_nama"
-                                                    value="{{ $bidang->bidang_nama ?? '' }}" placeholder="Masukkan nama bidang"
-                                                    required>
+                                                <input type="text" class="form-control" id="bidang_nama"
+                                                    name="bidang_nama" value="{{ $bidang->bidang_nama ?? '' }}"
+                                                    placeholder="Masukkan nama bidang" required>
                                             </div>
-                            
+
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <label for="bidang_level" class="form-label">Bidang Level</label>
-                                                    <input type="number" class="form-control" id="bidang_level" name="bidang_level"
-                                                        value="{{ $bidang->bidang_level ?? '' }}" placeholder="Masukkan level bidang"
-                                                        required>
+                                                    <input type="number" class="form-control" id="bidang_level"
+                                                        name="bidang_level" value="{{ $bidang->bidang_level ?? '' }}"
+                                                        placeholder="Masukkan level bidang" required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label for="bidang_lokasi" class="form-label">Bidang Lokasi</label>
-                                                    <input type="number" class="form-control" id="bidang_lokasi" name="bidang_lokasi"
-                                                        value="{{ $bidang->bidang_lokasi ?? '' }}" placeholder="Masukkan lokasi bidang"
-                                                        required>
+                                                    <input type="number" class="form-control" id="bidang_lokasi"
+                                                        name="bidang_lokasi" value="{{ $bidang->bidang_lokasi ?? '' }}"
+                                                        placeholder="Masukkan lokasi bidang" required>
                                                 </div>
                                             </div>
-                            
+
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
                                                     <label for="rumpun" class="form-label">Rumpun</label>
                                                     <input type="number" class="form-control" id="rumpun" name="rumpun"
-                                                        value="{{ $bidang->rumpun ?? '' }}" placeholder="Masukkan rumpun" required>
+                                                        value="{{ $bidang->rumpun ?? '' }}" placeholder="Masukkan rumpun"
+                                                        required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label for="hide" class="form-label">Hide (0/1)</label>
-                                                    <input type="number" class="form-control" id="hide" name="hide"
-                                                        value="{{ $bidang->hide ?? '' }}" placeholder="Masukkan status hide (0/1)"
-                                                        required>
+                                                    <input type="number" class="form-control" id="hide"
+                                                        name="hide" value="{{ $bidang->hide ?? '' }}"
+                                                        placeholder="Masukkan status hide (0/1)" required>
                                                 </div>
                                             </div>
-                            
+
                                             <button type="submit" class="btn btn-success">
                                                 {{ isset($bidang) ? 'Update' : 'Simpan' }}
                                             </button>
@@ -154,7 +157,7 @@
                                 {{ $bidangs->links() }}
                             </div>
 
-                            
+
 
                         </div>
                         <!-- Data Saspro -->
@@ -165,35 +168,36 @@
                                     <b>Input Data Saspro</b>
                                     <a data-bs-toggle="collapse" href="#collapseSaspro" role="button"
                                         aria-expanded="false" aria-controls="collapseSaspro">
-                                        <i class="bi bi-chevron-down text-white" id="iconCollapseSaspro"></i> <!-- Ikon Bootstrap -->
+                                        <i class="bi bi-chevron-down text-white" id="iconCollapseSaspro"></i>
+                                        <!-- Ikon Bootstrap -->
                                     </a>
                                 </div>
                                 <div class="collapse hide" id="collapseSaspro">
                                     <div class="card-body">
                                         <form method="POST" action="{{ route('saspro.store') }}">
                                             @csrf
-                            
+
                                             <!-- Link -->
                                             <div class="form-group">
                                                 <label for="link">Link</label>
                                                 <input type="text" class="form-control" id="link" name="link"
                                                     placeholder="Masukkan Link" required>
                                             </div>
-                            
+
                                             <!-- Nama Saspro -->
                                             <div class="form-group">
                                                 <label for="saspro_nama">Nama Saspro</label>
-                                                <input type="text" class="form-control" id="saspro_nama" name="saspro_nama"
-                                                    placeholder="Masukkan Nama Saspro" required>
+                                                <input type="text" class="form-control" id="saspro_nama"
+                                                    name="saspro_nama" placeholder="Masukkan Nama Saspro" required>
                                             </div>
-                            
+
                                             <!-- Penjelasan Saspro -->
                                             <div class="form-group">
                                                 <label for="penjelasan_saspro">Penjelasan Saspro</label>
                                                 <textarea class="form-control" id="penjelasan_saspro" name="penjelasan_saspro" rows="3"
                                                     placeholder="Masukkan Penjelasan Saspro" required></textarea>
                                             </div>
-                            
+
                                             <br>
                                             <!-- Submit Button -->
                                             <button type="submit" class="btn btn-success">Submit</button>
@@ -324,11 +328,39 @@
                                                 <textarea class="form-control" id="indikator_penjelasan" name="indikator_penjelasan" rows="3" required></textarea>
                                             </div>
 
+                                            <!-- Sub Indikator -->
                                             <div class="form-group">
                                                 <label for="sub_indikator">Sub Indikator</label>
-                                                <input type="text" class="form-control" name="sub_indikator" id="sub_indikator"><p style="color: red">"Pisahkan dengan koma jika lebih dari satu"</p>
+                                                <input type="text" class="form-control" name="sub_indikator"
+                                                    id="sub_indikator">
+                                                <p style="color: red">"Pisahkan dengan koma jika lebih dari satu"</p>
                                             </div>
-                                            
+
+                                            <!-- Indikator Penghitungan -->
+                                            <div class="form-group">
+                                                <label for="indikator_penghitungan">Indikator Penghitungan</label>
+                                                <input type="text" class="form-control" name="indikator_penghitungan"
+                                                    id="indikator_penghitungan">
+                                                <p style="color: red">"Pisahkan dengan koma jika lebih dari satu"<br>"Maks
+                                                    1 koma"</p>
+                                            </div>
+
+                                            <!-- Tahun -->
+                                            <div class="form-group">
+                                                <label for="tahun">Tahun</label>
+                                                <input type="text" class="form-control" id="tahun" name="tahun"
+                                                    required>
+                                            </div>
+
+                                            <!-- Tren -->
+                                            <div class="form-group">
+                                                <label for="tren">Tren</label>
+                                                <select class="form-select" id="tren" name="tren" required>
+                                                    <option value="">Pilih</option>
+                                                    <option value="Naik">Naik</option>
+                                                    <option value="Turun">Turun</option>
+                                                </select>
+                                            </div>
                                             <br>
                                             <!-- Submit Button -->
                                             <button type="submit" class="btn btn-success">Submit</button>
@@ -352,6 +384,9 @@
                                         <th>Indikator Penyebut</th>
                                         <th>Indikator Penjelasan</th>
                                         <th>Sub Indikator</th>
+                                        <th>Indikator Penghitungan</th>
+                                        <th>Tahun</th>
+                                        <th>Tren</th>
                                         <th style="width: 150px;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -366,7 +401,11 @@
                                             <td>{{ $indikator->indikator_pembilang }}</td>
                                             <td>{{ $indikator->indikator_penyebut }}</td>
                                             <td>{{ $indikator->indikator_penjelasan }}</td>
-                                            <td>{{ $indikator->sub_indikator }}</td> 
+                                            <td>{{ $indikator->sub_indikator }}</td>
+                                            <td>{{ $indikator->indikator_penghitungan }}</td>
+                                            {{-- <td>{{ $indikator->bidangById->rumpun ?? '-' }}</td> --}}
+                                            <td>{{ $indikator->tahun }}</td>
+                                            <td>{{ $indikator->tren }}</td>
                                             <td>
                                                 <button class="btn btn-warning btn-sm edit-indikator"
                                                     data-id="{{ $indikator->id }}"
@@ -376,7 +415,9 @@
                                                     data-pembilang="{{ $indikator->indikator_pembilang }}"
                                                     data-penyebut="{{ $indikator->indikator_penyebut }}"
                                                     data-penjelasan="{{ $indikator->indikator_penjelasan }}"
-                                                    data-sub-indikator="{{ $indikator->sub_indikator }}">
+                                                    data-sub-indikator="{{ $indikator->sub_indikator }}"
+                                                    data-penghitungan="{{ $indikator->indikator_penghitungan }}"
+                                                    data-tahun="{{ $indikator->tahun }}">
                                                     Edit
                                                 </button>
                                                 <form action="{{ route('indikator.delete', $indikator->id) }}"
@@ -398,211 +439,234 @@
                             </div>
 
                         </div>
-                        
+
 
                     </div>
                 </div>
             </div>
 
             {{-- Modal bidang --}}
-            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
-            aria-hidden="true" data-bs-backdrop="false">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <form action="{{ route('bidang.storeOrUpdateBidang') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="id" id="modal_id">
-
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel">Edit Data Bidang</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="modal_nama_bidang" class="form-label">Nama Bidang</label>
-                                <input type="text" class="form-control" id="modal_nama_bidang"
-                                    name="bidang_nama" required>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="modal_bidang_level" class="form-label">Bidang
-                                        Level</label>
-                                    <input type="number" class="form-control"
-                                        id="modal_bidang_level" name="bidang_level" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="modal_bidang_lokasi" class="form-label">Bidang
-                                        Lokasi</label>
-                                    <input type="number" class="form-control"
-                                        id="modal_bidang_lokasi" name="bidang_lokasi" required>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="modal_rumpun" class="form-label">Rumpun</label>
-                                    <input type="number" class="form-control" id="modal_rumpun"
-                                        name="rumpun" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="modal_hide" class="form-label">Hide</label>
-                                    <input type="number" class="form-control" id="modal_hide"
-                                        name="hide" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-success">Simpan Perubahan</button>
-
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Latar belakang semi-transparan -->
-        <div class="custom-opacity d-none" id="modalBackground"></div>
-        
-            <!-- Modal Edit Saspro -->
-            <div class="modal fade" id="editSasproModal" tabindex="-1" role="dialog"
-            aria-labelledby="editSasproModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editSasproModalLabel">Edit Data Saspro</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-
-                    </div>
-                    <div class="modal-body">
-                        <form id="editSasproForm" method="POST">
+            <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"
+                data-bs-backdrop="false">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <form action="{{ route('bidang.storeOrUpdateBidang') }}" method="POST">
                             @csrf
-                            <input type="hidden" name="_method" value="POST">
-                            <input type="hidden" id="edit_saspro_id" name="id">
+                            <input type="hidden" name="id" id="modal_id">
 
-
-
-                            <!-- Link -->
-                            <div class="form-group">
-                                <label for="edit_link">Link</label>
-                                <input type="text" class="form-control" id="edit_link" name="link"
-                                    required>
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Edit Data Bidang</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
 
-                            <!-- Nama Saspro -->
-                            <div class="form-group">
-                                <label for="edit_saspro_nama">Nama Saspro</label>
-                                <input type="text" class="form-control" id="edit_saspro_nama"
-                                    name="saspro_nama" required>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="modal_nama_bidang" class="form-label">Nama Bidang</label>
+                                    <input type="text" class="form-control" id="modal_nama_bidang" name="bidang_nama"
+                                        required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="modal_bidang_level" class="form-label">Bidang
+                                            Level</label>
+                                        <input type="number" class="form-control" id="modal_bidang_level"
+                                            name="bidang_level" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="modal_bidang_lokasi" class="form-label">Bidang
+                                            Lokasi</label>
+                                        <input type="number" class="form-control" id="modal_bidang_lokasi"
+                                            name="bidang_lokasi" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="modal_rumpun" class="form-label">Rumpun</label>
+                                        <input type="number" class="form-control" id="modal_rumpun" name="rumpun"
+                                            required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="modal_hide" class="form-label">Hide</label>
+                                        <input type="number" class="form-control" id="modal_hide" name="hide"
+                                            required>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- Penjelasan Saspro -->
-                            <div class="form-group">
-                                <label for="edit_penjelasan_saspro">Penjelasan Saspro</label>
-                                <textarea class="form-control" id="edit_penjelasan_saspro" name="penjelasan_saspro" rows="3" required></textarea>
+                            <div class="modal-footer">
+                                {{-- <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Tutup</button> --}}
+                                <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+
                             </div>
                         </form>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                            data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-success" id="saveEditSaspro">Simpan
-                            Perubahan</button>
+                </div>
+            </div>
+
+            <!-- Latar belakang semi-transparan -->
+            <div class="custom-opacity d-none" id="modalBackground"></div>
+
+            <!-- Modal Edit Saspro -->
+            <div class="modal fade" id="editSasproModal" tabindex="-1" role="dialog"
+                aria-labelledby="editSasproModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editSasproModalLabel">Edit Data Saspro</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+
+                        </div>
+                        <div class="modal-body">
+                            <form id="editSasproForm" method="POST">
+                                @csrf
+                                <input type="hidden" name="_method" value="POST">
+                                <input type="hidden" id="edit_saspro_id" name="id">
+
+
+
+                                <!-- Link -->
+                                <div class="form-group">
+                                    <label for="edit_link">Link</label>
+                                    <input type="text" class="form-control" id="edit_link" name="link" required>
+                                </div>
+
+                                <!-- Nama Saspro -->
+                                <div class="form-group">
+                                    <label for="edit_saspro_nama">Nama Saspro</label>
+                                    <input type="text" class="form-control" id="edit_saspro_nama" name="saspro_nama"
+                                        required>
+                                </div>
+
+                                <!-- Penjelasan Saspro -->
+                                <div class="form-group">
+                                    <label for="edit_penjelasan_saspro">Penjelasan Saspro</label>
+                                    <textarea class="form-control" id="edit_penjelasan_saspro" name="penjelasan_saspro" rows="3" required></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            {{-- <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">Batal</button> --}}
+                            <button type="submit" class="btn btn-success" id="saveEditSaspro">Simpan
+                                Perubahan</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-<!-- Modal Edit Indikator -->
-<div class="modal fade" id="editIndikatorModal" tabindex="-1"
-aria-labelledby="editIndikatorLabel" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="editIndikatorLabel">Edit Data Indikator</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form id="editIndikatorForm" method="POST" action="">
-                @csrf
-                <input type="hidden" name="_method" value="POST">
+            <!-- Modal Edit Indikator -->
+            <div class="modal fade" id="editIndikatorModal" tabindex="-1" aria-labelledby="editIndikatorLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editIndikatorLabel">Edit Data Indikator</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editIndikatorForm" method="POST" action="">
+                                @csrf
+                                <input type="hidden" name="_method" value="POST">
 
-                <!-- ID Indikator (Hidden) -->
-                <input type="hidden" id="indikator_id" name="indikator_id">
+                                <!-- ID Indikator (Hidden) -->
+                                <input type="hidden" id="indikator_id" name="indikator_id">
 
-                <!-- Bidang -->
-                <div class="form-group">
-                    <label for="edit_bidang">Bidang</label>
-                    <select class="form-control" id="edit_bidang" name="bidang" required>
-                        <option value="">Pilih Bidang</option>
-                        @foreach ($bidangall as $bidang)
-                            <option value="{{ $bidang->id }}"
-                                data-rumpun="{{ $bidang->rumpun }}">
-                                {{ $bidang->bidang_nama }}
-                            </option>
-                        @endforeach
-                    </select>
+                                <!-- Bidang -->
+                                <div class="form-group">
+                                    <label for="edit_bidang">Bidang</label>
+                                    <select class="form-control" id="edit_bidang" name="bidang" required>
+                                        <option value="">Pilih Bidang</option>
+                                        @foreach ($bidangall as $bidang)
+                                            <option value="{{ $bidang->id }}" data-rumpun="{{ $bidang->rumpun }}">
+                                                {{ $bidang->bidang_nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Lingkup -->
+                                <div class="form-group">
+                                    <label for="edit_lingkup">Lingkup</label>
+                                    <input type="number" class="form-control" id="edit_lingkup" name="lingkup"
+                                        required>
+                                </div>
+
+                                <!-- Indikator Nama -->
+                                <div class="form-group">
+                                    <label for="edit_indikator_nama">Indikator Nama</label>
+                                    <input type="text" class="form-control" id="edit_indikator_nama"
+                                        name="indikator_nama" required>
+                                </div>
+
+                                <!-- Indikator Pembilang -->
+                                <div class="form-group">
+                                    <label for="edit_indikator_pembilang">Indikator Pembilang</label>
+                                    <input type="text" class="form-control" id="edit_indikator_pembilang"
+                                        name="indikator_pembilang" required>
+                                </div>
+
+                                <!-- Indikator Penyebut -->
+                                <div class="form-group">
+                                    <label for="edit_indikator_penyebut">Indikator Penyebut</label>
+                                    <input type="text" class="form-control" id="edit_indikator_penyebut"
+                                        name="indikator_penyebut" required>
+                                </div>
+
+                                <!-- Indikator Penjelasan -->
+                                <div class="form-group">
+                                    <label for="edit_indikator_penjelasan">Indikator Penjelasan</label>
+                                    <textarea class="form-control" id="edit_indikator_penjelasan" name="indikator_penjelasan" rows="3" required></textarea>
+                                </div>
+
+                                <!-- Sub Indikator  -->
+                                <div class="form-group">
+                                    <label for="edit_sub_indikator">Sub Indikator</label>
+                                    <input type="text" class="form-control" name="sub_indikator"
+                                        id="edit_sub_indikator">
+                                    <p style="color: red">"Pisahkan dengan koma jika lebih dari satu"</p>
+                                </div>
+
+                                <!-- Indikator Penghitungan -->
+                                <div class="form-group">
+                                    <label for="edit_indikator_penghitungan">Indikator Penghitungan</label>
+                                    <input type="text" class="form-control" name="indikator_penghitungan"
+                                        id="edit_indikator_penghitungan" rows="3">
+                                    <p style="color: red">"Pisahkan dengan koma jika lebih dari satu"<br>"Maks 1 koma"</p>
+                                </div>
+
+                                <!-- Tahun -->
+                                <div class="form-group">
+                                    <label for="edit_tahun">Tahun</label>
+                                    <input type="text" class="form-control" id="edit_tahun" name="tahun" required>
+                                </div>
+
+                                <!-- Tren -->
+                                <div class="form-group">
+                                    <label for="edit_tren">Tren</label>
+                                    <select class="form-select" id="edit_tren" name="tren" required>
+                                        <option value="">Pilih</option>
+                                        <option value="Naik">Naik</option>
+                                        <option value="Turun">Turun</option>
+                                    </select>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="modal-footer">
+                                    {{-- <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Batal</button> --}}
+                                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                                </div>
+
+
+                            </form>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Lingkup -->
-                <div class="form-group">
-                    <label for="edit_lingkup">Lingkup</label>
-                    <input type="number" class="form-control" id="edit_lingkup"
-                        name="lingkup" required>
-                </div>
-
-                <!-- Indikator Nama -->
-                <div class="form-group">
-                    <label for="edit_indikator_nama">Indikator Nama</label>
-                    <input type="text" class="form-control" id="edit_indikator_nama"
-                        name="indikator_nama" required>
-                </div>
-
-                <!-- Indikator Pembilang -->
-                <div class="form-group">
-                    <label for="edit_indikator_pembilang">Indikator Pembilang</label>
-                    <input type="text" class="form-control" id="edit_indikator_pembilang"
-                        name="indikator_pembilang" required>
-                </div>
-
-                <!-- Indikator Penyebut -->
-                <div class="form-group">
-                    <label for="edit_indikator_penyebut">Indikator Penyebut</label>
-                    <input type="text" class="form-control" id="edit_indikator_penyebut"
-                        name="indikator_penyebut" required>
-                </div>
-
-                <!-- Indikator Penjelasan -->
-                <div class="form-group">
-                    <label for="edit_indikator_penjelasan">Indikator Penjelasan</label>
-                    <textarea class="form-control" id="edit_indikator_penjelasan" name="indikator_penjelasan" rows="3" required></textarea>
-                </div>
-
-                <!-- Sub Indikator  -->
-                <div class="form-group">
-                    <label for="edit_sub_indikator">Sub Indikator</label>
-                    <input type="text" class="form-control" name="sub_indikator" id="edit_sub_indikator">
-                </div>
-
-                <br>
-                <!-- Submit Button -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary"
-                        data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
-                </div>
-
-
-            </form>
-        </div>
-    </div>
-</div>
-</div>
+            </div>
 
         </div>
     </div>
@@ -735,6 +799,9 @@ aria-labelledby="editIndikatorLabel" aria-hidden="true">
                 let indikatorPenyebut = this.getAttribute("data-penyebut");
                 let indikatorPenjelasan = this.getAttribute("data-penjelasan");
                 let subIndikator = this.getAttribute("data-sub-indikator");
+                let indikatorPenghitungan = this.getAttribute("data-penghitungan");
+                let tahun = this.getAttribute("data-tahun");
+                let tren = this.getAttribute("data-tren");
 
                 // Isi form modal dengan data yang diambil dari tombol edit
                 document.getElementById("indikator_id").value = indikatorId;
@@ -742,8 +809,13 @@ aria-labelledby="editIndikatorLabel" aria-hidden="true">
                 document.getElementById("edit_indikator_nama").value = indikatorNama;
                 document.getElementById("edit_indikator_pembilang").value = indikatorPembilang;
                 document.getElementById("edit_indikator_penyebut").value = indikatorPenyebut;
-                document.getElementById("edit_indikator_penjelasan").value = indikatorPenjelasan;
+                document.getElementById("edit_indikator_penjelasan").value =
+                    indikatorPenjelasan;
                 document.getElementById("edit_sub_indikator").value = subIndikator;
+                document.getElementById("edit_indikator_penghitungan").value =
+                    indikatorPenghitungan;
+                document.getElementById("edit_tahun").value = tahun;
+                document.getElementById("edit_tren").value = tren;
 
                 // Set dropdown bidang dengan bidang yang sesuai
                 let bidangSelect = document.getElementById("edit_bidang");

@@ -82,7 +82,7 @@
 <body>
 
     <div class="login-container">
-        <h2 class="login-title">SERENATA <br>KEJAKSAAN AGUNG REPUBLIK INDONESIA</h2>
+        <h2 class="login-title">E-SAKIP <br>KEJAKSAAN AGUNG REPUBLIK INDONESIA</h2>
         <center><img src="{{ asset('gambar/kejaksaan.png') }}" alt="kejaksaan" class="login-pic"></center>
 <br>
         <!-- Display Validation Errors -->

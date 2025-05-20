@@ -26,7 +26,13 @@ class DashboardController extends Controller
         $tahun = session('tahun_terpilih', date('Y'));
         session(['tahun_terpilih' => $tahun]);
         $idSatker = session('id_satker'); // Ambil id_satker dari session
-        $periode = 'P2'; // Periode yang dicek
+        // $periode = 'P2'; // Periode yang dicek
+
+        if ($tahun == "2024") {
+            $periode = "P1";
+        } elseif ($tahun >= "2025" && $tahun <= "2029") {
+            $periode = "P2";
+        }
 
         // Lanjutkan dengan logika untuk menampilkan data berdasarkan tahun
         // return view('dashboard', ['tahun' => $tahun]);

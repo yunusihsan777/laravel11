@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\kep;
-
+ 
 class kepController extends Controller
 {
     public function index()
@@ -52,9 +52,9 @@ class kepController extends Controller
         // Simpan file ke storage
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $fileName = $idSatker .'_'. $tahun . '.pdf'; // Unikkan nama file
-            $file->move(public_path('uploads/keputusan'), $fileName); // Simpan di folder 'keputusan' di public
-
+            $fileName = $idSatker . '.pdf'; // Unikkan nama file
+            $file->move(public_path('uploads/KEP'), $fileName); // Simpan di folder 'keputusan' di public
+            // $file->move(base_path('uploads/'. $idSatker), $fileName);
             // Simpan data ke database
             Kep::create([
                 'id_satker' => $idSatker,

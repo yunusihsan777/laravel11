@@ -6,7 +6,7 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
-                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                 <center>
                     <h2><b>Keputusan</b></h2>
                 </center></div>

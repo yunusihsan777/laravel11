@@ -5,157 +5,298 @@
 @section('content')
     <div class="content" id="content">
         <div class="container-fluid">
-            <div class="card border-light shadow-sm">
-                <!-- Judul -->
-                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+            <div class="card" style="width: 100%;">
+                <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                     <center>
                         <h2><b>Pengukuran</b></h2>
                     </center>
-                </div><br>
-                @php
-                    $bulanSekarang = session('bulan_terpilih', date('n')); // Ambil bulan dari session, jika tidak ada gunakan bulan sekarang
-                @endphp
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-header bg-warning">
+                                    <strong>📌 Daftar Bidang</strong>
+                                </div>
+                                <div class="card-body">
+                                    @php
+                                        use App\Models\Bidang;
+                                        $level = session('id_sakip_level');
+                                        $bidangs = in_array($level, [2, 3])
+                                            ? \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                ->where('bidang_level', '!=', null) // atau angka tertentu
+                                                ->orderBy('bidang_level', 'asc')
+                                                ->get()
+                                            : [];
 
-                <!-- Row untuk membagi dua kolom (Bidang & Indikator) -->
-                <div class="row">
-                    <!-- Kolom Kiri (Daftar Bidang) -->
-                    <div class="col-md-3">
-                        <div class="card">
-                            <div class="card-header bg-warning">
-                                <strong>📌 Daftar Bidang</strong>
-                            </div>
-                            <div class="card-body">
-                                @php
-                                    use App\Models\Bidang;
-                                    $bidangs =
-                                        session('id_sakip_level') == 3 ? Bidang::where('bidang_lokasi', 3)->get() : [];
-                                @endphp
-
-                                @foreach ($bidangs as $bidang)
-                                    <button class="btn btn-outline-primary w-100 mb-2 bidang-item"
-                                        data-id="{{ $bidang->rumpun }}">
-                                        {{ $bidang->bidang_nama }}
-                                    </button>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kolom Kanan (Indikator & Sub-Indikator) -->
-                    <div class="col-md-9">
-                        <div class="card h-100">
-                            <div class="card-header bg-warning text-black">
-                                <strong>📌 Indikator</strong>
-                            </div>
-                            @php
-                                $bulanSekarang = session('bulan_terpilih', date('n')); // Ambil bulan dari session, default ke bulan sekarang
-                                $daftarBulan = [
-                                    1 => 'Januari',
-                                    2 => 'Februari',
-                                    3 => 'Maret',
-                                    4 => 'April',
-                                    5 => 'Mei',
-                                    6 => 'Juni',
-                                    7 => 'Juli',
-                                    8 => 'Agustus',
-                                    9 => 'September',
-                                    10 => 'Oktober',
-                                    11 => 'November',
-                                    12 => 'Desember',
-                                ];
-                            @endphp
-
-                            <!-- Dropdown Pilih Bulan -->
-                            <div class="d-flex align-items-center mt-2 ms-3">
-                                <strong class="me-3">Pilih Bulan:</strong>
-                                <div class="input-group w-auto">
-                                    <select id="bulanDropdown" class="form-select">
-                                        @foreach ($daftarBulan as $num => $namaBulan)
-                                            <option value="{{ $num }}"
-                                                {{ $num == $bulanSekarang ? 'selected' : '' }}>
-                                                {{ $namaBulan }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    @endphp
+                                    @foreach ($bidangs as $bidang)
+                                        <button class="btn btn-outline-warning text-black w-100 mb-2 bidang-item"
+                                            data-rumpun="{{ $bidang->rumpun }}">
+                                            {{ $bidang->bidang_nama }}
+                                        </button>
+                                    @endforeach
 
                                 </div>
                             </div>
-                            <br>
+                        </div>
 
+                        <div class="col-md-9">
+                            <div class="card">
+                                <div class="card-header bg-warning text-black">📋 Indikator</div>
+                                <div class="card-body" id="subindikator-wrapper">
 
-                            <div class="card-body overflow-auto" id="indikator-container" style="max-height: 80vh;">
-                                <p class="text-center"><i>Pilih bidang untuk melihat indikator.</i></p>
+                                    <form action="{{ route('pengukuran.store') }}" method="POST">
+                                        @csrf
+                                        <div id="indikator-section">
+                                            @if (session('success'))
+                                                <div class="alert alert-success">{{ session('success') }}</div>
+                                            @endif
+                                            <p>Pilih bidang untuk melihat indikator.</p>
+                                        </div>
+                                        <div class="text-end mt-4">
+                                            <button type="submit" class="btn btn-success" id="btn-simpan"
+                                                style="display: none;">Simpan</button>
+
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div> <!-- END ROW -->
-            </div> <!-- END CARD -->
-        </div> <!-- END CONTAINER -->
-    </div> <!-- END CONTENT -->
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
 
-    <!-- AJAX Script -->
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let bidangButtons = document.querySelectorAll('.bidang-item');
-            let indikatorContainer = document.getElementById('indikator-container');
-            let bulanDropdown = document.getElementById('bulanDropdown');
+        const bulanList = [
+            'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
+            'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'
+        ];
 
-            function loadIndikator(bidangId, bulan) {
-                fetch(`/pengukuran/indikator?bidang_id=${bidangId}&bulan=${bulan}`)
-                    .then(response => response.text())
-                    .then(html => {
-                        indikatorContainer.innerHTML = html;
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        indikatorContainer.innerHTML = '<p class="text-danger">Gagal mengambil data.</p>';
-                    });
-            }
+        function formatRibuan(angka) {
+            let parts = angka.replace(/[^\d,]/g, '').split(',');
+            let number = parts[0];
+            let decimal = parts[1] || '';
+            let formatted = number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return decimal ? `${formatted},${decimal}` : formatted;
+        }
 
-            bidangButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    let bidangId = this.getAttribute('data-id');
-                    let selectedBulan = bulanDropdown.value;
+        // $.getJSON('/get-subindikator/' + rumpun, function(response) {
+        //     response.forEach(function(indikator) {
+        //         let labelPenghitungan = ['Ditangani', 'Diselesaikan'];
 
-                    // Hapus kelas 'active' dari semua tombol bidang
-                    bidangButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active'); // Tandai bidang yang aktif
+        //         if (indikator.indikator_penghitungan) {
+        //             let labels = indikator.indikator_penghitungan.split(',');
+        //             if (labels.length === 2) {
+        //                 labelPenghitungan = labels.map(s => s.trim());
+        //             }
+        //         }
 
-                    loadIndikator(bidangId, selectedBulan);
-                });
+        //         // Sekarang labelPenghitungan[0] dan labelPenghitungan[1] adalah label yang bisa kamu tampilkan
+        //         console.log("Label:", labelPenghitungan[0], labelPenghitungan[1]);
+
+        //         // Gunakan label ini untuk menampilkan di header tabel atau placeholder input
+        //         // Tapi name="ditangani" dan name="diselesaikan" tetap
+        //     });
+        // });
+
+        $(document).on('input', '.angka-format', function() {
+            let val = $(this).val();
+            let parts = val.replace(/[^0-9,]/g, '').split(',');
+            let number = parts[0];
+            let decimal = parts[1] ?? '';
+            let formatted = number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            $(this).val(val.includes(',') ? `${formatted},${decimal}` : formatted);
+        });
+
+        $(document).ready(function() {
+            $('.bidang-item').on('click', function() {
+                // Hilangkan class aktif dari semua tombol bidang
+                $('.bidang-item').removeClass('active-bidang');
+
+                // Tambahkan class aktif ke tombol yang diklik
+                $(this).addClass('active-bidang');
+
+                // Lanjutkan dengan AJAX...
             });
 
-            bulanDropdown.addEventListener('change', function() {
-                let bidangId = document.querySelector('.bidang-item.active')?.getAttribute('data-id');
-                if (bidangId) {
-                    loadIndikator(bidangId, this.value);
-                }
+            $('.bidang-item').on('click', function() {
+                var rumpun = $(this).data('rumpun');
+                $.ajax({
+                    url: '/get-subindikator/' + rumpun,
+                    method: 'GET',
+                    success: function(response) {
+
+                        let indikatorSection = $('#indikator-section');
+                        indikatorSection.empty();
+
+                        if (response.length === 0) {
+                            indikatorSection.html(
+                                '<p>Tidak ada Indikator untuk bidang ini.</p>');
+                            return;
+                        }
+
+                        response.forEach(indikator => {
+                            if (!indikator.sub_indikator) return;
+
+                            let subIndikators = indikator.sub_indikator.split(',').map(
+                                s => s.trim());
+
+                            let labelPenghitungan = ['Ditangani', 'Diselesaikan'];
+                            if (indikator.indikator_penghitungan) {
+                                let labels = indikator.indikator_penghitungan.split(',')
+                                    .map(s => s.trim());
+                                if (labels.length === 2 && labels[0] && labels[1]) {
+                                    labelPenghitungan = labels;
+                                }
+                            }
+
+                            subIndikators.forEach(sub => {
+                                let table = `
+                        <div class="table-responsive mb-4">
+                            <strong>${sub}</strong>
+                            <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}" />
+                            <input type="hidden" name="sub_indikator_list[]" value="${sub}" />
+                            <div class="mb-2 d-flex align-items-center">
+                    <label class="me-2 mb-0" style="white-space: nowrap;">Sisa tahun lalu:</label>
+                    <input type="text" class="form-control angka-format mb-2" 
+                    name="sisa_tahun_lalu[${sub}]" style="width:200px;" />
+
+                </div>
+
+            <table class="table table-bordered text-center mt-2">
+                <thead>
+                    <tr>
+                        <th>Bulan</th>
+                        ${bulanList.map(bulan => `<th>${bulan}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+    <td>${labelPenghitungan[0]}</td>
+    ${bulanList.map(bulan => `
+                <td>
+                    <input type="text" style="width:120px" class="form-control angka-format" name="ditangani[${sub}][${bulan}]" placeholder=" ">
+                </td>`).join('')}
+                 
+</tr>
+<tr>
+    <td>${labelPenghitungan[1]}</td>
+    ${bulanList.map(bulan => `
+                <td>
+                    <input type="text" style="width:120px" class="form-control angka-format" name="diselesaikan[${sub}][${bulan}]" placeholder=" ">
+                </td>`).join('')}
+</tr>
+                </tbody>
+            </table>
+        </div>
+    `;
+
+                                indikatorSection.append(table);
+                            });
+
+
+                            // Ambil data pengukuran dari DB
+                            $.ajax({
+                                url: '/get-pengukuran/' + indikator.id,
+                                method: 'GET',
+                                success: function(pengukuranData) {
+                                    const bulanIndex = [
+                                        '', 'JANUARI', 'FEBRUARI',
+                                        'MARET',
+                                        'APRIL', 'MEI', 'JUNI',
+                                        'JULI', 'AGUSTUS', 'SEPTEMBER',
+                                        'OKTOBER', 'NOVEMBER',
+                                        'DESEMBER'
+                                    ];
+
+                                    pengukuranData.forEach(item => {
+                                        let bulanNama = bulanIndex[
+                                            item.bulan];
+
+                                        // Tampilkan Ditangani
+                                        let d =
+                                            `input[name="ditangani[${item.sub_indikator}][${bulanNama}]"]`;
+                                        if ($(d).length && item
+                                            .ditangani !== null) {
+                                            $(d).val(formatRibuan(
+                                                item
+                                                .ditangani
+                                                .toString()
+                                            ));
+                                        }
+
+                                        // Tampilkan Diselesaikan
+                                        let s =
+                                            `input[name="diselesaikan[${item.sub_indikator}][${bulanNama}]"]`;
+                                        if ($(s).length && item
+                                            .diselesaikan !== null
+                                        ) {
+                                            $(s).val(formatRibuan(
+                                                item
+                                                .diselesaikan
+                                                .toString()
+                                            ));
+                                        }
+
+                                        // Tampilkan Sisa Tahun Lalu hanya untuk bulan Januari
+                                        if (item.bulan === 1 && item
+                                            .sisa_tahun_lalu !==
+                                            null) {
+                                            let sisaInput = $(
+                                                `input[name="sisa_tahun_lalu[${item.sub_indikator}]"]`
+                                            );
+                                            if (sisaInput.length) {
+                                                sisaInput.val(
+                                                    formatRibuan(
+                                                        item
+                                                        .sisa_tahun_lalu
+                                                        .toString()
+                                                    ));
+                                            }
+                                        }
+                                    });
+                                }
+
+                            });
+                        });
+                    },
+                    error: function() {
+                        $('#indikator-section').html('<p>Gagal memuat data indikator.</p>');
+                    }
+                });
             });
         });
     </script>
-@endsection
+    <script>
+        $(document).ready(function() {
+            // Sembunyikan tombol simpan saat halaman pertama kali dimuat
+            $('#btn-simpan').hide();
 
+            // Ketika tombol bidang diklik
+            $('.bidang-item').on('click', function() {
+                // Tampilkan tombol simpan
+                $('#btn-simpan').fadeIn();
 
-@section('styles')
-    <style>
-        .nav-tabs .nav-link {
-            border-radius: 0;
-            border: 1px solid #dee2e6;
-        }
+                // Tambahan: jika ingin hanya 1 tombol bidang yang aktif berwarna kuning
+                $('.bidang-item').removeClass('active text-white bg-warning');
+                $(this).addClass('active text-white bg-warning');
 
-        .nav-tabs .nav-link.active {
-            background-color: #fff;
-            border-color: #dee2e6 #dee2e6 #fff;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-    </style>
-@endsection
-
-@section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- JavaScript untuk AJAX -->
-
-@endsection
+                // TODO: Tambahkan logika AJAX load sub indikator jika perlu
+            });
+        });
+    </script>
+@endpush
+<style>
+    .bidang-item.active-bidang {
+        background-color: #ffc107;
+        /* Bootstrap's warning (yellow) */
+        color: black;
+        border-color: #ffc107;
+    }
+</style>

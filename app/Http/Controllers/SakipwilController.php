@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Bidang;
 
 class SakipwilController extends Controller
 {
@@ -17,6 +18,14 @@ class SakipwilController extends Controller
         // Ambil nilai dari session
         $id_satker = session('id_satker');
         $tahun = session('tahun_terpilih');
+        $level = session('id_sakip_level'); 
+
+        $bidangs = in_array($level, [2, 3])
+        ? Bidang::where('bidang_lokasi', $level)
+        ->where('bidang_level', '!=', null)
+        ->orderBy('bidang_level', 'asc')
+        ->get()
+        : [];
 
         // Ambil data pengguna
         $id = DB::table('sinori_login')->where('id_satker', $id_satker)->first();
@@ -102,6 +111,7 @@ class SakipwilController extends Controller
             'iku' => $iku,
             'renja' => $renja,
             'renaksi' => $renaksi,
+            'bidangs' => $bidangs,
             // 'pk' => $pk,
         ]);
     }

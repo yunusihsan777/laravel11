@@ -52,16 +52,34 @@ Route::post('/perencanaan/store', [PerencanaanController::class, 'store'])->name
 Route::post('/target/store', [PerencanaanController::class, 'storetarget'])->name('target.store');
 
 use App\Http\Controllers\PengukuranController;
-Route::post('/pengukuran/store', [PengukuranController::class, 'store'])->name('pengukuran.store');
-Route::get('/pengukuran/indikator', [PengukuranController::class, 'getIndikator'])->name('pengukuran.getIndikator');
-Route::get('/pengukuran/get-indikator', [PengukuranController::class, 'getIndikator'])->name('pengukuran.getIndikator');
-Route::get('/pengukuran/{id}', [PengukuranController::class, 'showPengukuran'])->name('pengukuran.show');
+Route::get('/pengukuran', [PengukuranController::class, 'index'])->name('pengukuran');
+Route::get('/pengukuran/form/{id}', [PengukuranController::class, 'form'])->name('pengukuran.form');
+Route::get('/pengukuran/indikator/{id_bidang}', [PengukuranController::class, 'getIndikatorByBidang'])->name('pengukuran.getIndikatorByBidang');
+Route::get('/pengukuran/indikator-nama', [PengukuranController::class, 'getIndikatorNama'])->name('pengukuran.getIndikatorNama');
+Route::get('/get-indikator/{id_bidang}', [PengukuranController::class, 'getIndikatorByBidang']);
+// Route::get('/get-subindikator/{rumpun}', [PengukuranController::class, 'getSubIndikatorByRumpun']);
+Route::get('/pengukuran/{id_bidang}/{sub_indikator}', [PengukuranController::class, 'getDataByBidangAndSubIndikator'])->name('pengukuran.getDataByBidangAndSubIndikator');
+Route::get('/get-pengukuran/{indikator_id}', [PengukuranController::class, 'getPengukuran'])->name('pengukuran.getPengukuran');
+Route::post('/simpan-pengukuran', [PengukuranController::class, 'store'])->name('pengukuran.store');
+Route::post('/pengukuran/update-inline', [PengukuranController::class, 'updateInline'])->name('pengukuran.updateInline');
+Route::post('/pengukuran/update-bulanan', [PengukuranController::class, 'updateBulanan'])->name('pengukuran.updateBulanan');
 
 use App\Http\Controllers\PelaporanController;
 Route::post('/upload/lkjip', [PelaporanController::class, 'uploadLkjip'])->name('upload.lkjip');
 Route::delete('/delete/lkjip/{id}', [PelaporanController::class, 'deleteLkjip'])->name('delete.lkjip');
+Route::post('/upload/rapat-staff-eka', [PelaporanController::class, 'uploadRapatStaffEka'])->name('upload.rapat_staff_eka');
+Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan.index');
+// Route::get('/get-subindikator/{rumpun}', [PelaporanController::class, 'getSubIndikatorByRumpun']);
+Route::get('/get-subindikator/{rumpun}', [PelaporanController::class, 'getSubIndikator']); //milik pengukuran
+// Route::get('/pengukuran/subindikator/{rumpun}', [App\Http\Controllers\PelaporanController::class, 'getSubIndikatorByRumpun']);
+Route::get('/pelaporan/subindikator/{rumpun}', [PelaporanController::class, 'getSubIndikator2']);
+Route::post('/pelaporan/simpan-keterangan', [PelaporanController::class, 'simpanKeterangan']);
+
 
 use App\Http\Controllers\EvaluasiController;
+Route::post('/upload/lhe-akip', [EvaluasiController::class, 'uploadLheAkip'])->name('upload.lhe_akip');
+Route::post('/upload/tl-lhe-akip', [EvaluasiController::class, 'uploadTlLheAkip'])->name('upload.tl_lhe_akip');
+Route::post('/upload/monev-renaksi', [EvaluasiController::class, 'uploadMonevRenaksi'])->name('upload.monev_renaksi');
 
 use App\Http\Controllers\SakipwilController;
 
@@ -117,7 +135,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/evaluasi', [EvaluasiController::class, 'index'])->name('evaluasi');
     Route::get('/sakipwil', [SakipwilController::class, 'index'])->name('sakipwil');
     Route::get('/sakipvalidasi', [SakipvalidasiController::class, 'index'])->name('sakipvalidasi');
-    Route::get('/kepatuhan', [KepatuhanController::class, 'index'])->name('kepatuhan');
+    // Route::get('/kepatuhan', [KepatuhanController::class, 'index'])->name('kepatuhan');
     Route::get('/chatsupport', [ChatsupportController::class, 'index'])->name('chatsupport');
     Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman');
     Route::get('/aturan', [AturanController::class, 'index'])->name('aturan');

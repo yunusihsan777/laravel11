@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -16,34 +17,34 @@ class LoginController extends Controller
 
     // Menangani login
     public function login(Request $request)
-{
-    $request->validate([
-        'email' => 'required',
-        'password' => 'required',
-    ]);
- 
-    $email = $request->input('email');
-    $password = $request->input('password');
+    {
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
 
-    // Fetch user from database
-    $user = DB::table('sinori_login')->where('id_satker', $email)->first();
+        $email = $request->input('email');
+        $password = $request->input('password');
 
-    // Check if user exists and password is correct
-    if ($user && md5($password) === $user->satkerpass) {
-        // Store user data in session
-        $request->session()->put('id_satker', $user->id_satker);
-        $request->session()->put('satkernama', str_replace('_', ' ', $user->satkernama));
-        $request->session()->put('id_sakip_level', $user->id_sakip_level);
+        // Fetch user from database
+        $user = DB::table('sinori_login')->where('id_satker', $email)->first();
 
-        // Mark the user as logged in manually
-        auth()->loginUsingId($user->id_satker);
-        // dd($user->id_sakip_level); 
-        return redirect()->route('dashboard');
+        // Check if user exists and password is correct
+        if ($user && md5($password) === $user->satkerpass) {
+            // Store user data in session
+            $request->session()->put('id_satker', $user->id_satker);
+            $request->session()->put('satkernama', str_replace('_', ' ', $user->satkernama));
+            $request->session()->put('id_sakip_level', $user->id_sakip_level);
+
+            // Mark the user as logged in manually
+            auth()->loginUsingId($user->id_satker);
+            // dd($user->id_sakip_level); 
+            return redirect()->route('dashboard');
+        }
+
+        return back()->withErrors(['email' => 'User atau Password yang dimasukan salah!']);
     }
 
-    return back()->withErrors(['email' => 'User atau Password yang dimasukan salah!']);
-}
- 
 
     // Menangani logout
     public function logout(Request $request)

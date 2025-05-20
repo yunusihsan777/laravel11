@@ -66,6 +66,9 @@ class KeloladataController extends Controller
             'indikator_penyebut' => 'required|string|max:255',
             'indikator_penjelasan' => 'required|string',
             'sub_indikator' => 'nullable|string',
+            // 'indikator_penghitungan' => 'nullable|string',
+            'tahun' => 'nullable|string',
+            'tren' => 'nullable|string',
         ]);
 
         Indikator::create([
@@ -77,6 +80,9 @@ class KeloladataController extends Controller
             'indikator_penyebut' => $request->indikator_penyebut,
             'indikator_penjelasan' => $request->indikator_penjelasan,
             'sub_indikator' => $request->sub_indikator,
+            'tahun' => $request->tahun,
+            'indikator_penghitungan' => $request->indikator_penghitungan,
+            'tren' => $request->tren,
         ]);
         // dd($request->all());
         return redirect()->back()->with('success', 'Data Indikator berhasil disimpan.');
@@ -92,6 +98,9 @@ class KeloladataController extends Controller
     $indikator->indikator_penyebut = $request->indikator_penyebut;
     $indikator->indikator_penjelasan = $request->indikator_penjelasan;
     $indikator->sub_indikator = $request->sub_indikator;
+    $indikator->tahun = $request->tahun;
+    $indikator->indikator_penghitungan = $request->indikator_penghitungan;
+    $indikator->tren = $request->tren;
 
     $indikator->save();
 

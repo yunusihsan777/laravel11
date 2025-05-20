@@ -9,14 +9,14 @@ class Lkjip extends Model
 {
     use HasFactory;
 
-    protected $table = 'lkjip';
+    protected $table = 'sinori_sakip_lakip';
     protected $fillable = [
-        'id_satker',
         'id_periode',
-        'triwulan',
+        'id_satker',
         'id_perubahan',
         'id_filename',
         'id_tglupload',
+        'triwulan',
     ];
 
     public $timestamps = false; // Nonaktifkan timestamps jika tidak menggunakan `created_at` dan `updated_at`

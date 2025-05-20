@@ -14,9 +14,9 @@
 
                 <div class="col-md-12">
                     <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                             <center>
-                                <h2><b>Pengumuman</b></h2>
+                                <h3><b>Pengumuman</b></h3>
                             </center>
                         </div>
                         <div class="card-body">
@@ -36,99 +36,106 @@
                 </div>
 
                 {{-- Chart --}}
-                <div class="row">
-                    <!-- Keputusan Tim SAKIP -->
-                    <div class="col-md-12">
-                        <div class="card shadow-sm mb-4"
-                            style="background-color: {{ $keputusanTimSakipTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                            <div class="card-body">
-                                <center><h5 class="card-title"><b>Keputusan Tim SAKIP</b></h5>
-                                <p class="card-text">
-                                    {{ $keputusanTimSakipTerisi ? 'Keputusan Tim SAKIP sudah diupload' : 'Keputusan Tim SAKIP belum diupload' }}
-                                </p></center>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-12">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Keputusan Tim SAKIP -->
+                                <div class="col-md-12">
+                                    <div class="card shadow-sm mb-4"
+                                        style="background-color: {{ $keputusanTimSakipTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>Keputusan Tim SAKIP</b></h5>
+                                                <p class="card-text">
+                                                    {{ $keputusanTimSakipTerisi ? 'Keputusan Tim SAKIP sudah diupload' : 'Keputusan Tim SAKIP belum diupload' }}
+                                                </p>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <!-- Renstra -->
-                    <div class="col-md-4">
-                        <div class="card shadow-sm mb-4"
-                            style="background-color: {{ $renstraTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                            <div class="card-body">
-                                <h5 class="card-title"><b>Pengisian Renstra</b></h5>
-                                <p class="card-text">
-                                    {{ $renstraTerisi ? 'Pengisian Renstra sudah dilakukan' : 'Pengisian Renstra belum dilakukan' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                                <!-- Renstra -->
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4"
+                                        style="background-color: {{ $renstraTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><b>Pengisian Renstra</b></h5>
+                                            <p class="card-text">
+                                                {{ $renstraTerisi ? 'Pengisian Renstra sudah dilakukan' : 'Pengisian Renstra belum dilakukan' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <!-- IKU -->
-                    <div class="col-md-4">
-                        <div class="card shadow-sm mb-4"
-                            style="background-color: {{ $ikuTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                            <div class="card-body">
-                                <h5 class="card-title"><b>Pengisian IKU</b></h5>
-                                <p class="card-text">
-                                    {{ $ikuTerisi ? 'Pengisian IKU sudah dilakukan' : 'Pengisian IKU belum dilakukan' }}</p>
-                            </div>
-                        </div>
-                    </div>
+                                <!-- IKU -->
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4"
+                                        style="background-color: {{ $ikuTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><b>Pengisian IKU</b></h5>
+                                            <p class="card-text">
+                                                {{ $ikuTerisi ? 'Pengisian IKU sudah dilakukan' : 'Pengisian IKU belum dilakukan' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <!-- Renja -->
-                    <div class="col-md-4">
-                        <div class="card shadow-sm mb-4"
-                            style="background-color: {{ $renjaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                            <div class="card-body">
-                                <h5 class="card-title"><b>Pengisian Renja</b></h5>
-                                <p class="card-text">
-                                    {{ $renjaTerisi ? 'Pengisian Renja sudah dilakukan' : 'Pengisian Renja belum dilakukan' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                                <!-- Renja -->
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4"
+                                        style="background-color: {{ $renjaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><b>Pengisian Renja</b></h5>
+                                            <p class="card-text">
+                                                {{ $renjaTerisi ? 'Pengisian Renja sudah dilakukan' : 'Pengisian Renja belum dilakukan' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <!-- RKAKL -->
-                    <div class="col-md-4">
-                        <div class="card shadow-sm mb-4"
-                            style="background-color: {{ $rkaklTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                            <div class="card-body">
-                                <h5 class="card-title"><b>Pengisian RKAKL</b></h5>
-                                <p class="card-text">
-                                    {{ $rkaklTerisi ? 'Pengisian RKAKL sudah dilakukan' : 'Pengisian RKAKL belum dilakukan' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                                <!-- RKAKL -->
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4"
+                                        style="background-color: {{ $rkaklTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><b>Pengisian RKAKL</b></h5>
+                                            <p class="card-text">
+                                                {{ $rkaklTerisi ? 'Pengisian RKAKL sudah dilakukan' : 'Pengisian RKAKL belum dilakukan' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <!-- DIPA -->
-                    <div class="col-md-4">
-                        <div class="card shadow-sm mb-4"
-                            style="background-color: {{ $dipaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                            <div class="card-body">
-                                <h5 class="card-title"><b>Pengisian DIPA</b></h5>
-                                <p class="card-text">
-                                    {{ $dipaTerisi ? 'Pengisian DIPA sudah dilakukan' : 'Pengisian DIPA belum dilakukan' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                                <!-- DIPA -->
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4"
+                                        style="background-color: {{ $dipaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><b>Pengisian DIPA</b></h5>
+                                            <p class="card-text">
+                                                {{ $dipaTerisi ? 'Pengisian DIPA sudah dilakukan' : 'Pengisian DIPA belum dilakukan' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <!-- Rencana Aksi -->
-                    <div class="col-md-4">
-                        <div class="card shadow-sm mb-4"
-                            style="background-color: {{ $rencanaAksiTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                            <div class="card-body">
-                                <h5 class="card-title"><b>Pengisian Rencana Aksi</b></h5>
-                                <p class="card-text">
-                                    {{ $rencanaAksiTerisi ? 'Pengisian Rencana Aksi sudah dilakukan' : 'Pengisian Rencana Aksi belum dilakukan' }}
-                                </p>
+                                <!-- Rencana Aksi -->
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4"
+                                        style="background-color: {{ $rencanaAksiTerisi ? '#28a745' : '#dc3545' }}; color: white;">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><b>Pengisian Rencana Aksi</b></h5>
+                                            <p class="card-text">
+                                                {{ $rencanaAksiTerisi ? 'Pengisian Rencana Aksi sudah dilakukan' : 'Pengisian Rencana Aksi belum dilakukan' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
                 {{-- Card --}}
                 <!-- Card Sumber Aturan (1:3) -->
 
@@ -172,9 +179,9 @@
                 <!-- Card untuk Gambar 1:1 -->
                 <div class="col-md-12">
                     <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                             <center>
-                                <h4><b>Gambaran Alur SAKIP</b></h4>
+                                <h3><b>Gambaran Alur SAKIP</b></h3>
                             </center>
                         </div>
                         <div class="card-body">
@@ -186,9 +193,9 @@
                 <!-- Card untuk Gambar 1:2 -->
                 <div class="col-md-6">
                     <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                             <center>
-                                <h4><b>Gambar SMART Goals for Project Management</b></h4>
+                                <h3><b>Gambar SMART Goals for Project Management</b></h3>
                             </center>
                         </div><br>
                         <div class="card-body">
@@ -200,9 +207,9 @@
                 <!-- Card untuk Teks 1:2 -->
                 <div class="col-md-6">
                     <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                             <center>
-                                <h4><b>SMART Goals for Project Management</b></h4>
+                                <h3><b>SMART Goals for Project Management</b></h3>
                             </center>
                         </div><br>
                         <div class="card-body">

@@ -6,43 +6,280 @@
     <div class="content" id="content">
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
-                <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                     <center>
                         <h2><b>Evaluasi</b></h2>
                     </center>
                 </div>
                 <div class="card-body">
+                    @php
+                        $activeTab = session('active_tab', 'lhe-akip'); // Default ke renstra
+                        $levelSakip = session('id_sakip_level', 0);
+                    @endphp
                     <!-- Tabs Navigation -->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="evaluasi-internal-tab" data-bs-toggle="tab"
-                                href="#evaluasi-internal" role="tab" aria-controls="evaluasi-internal"
+                            <a class="nav-link {{ $activeTab == 'lhe-akip' ? 'active' : '' }}" id="lhe-akip-tab"
+                                data-bs-toggle="tab" href="#lhe-akip" role="tab"
+                                aria-controls="{{ $activeTab == 'lhe-akip' ? 'true' : 'false' }}" aria-selected="false">LHE
+                                AKIP</a>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ $activeTab == 'tl-lhe-akip' ? 'active' : '' }}" id="tl-lhe-akip-tab"
+                                data-bs-toggle="tab" href="#tl-lhe-akip" role="tab"
+                                aria-controls="{{ $activeTab == 'tl-lhe-akip' ? 'true' : 'false' }}"
+                                aria-selected="false">TL LHE AKIP</a>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ $activeTab == 'monev-renaksi' ? 'active' : '' }}" id="monev-renaksi-tab"
+                                data-bs-toggle="tab" href="#monev-renaksi" role="tab"
+                                aria-controls="{{ $activeTab == 'monev-renaksi' ? 'true' : 'false' }}"
+                                aria-selected="false">Laporan Monev Renaksi</a>
+                        </li>
+                        @if ($levelSakip == 99)
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ $activeTab == 'evaluasi-internal' ? 'active' : '' }}" id="evaluasi-internal-tab" data-bs-toggle="tab"
+                                href="#evaluasi-internal" role="tab" aria-controls="{{ $activeTab == 'tevaluasi-internal' ? 'true' : 'false' }}"
                                 aria-selected="true">Evaluasi Internal</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="evaluasi-rencana-tab" data-bs-toggle="tab" href="#evaluasi-rencana"
-                                role="tab" aria-controls="evaluasi-rencana" aria-selected="false">Evaluasi Rencana
+                            <a class="nav-link {{ $activeTab == 'evaluasi-rencana' ? 'active' : '' }}" id="evaluasi-rencana-tab" data-bs-toggle="tab" href="#evaluasi-rencana"
+                                role="tab" aria-controls="{{ $activeTab == 'evaluasi-rencana' ? 'true' : 'false' }}" aria-selected="false">Evaluasi Rencana
                                 Aksi</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="radar-capaian-tab" data-bs-toggle="tab" href="#radar-capaian"
-                                role="tab" aria-controls="radar-capaian" aria-selected="false">Radar Capaian</a>
+                            <a class="nav-link {{ $activeTab == 'radar-capaian' ? 'active' : '' }}" id="radar-capaian-tab" data-bs-toggle="tab" href="#radar-capaian"
+                                role="tab" aria-controls="{{ $activeTab == 'radar-capaian' ? 'true' : 'false' }}" aria-selected="false">Radar Capaian</a>
                         </li>
+                        @endif
                     </ul>
-
+ 
                     <!-- Tabs Content -->
                     <div class="tab-content mt-3" id="myTabContent">
-                        <div class="tab-pane fade show active" id="evaluasi-internal" role="tabpanel"
-                            aria-labelledby="evaluasi-internal-tab">
+                        <!-- LHE AKIP Section -->
+                        <div class="tab-pane fade {{ $activeTab == 'lhe-akip' ? 'show active' : '' }}" id="lhe-akip"
+                            role="tabpanel" aria-labelledby="lhe-akip-tab">
+                            <h5>Laporan Hasil Evaluasi AKIP</h5>
+
+                            <!-- Alert for success -->
+                            @if (session('success-lhe'))
+                                <div class="alert alert-success" id="success-alert">
+                                    {{ session('success-lhe') }}
+                                </div>
+                            @endif
+
+                            <!-- Form Upload LHE AKIP -->
+                            <div class="card shadow-sm mb-3">
+                                <div class="card-header text-white" style="background-color: #e6bf3e;">
+                                    <h6 class="mb-0">Upload Dokumen TL LHE AKIP</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form action="{{ route('upload.lhe_akip') }}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="lhe_akip_file" class="form-label">Upload File PDF (Max:
+                                                4MB)</label>
+                                            <input type="file" class="form-control" id="lhe_akip_file"
+                                                name="lhe_akip_file" accept=".pdf" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-block"
+                                            style="background-color: #e6bf3e;">Upload File</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Tabel Data LHE AKIP -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-warning">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama File</th>
+                                            <th>Versi</th>
+                                            <th>Tanggal Upload</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($lheAkipFiles as $index => $file)
+                                            <tr class="bg-warning bg-opacity-25">
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/lhe_' . $tahun . '_' . $file->id_perubahan .'.pdf') }}"
+                                                        target="_blank">
+                                                        LHE AKIP
+                                                        ({{ $tahun }})
+                                                    </a>
+                                                </td>
+                                                <td>{{ $file->id_perubahan }}</td>
+                                                <td>{{ $file->id_tglupload }}</td>
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- TL LHE AKIP Section -->
+                        <div class="tab-pane fade {{ $activeTab == 'tl-lhe-akip' ? 'show active' : '' }}"
+                            id="tl-lhe-akip" role="tabpanel" aria-labelledby="tl-lhe-akip-tab">
+                            <h5>Tindak Lanjut Laporan Hasil Evaluasi AKIP</h5>
+
+                            <!-- Alert for success -->
+                            @if (session('success-tllhe'))
+                                <div class="alert alert-success" id="success-alert">
+                                    {{ session('success-tllhe') }}
+                                </div>
+                            @endif
+
+                            <!-- Form Upload TL LHE AKIP -->
+                            <div class="card shadow-sm mb-3">
+                                <div class="card-header text-white" style="background-color: #e6bf3e;">
+                                    <h6 class="mb-0">Upload Dokumen TL LHE AKIP</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form action="{{ route('upload.tl_lhe_akip') }}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="tl_lhe_akip_file" class="form-label">Upload File PDF (Max:
+                                                4MB)</label>
+                                            <input type="file" class="form-control" id="tl_lhe_akip_file"
+                                                name="tl_lhe_akip_file" accept=".pdf" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-block"
+                                            style="background-color: #e6bf3e;">Upload File</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Tabel Data TL LHE AKIP -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-warning">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama File</th>
+                                            <th>Versi</th>
+                                            <th>Tanggal Upload</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($tlLheAkipFiles as $index => $file)
+                                            <tr class="bg-warning bg-opacity-25">
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/tl_lhe_akip_' . $tahun . '_' . $file->id_perubahan .'.pdf') }}"
+                                                        target="_blank">
+                                                        TL LHE AKIP
+                                                        ({{ $tahun }})
+                                                    </a>
+                                                </td>
+                                                <td>{{ $file->id_perubahan }}</td>
+                                                <td>{{ $file->id_tglupload }}</td>
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Monev Renaksi Section -->
+                        <div class="tab-pane fade {{ $activeTab == 'monev-renaksi' ? 'show active' : '' }}"
+                            id="monev-renaksi" role="tabpanel" aria-labelledby="monev-renaksi-tab">
+                            <h5>Laporan Monev Renaksi</h5>
+
+                            <!-- Alert for success -->
+                            @if (session('success-monev'))
+                                <div class="alert alert-success" id="success-alert">
+                                    {{ session('success-monev') }}
+                                </div>
+                            @endif
+
+                            <!-- Form Upload File -->
+                            <div class="card shadow-sm mb-3">
+                                <div class="card-header text-white" style="background-color: #e6bf3e;">
+                                    <h6 class="mb-0">Upload Dokumen Monev Renaksi</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form action="{{ route('upload.monev_renaksi') }}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="id_triwulan" class="form-label">Pilih Triwulan</label>
+                                            <select class="form-control" id="id_triwulan" name="id_triwulan" required>
+                                                <option value="" disabled selected>Pilih Triwulan</option>
+                                                <option value="TW 1">Triwulan 1</option>
+                                                <option value="TW 2">Triwulan 2</option>
+                                                <option value="TW 3">Triwulan 3</option>
+                                                <option value="TW 4">Triwulan 4</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="monev_file" class="form-label">Upload File PDF (Max: 4MB)</label>
+                                            <input type="file" class="form-control" id="monev_file" name="monev_file"
+                                                accept=".pdf" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-block"
+                                            style="background-color: #e6bf3e;">Upload File</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Tabel Data Monev Renaksi -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-warning">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama File</th>
+                                            <th>Triwulan</th>
+                                            <th>Versi</th>
+                                            <th>Tanggal Upload</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($monevRenaksiFiles as $index => $file)
+                                            <tr class="bg-warning bg-opacity-25">
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/monev_' . $tahun . '_' . $file->id_perubahan .'_'. $file->id_triwulan .'.pdf') }}"
+                                                        target="_blank">
+                                                        Monev Renaksi
+                                                        ({{ $tahun }})
+                                                        -
+                                                        {{ $file->id_triwulan }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ $file->id_triwulan }}</td>
+                                                <td>{{ $file->id_perubahan }}</td>
+                                                <td>{{ $file->id_tglupload }}</td>
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade {{ $activeTab == 'evaluasi-internal' ? 'show active' : '' }}"
+                        id="evaluasi-internal" role="tabpanel" aria-labelledby="evaluasi-internal-tab">
                             <h5>Evaluasi Internal</h5>
                             <p>Content for Evaluasi Internal goes here.</p>
                         </div>
-                        <div class="tab-pane fade" id="evaluasi-rencana" role="tabpanel"
-                            aria-labelledby="evaluasi-rencana-tab">
+                        <div class="tab-pane fade {{ $activeTab == 'evaluasi-rencana' ? 'show active' : '' }}"
+                        id="evaluasi-rencana" role="tabpanel" aria-labelledby="evaluasi-rencana-tab">
                             <h5>Evaluasi Rencana Aksi</h5>
                             <p>Content for Evaluasi Rencana Aksi goes here.</p>
                         </div>
-                        <div class="tab-pane fade" id="radar-capaian" role="tabpanel" aria-labelledby="radar-capaian-tab">
+                        <div class="tab-pane fade {{ $activeTab == 'radar-capaian' ? 'show active' : '' }}"
+                        id="radar-capaian" role="tabpanel" aria-labelledby="radar-capaian-tab">
                             <h5>Radar Capaian</h5>
                             <p>Content for Radar Capaian goes here.</p>
                         </div>
