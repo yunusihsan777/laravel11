@@ -11,6 +11,7 @@ use App\Models\Renja;
 use App\Models\Rkakl;
 use App\Models\Dipa;
 use App\Models\Renaksi;
+use App\Models\Bidang;
 use App\Models\SinoriSakipPidum;
 use App\Models\SinoriSakipIndikator;
 use App\Models\TargetPK;
@@ -23,7 +24,8 @@ class PerencanaanController extends Controller
         if (!session()->has('tahun_terpilih')) {
             return redirect()->route('pilih.tahun');
         }
-
+$level = session('id_sakip_level');
+$satkernama = session('satkernama');
         // Ambil tahun yang dipilih dari session
         $tahun = session('tahun_terpilih');
 
@@ -42,6 +44,8 @@ class PerencanaanController extends Controller
         $dipa = Dipa::getData($id_satker, $tahun);
         $renaksi = Renaksi::getData($id_satker, $tahun);
         $indikator = SinoriSakipIndikator::getData();
+        $bidang = Bidang::where('id', $level)->where('bidang_nama', 'LIKE', '%' . $satkernama . '%')->get();
+        // dd($bidang);
         // Panggil method untuk mendapatkan data target indikator 
 
         // $indicatorIds = [22, 23, 24, 25]; // Inisialisasi ID indikator di controller
@@ -52,13 +56,13 @@ class PerencanaanController extends Controller
             ->where('tahun', $tahun)
             ->get()
             ->keyBy('indikator_id'); // Agar mudah diakses di Blade
-
+        // dd($bidang);
         // return view('perencanaan.input_indikator', compact('indikator', 'pidumTargets'));
         // );
 
         // dd ($indikator_pidum);
         // Kembalikan view beserta data yang telah difilter
-        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'indikator' => $indikator, 'target' => $target]);
+        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'indikator' => $indikator, 'target' => $target, 'bidang' => $bidang]);
     }
 
     // Fungsi untuk menangani upload file Renstra

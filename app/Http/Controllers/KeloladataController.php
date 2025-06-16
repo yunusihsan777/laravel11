@@ -19,14 +19,16 @@ class KeloladataController extends Controller
         // Ambil tahun yang dipilih dari session
         $tahun = session('tahun_terpilih');
         // $saspros = Saspro::select('id','link', 'saspro_nama', 'saspro_penjelasan')->get();
-        $saspros = Saspro::orderBy('id', 'desc')->paginate(10);
+        // $saspros = Saspro::orderBy('link', 'asc')->paginate(10);
         // return view('keloladata', compact('saspros'));
- 
+
         // Ambil data dari tabel sinori_sakip_bidang
         $bidangs = Bidang::orderBy('bidang_lokasi')->paginate(10);
-        $bidangall = Bidang::select('id', 'bidang_nama', 'rumpun')->get();
+        $bidangall = Bidang::select('id', 'bidang_nama', 'rumpun')->where('hide',0)->get();
 
-        $indikators = Indikator::with('bidangById')->paginate(10);
+        $indikators = Indikator::with('bidangById')->orderBy('tahun', 'desc')->orderBy('link', 'asc')->paginate(10);
+        $saspros = Saspro::with('bidang')->orderBy('tahun', 'desc')->orderBy('link', 'asc')->paginate(10); // atau ->get() jika tidak pakai pagination
+     
 
         // Kirim data ke view
         // return view('keloladata', compact('bidangs'));
@@ -59,7 +61,7 @@ class KeloladataController extends Controller
     {
         $request->validate([
             'bidang' => 'required|exists:sinori_sakip_bidang,id',
-            'link' => 'required',
+            // 'link' => 'required',
             'lingkup' => 'required|numeric',
             'indikator_nama' => 'required|string|max:255',
             'indikator_pembilang' => 'required|string|max:255',
@@ -72,8 +74,8 @@ class KeloladataController extends Controller
         ]);
 
         Indikator::create([
-            'id_bidang' => $request->bidang,
-            'link' => $request->link,
+            // 'id_bidang' => $request->bidang,
+            'link' => $request->bidang,
             'lingkup' => $request->lingkup,
             'indikator_nama' => $request->indikator_nama,
             'indikator_pembilang' => $request->indikator_pembilang,
@@ -87,37 +89,37 @@ class KeloladataController extends Controller
         // dd($request->all());
         return redirect()->back()->with('success', 'Data Indikator berhasil disimpan.');
     }
-    
+
     public function updateIndikator(Request $request, $id)
-{
-    $indikator = Indikator::findOrFail($id);
-    $indikator->id_bidang = $request->bidang;
-    $indikator->lingkup = $request->lingkup;
-    $indikator->indikator_nama = $request->indikator_nama;
-    $indikator->indikator_pembilang = $request->indikator_pembilang;
-    $indikator->indikator_penyebut = $request->indikator_penyebut;
-    $indikator->indikator_penjelasan = $request->indikator_penjelasan;
-    $indikator->sub_indikator = $request->sub_indikator;
-    $indikator->tahun = $request->tahun;
-    $indikator->indikator_penghitungan = $request->indikator_penghitungan;
-    $indikator->tren = $request->tren;
+    {
+        $indikator = Indikator::findOrFail($id);
+        $indikator->link = $request->bidang;
+        $indikator->lingkup = $request->lingkup;
+        $indikator->indikator_nama = $request->indikator_nama;
+        $indikator->indikator_pembilang = $request->indikator_pembilang;
+        $indikator->indikator_penyebut = $request->indikator_penyebut;
+        $indikator->indikator_penjelasan = $request->indikator_penjelasan;
+        $indikator->sub_indikator = $request->sub_indikator;
+        $indikator->tahun = $request->tahun1;
+        $indikator->indikator_penghitungan = $request->indikator_penghitungan;
+        $indikator->tren = $request->tren;
 
-    $indikator->save();
+        $indikator->save();
 
-    return redirect()->back()->with('success', 'Data Indikator berhasil diperbarui.');
-}
-
-    public function deleteIndikator($id)
-{
-    $indikator = Indikator::find($id);
-    
-    if ($indikator) {
-        $indikator->delete();
-        return redirect()->back()->with('success', 'Indikator berhasil dihapus.');
+        return redirect()->back()->with('success', 'Data Indikator berhasil diperbarui.');
     }
 
-    return redirect()->back()->with('error', 'Indikator tidak ditemukan.');
-}
+    public function deleteIndikator($id)
+    {
+        $indikator = Indikator::find($id);
+
+        if ($indikator) {
+            $indikator->delete();
+            return redirect()->back()->with('success', 'Indikator berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Indikator tidak ditemukan.');
+    }
 
 
     public function Bidang(Request $request)
@@ -139,7 +141,7 @@ class KeloladataController extends Controller
     }
 
     public function edit($id)
-    {// Cek apakah tahun sudah dipilih
+    { // Cek apakah tahun sudah dipilih
         if (!session()->has('tahun_terpilih')) {
             return redirect()->route('pilih.tahun');
         }
@@ -148,7 +150,7 @@ class KeloladataController extends Controller
 
         $bidang = Bidang::findOrFail($id);
         $bidangs = Bidang::all(); // Tetap kirimkan semua data untuk tabel
-        
+
         return view('keloladata', ['tahun' => $tahun, 'bidang' => $bidangs]);
     }
 
@@ -207,11 +209,12 @@ class KeloladataController extends Controller
     {
         // Validasi input
         $request->validate([
-            'link' => 'required|string|max:255',
+            'link' => 'required|integer',
             'saspro_nama' => 'required|string|max:255',
             'penjelasan_saspro' => 'required|string',
-            // 'lingkup' => '0',
-            
+            'tahun' => 'required|string',
+            'hide' => 'required|integer|in:0,1',
+
         ]);
 
         // Simpan data ke database
@@ -220,6 +223,8 @@ class KeloladataController extends Controller
             'saspro_nama' => $request->input('saspro_nama'),
             'saspro_penjelasan' => $request->input('penjelasan_saspro'),
             'lingkup' => '0',
+            'tahun' => $request->input('tahun'),
+            'hide' => $request->input('hide'),
         ]);
 
         // Redirect dengan pesan sukses
@@ -227,23 +232,27 @@ class KeloladataController extends Controller
     }
 
     // Simpan Data Saspro
-public function sasproStore(Request $request)
-{
-    $request->validate([
-        'link' => 'required|string|max:255',
-        'saspro_nama' => 'required|string|max:255',
-        'penjelasan_saspro' => 'required|string',
-    ]);
+    public function sasproStore(Request $request)
+    {
+        $request->validate([
+            'link' => 'required|string|max:255',
+            'saspro_nama' => 'required|string|max:255',
+            'penjelasan_saspro' => 'required|string',
+            'tahun' => 'required|string',
+            'hide' => 'required|integer|in:0,1',
+        ]);
 
-    Saspro::create([
-        'link' => $request->input('link'),
-        'saspro_nama' => $request->input('saspro_nama'),
-        'saspro_penjelasan' => $request->input('penjelasan_saspro'),
-        'lingkup' => '0',
-    ]);
+        Saspro::create([
+            'link' => $request->input('link'),
+            'saspro_nama' => $request->input('saspro_nama'),
+            'saspro_penjelasan' => $request->input('penjelasan_saspro'),
+            'lingkup' => '0',
+            'tahun' => $request->input('tahun'),
+            'hide' => $request->input('hide'),
+        ]);
 
-    return redirect()->back()->with('success', 'Data Saspro berhasil disimpan!');
-}
+        return redirect()->back()->with('success', 'Data Saspro berhasil disimpan!');
+    }
 
     // Update Saspro
     public function sasproUpdate(Request $request, $id)
@@ -252,18 +261,22 @@ public function sasproStore(Request $request)
             'link' => 'required|string',
             'saspro_nama' => 'required|string',
             'penjelasan_saspro' => 'required|string',
+            'tahun' => 'required|string',
+            'hide' => 'required|integer|in:0,1',
         ]);
-    
+
         $saspro = Saspro::findOrFail($id);
         $saspro->update([
             'link' => $request->link,
             'saspro_nama' => $request->saspro_nama,
             'saspro_penjelasan' => $request->penjelasan_saspro,
+            'tahun' => $request->tahun,
+            'hide' => $request->hide,
         ]);
-    
+
         return redirect()->back()->with('success', 'Data Saspro berhasil diperbarui!');
     }
-    
+
     // public function storeSaspro(Request $request)
     // {
     //     $request->validate([
@@ -287,16 +300,15 @@ public function sasproStore(Request $request)
     {
         // Cari data berdasarkan ID
         $saspro = Saspro::find($id);
-    
+
         // Periksa apakah data ditemukan
         if (!$saspro) {
             return redirect()->back()->with('error', 'Data Saspro tidak ditemukan.');
         }
-    
+
         // Hapus data
         $saspro->delete();
-    
+
         return redirect()->back()->with('success', 'Data Saspro berhasil dihapus.');
     }
-    
 }

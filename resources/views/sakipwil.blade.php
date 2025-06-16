@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'SAKIP Wilayah')
-<script src="https://cdn.jsdelivr.net/npm/chart.js">
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 @section('content')
     <div class="content" id="content">
@@ -11,11 +10,12 @@
                 <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
                     <center>
                         <h2><b>DATA PERENCANAAN AKIP SATUAN KERJA KEJAKSAAN RI</b></h2>
-                    </center></div>
-                <div class="card-body">                    
-@php
-        $levelSakip = session('id_sakip_level', 0);
-        @endphp
+                    </center>
+                </div>
+                <div class="card-body">
+                    @php
+                        $levelSakip = session('id_sakip_level', 0);
+                    @endphp
                     <!-- List Pengumuman -->
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover text-center rounded">
@@ -28,13 +28,16 @@
                                     <th>Renstra</th>
                                     <th>IKU</th>
                                     <th>Renja</th>
+                                    <th>RKAKL</th>
                                     <th>Dipa</th>
                                     <th>Renaksi</th>
+                                    <th>LKJIP</th>
+                                    <th>Rapat Staff</th>
                                     @if ($levelSakip == 99)
-                                    <th>Perjanjian Kinerja</th>
-                                    <th>Jumlah Indikator Kinerja</th>
-                                    <th>Status Pengukuran Kinerja</th>
-                                    <th>LKjIP</th>
+                                        <th>Perjanjian Kinerja</th>
+                                        <th>Jumlah Indikator Kinerja</th>
+                                        <th>Status Pengukuran Kinerja</th>
+                                        <th>LKjIP</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -57,11 +60,10 @@
                                             </td>
                                             <td>
                                                 @if (isset($renstra[$row->id_satker]) && $renstra[$row->id_satker]->isNotEmpty())
-                                                    <!-- Ambil data renstra pertama (karena sudah dikelompokkan berdasarkan id_satker dan diurutkan) -->
                                                     @php
                                                         $latestRenstra = $renstra[$row->id_satker]->first();
                                                     @endphp
-                                                    <a href="{{ asset('uploads/repository/' . $row->id_satker . '/renstra' . $row->id_tahun . '_' . $row->triwulan . '.pdf') }}"
+                                                    <a href="{{ asset('uploads/repository/' . $latestRenstra->id_satker . '/' . $latestRenstra->id_filename) }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
                                                         &#10003; <!-- Tanda centang -->
                                                     </a>
@@ -75,7 +77,7 @@
                                                     @php
                                                         $latestiku = $iku[$row->id_satker]->first();
                                                     @endphp
-                                                    <a href="{{ asset('uploads/iku/iku_' . $latestiku->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                    <a href="{{ asset('uploads/repository/' . $latestiku->id_satker . '/' . $latestiku->id_filename) }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
                                                         &#10003; <!-- Tanda centang -->
                                                     </a>
@@ -89,7 +91,7 @@
                                                     @php
                                                         $latestrenja = $renja[$row->id_satker]->first();
                                                     @endphp
-                                                    <a href="{{ asset('uploads/renja/renja_' . $latestrenja->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
+                                                    <a href="{{ asset('uploads/repository/' . $latestrenja->id_satker . '/renja_' . $latestrenja->id_filename) }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
                                                         &#10003; <!-- Tanda centang -->
                                                     </a>
@@ -97,27 +99,77 @@
                                                     <span class="text-danger">-</span>
                                                 @endif
                                             </td>
-                                            <td>{{ $row->dipa?? '-' }}</td>
+                                            <td>
+                                                @if (isset($rkakl[$row->id_satker]) && $rkakl[$row->id_satker]->isNotEmpty())
+                                                    @php
+                                                        $latestRkakl = $rkakl[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/repository/' . $latestRkakl->id_satker . '/RKAKL_' . $latestRkakl->id_filename) }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if (isset($dipa[$row->id_satker]) && $dipa[$row->id_satker]->isNotEmpty())
+                                                    @php
+                                                        $latestDipa = $dipa[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/repository/' . $latestDipa->id_satker . '/' . $latestDipa->id_filename) }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
                                             <td>
                                                 @if (isset($renaksi[$row->id_satker]) && $renaksi[$row->id_satker]->isNotEmpty())
-                                                @php
-                                                    // Ambil data renaksi pertama untuk id_satker tertentu
-                                                    $latestRenaksi = $renaksi[$row->id_satker]->first();
-                                                @endphp
-                                                <a href="{{ asset('uploads/renaksi/renaksi_' . $latestRenaksi->id_perubahan . '_' . $row->id_satker . '_' . $tahun . '.pdf') }}"
-                                                    target="_blank" class="text-success" style="text-decoration: none;">
-                                                    &#10003; <!-- Tanda centang -->
-                                                </a>
-                                            @else
-                                                <span class="text-danger">-</span>
-                                            @endif
-                                            
+                                                    @php
+                                                        // Ambil data renaksi pertama untuk id_satker tertentu
+                                                        $latestRenaksi = $renaksi[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/repository/' . $latestRenaksi->id_satker . '/' . $latestRenaksi->id_filename) }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if (isset($lkjip[$row->id_satker]) && $lkjip[$row->id_satker]->isNotEmpty())
+                                                    @php
+                                                        $latestLkjip = $lkjip[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/repository/' . $latestLkjip->id_satker . '/' . $latestLkjip->id_filename) }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if (isset($rastaff[$row->id_satker]) && $rastaff[$row->id_satker]->isNotEmpty())
+                                                    @php
+                                                        $latestRastaff = $rastaff[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/repository/' . $latestRastaff->id_satker . '/' . $latestRastaff->id_filename) }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+
                                             </td>
                                             @if ($levelSakip == 99)
-                                            <td>{{ $row->perjanjian_kinerja ?? '-' }}</td>
-                                            <td>{{ $row->jumlah_indikator_kinerja ?? '-' }}</td>
-                                            <td>{{ $row->status_pengukuran_kinerja ?? '-' }}</td>
-                                            <td>{{ $row->lkjip ?? '-' }}</td>
+                                                <td>{{ $row->perjanjian_kinerja ?? '-' }}</td>
+                                                <td>{{ $row->jumlah_indikator_kinerja ?? '-' }}</td>
+                                                <td>{{ $row->status_pengukuran_kinerja ?? '-' }}</td>
                                             @endif
                                         </tr>
                                     @endforeach
@@ -130,17 +182,16 @@
                             </tbody>
                         </table>
                     </div>
-                    @if ($levelSakip == 99)
-                    <div class="card mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
-                            <center>
-                                <h2><b>Distribusi Keputusan</b></h2>
-                            </center></div>
-                        <div class="card-body">
-                            <canvas id="pieChart"></canvas>
+                        <div class="card mb-4">
+                            <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                                <center>
+                                    <h2><b>Distribusi Keputusan</b></h2>
+                                </center>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="pieChart"></canvas>
+                            </div>
                         </div>
-                    </div>
-@endif
                 </div>
             </div>
         </div>
@@ -150,8 +201,8 @@
     @section('style')
         <style>
             .link-no-underline {
-    text-decoration: none;
-}
+                text-decoration: none;
+            }
 
             .table-hover tbody tr:hover {
                 background-color: #f1f1f1;

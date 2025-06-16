@@ -63,6 +63,7 @@ Route::get('/get-pengukuran/{indikator_id}', [PengukuranController::class, 'getP
 Route::post('/simpan-pengukuran', [PengukuranController::class, 'store'])->name('pengukuran.store');
 Route::post('/pengukuran/update-inline', [PengukuranController::class, 'updateInline'])->name('pengukuran.updateInline');
 Route::post('/pengukuran/update-bulanan', [PengukuranController::class, 'updateBulanan'])->name('pengukuran.updateBulanan');
+Route::get('/get-subindikator-by-id/{id}', [App\Http\Controllers\PengukuranController::class, 'getIndikatorNama']);
 
 use App\Http\Controllers\PelaporanController;
 Route::post('/upload/lkjip', [PelaporanController::class, 'uploadLkjip'])->name('upload.lkjip');

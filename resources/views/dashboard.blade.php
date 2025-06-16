@@ -137,6 +137,26 @@
                     </div>
                 </div>
                 {{-- Card --}}
+                <div class="col-md-12">
+                    <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
+                        <center>
+                            <h2><b>Distribusi Keputusan</b></h2>
+                        </center>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Card Sumber Aturan (1:3) -->
 
                 <div class="col-md-6">

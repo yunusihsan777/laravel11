@@ -10,74 +10,66 @@ class PengukuranController extends Controller
 {
     public function index(Request $request)
     {
-        $id_bidang = $request->get('id_bidang');
+        // $id_bidang = $request->get('id_bidang');
         $tahun = session('tahun_terpilih');
         $id_satker = session('id_satker');
 
         $indikators = [];
         $data = [];
 
-        if ($id_bidang) {
-            $indikators = Indikator::where('id_bidang', $id_bidang)->get();
+        // if ($id_bidang) {
+        //     $indikators = Indikator::where('id_bidang', $id_bidang)->get();
 
-            foreach ($indikators as $indikator) {
-                $subIndikators = explode(',', $indikator->sub_indikator);
-                $pengukuranData = Pengukuran::where('indikator_id', $indikator->id)
-                    ->where('id_satker', $id_satker)
-                    ->where('tahun', $tahun)
-                    ->get();
+        //     foreach ($indikators as $indikator) {
+        //         $subIndikators = explode(',', $indikator->sub_indikator);
+        //         $pengukuranData = Pengukuran::where('indikator_id', $indikator->id)
+        //             ->where('id_satker', $id_satker)
+        //             ->where('tahun', $tahun)
+        //             ->get();
 
-                $data[$indikator->id] = [
-                    'nama' => $indikator->indikator_nama,
-                    'sub' => []
-                ];
+        //         $data[$indikator->id] = [
+        //             'nama' => $indikator->indikator_nama,
+        //             'sub' => []
+        //         ];
 
-                foreach ($subIndikators as $sub) {
-                    $sub = trim($sub);
-                    $data[$indikator->id]['sub'][$sub] = $pengukuranData
-                        ->where('sub_indikator', $sub)
-                        ->where('id_satker', $id_satker)
-                        ->keyBy('bulan'); // <--- agar mudah akses berdasarkan bulan
-                }
-            }
-        }
+        //         foreach ($subIndikators as $sub) {
+        //             $sub = trim($sub);
+        //             $data[$indikator->id]['sub'][$sub] = $pengukuranData
+        //                 ->where('sub_indikator', $sub)
+        //                 ->where('id_satker', $id_satker)
+        //                 ->keyBy('bulan'); // <--- agar mudah akses berdasarkan bulan
+        //         }
+        //     }
+        // }
 
         return view('kelola.pengukuran', compact('data', 'indikators', 'tahun'));
     }
 
-    public function getIndikatorNama(Request $request)
-    {
-        $bidangId = $request->input('bidang_id');
+//     public function getIndikatorNama(Request $request)
+//     {
+//         $bidangId = $request->input('bidang_id');
 
-        try {
-            $indikators = Indikator::where('id_bidang', $bidangId)
-                ->select('id', 'indikator_nama')
-                ->get();
+//         try {
+//             $indikators = Indikator::where('id_bidang', $bidangId)
+//                 ->select('id', 'indikator_nama')
+//                 ->get();
 
-            return response()->json($indikators);
-        } catch (\Exception $e) {
-            \Log::error('Gagal ambil indikator: ' . $e->getMessage());
-            return response()->json(['error' => 'Gagal mengambil data'], 500);
-        }
-    }
- 
-    public function getIndikatorByBidang($id_bidang)
-    {
-        $indikator = Indikator::where('id_bidang', $id_bidang)
-            ->select('id', 'indikator_nama', 'sub_indikator')
-            ->get();
+//             return response()->json($indikators);
+//         } catch (\Exception $e) {
+//             \Log::error('Gagal ambil indikator: ' . $e->getMessage());
+//             return response()->json(['error' => 'Gagal mengambil data'], 500);
+//         }
+//     }
+//  public function getDataByBidangAndSubIndikator($id_bidang, $subIndikator)
+//     {
+//         $data = Pengukuran::whereHas('indikator', function ($query) use ($id_bidang) {
+//             $query->where('id_bidang', $id_bidang);
+//         })->where('sub_indikator', $subIndikator)
+//             ->select('bulan', 'ditangani', 'diselesaikan')
+//             ->get();
 
-        return response()->json($indikator);
-    }
-
-    public function getSubIndikatorByRumpun($rumpun)
-    {
-        $indikator = Indikator::where('id_bidang', $rumpun)->get();
-
-        return response()->json($indikator);
-    }
-
-    
+//         return response()->json($data);
+//     }
 
     public function store(Request $request)
     {
@@ -184,16 +176,6 @@ class PengukuranController extends Controller
         return response()->json(['success' => true, 'message' => 'Data berhasil disimpan']);
     }
 
-    public function getDataByBidangAndSubIndikator($id_bidang, $subIndikator)
-    {
-        $data = Pengukuran::whereHas('indikator', function ($query) use ($id_bidang) {
-            $query->where('id_bidang', $id_bidang);
-        })->where('sub_indikator', $subIndikator)
-            ->select('bulan', 'ditangani', 'diselesaikan')
-            ->get();
-
-        return response()->json($data);
-    }
 
     public function form($id)
     {
@@ -214,4 +196,30 @@ class PengukuranController extends Controller
 
         return response()->json($data);
     }
+
+    public function getSubindikator($rumpun)
+{
+    $tahun = date('Y');
+    $level = session('id_sakip_level');
+
+    $indikators = Indikator::where('link', $rumpun)
+        ->where(function ($query) use ($tahun) {
+            $query->where('tahun', 'LIKE', "%$tahun%");
+        })
+        ->where(function ($query) use ($level) {
+            if ($level == 1) {
+                $query->whereIn('lingkup', [0, 1]);
+            } elseif ($level == 2) {
+                $query->whereIn('lingkup', [0, 2, 5]);
+            } elseif ($level == 3) {
+                $query->whereIn('lingkup', [0, 3, 5, 6]);
+            } elseif ($level == 4) {
+                $query->whereIn('lingkup', [0, 4, 6]);
+            }
+        })
+        ->get();
+
+    return response()->json($indikators);
+}
+
 }

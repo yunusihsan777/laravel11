@@ -16,7 +16,15 @@ class Saspro extends Model
         'saspro_nama',
         'saspro_penjelasan',
         'lingkup',
+        'tahun',
+        'hide',
     ];
     // Jika tidak ada timestamps
     public $timestamps = false;
+
+    public function bidang()
+{
+    return $this->belongsTo(Bidang::class, 'link', 'id');
+}
+
 }

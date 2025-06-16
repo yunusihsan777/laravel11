@@ -75,10 +75,23 @@
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label for="bidang_lokasi" class="form-label">Bidang Lokasi</label>
-                                                    <input type="number" class="form-control" id="bidang_lokasi"
-                                                        name="bidang_lokasi" value="{{ $bidang->bidang_lokasi ?? '' }}"
-                                                        placeholder="Masukkan lokasi bidang" required>
+                                                    <select class="form-control" id="bidang_lokasi" name="bidang_lokasi"
+                                                        required>
+                                                        <option value="1"
+                                                            {{ isset($bidang->bidang_lokasi) && $bidang->bidang_lokasi == 1 ? 'selected' : '' }}>
+                                                            Pusat</option>
+                                                        <option value="2"
+                                                            {{ isset($bidang->bidang_lokasi) && $bidang->bidang_lokasi == 2 ? 'selected' : '' }}>
+                                                            Kejati</option>
+                                                        <option value="3"
+                                                            {{ isset($bidang->bidang_lokasi) && $bidang->bidang_lokasi == 3 ? 'selected' : '' }}>
+                                                            Kejari</option>
+                                                        <option value="4"
+                                                            {{ isset($bidang->bidang_lokasi) && $bidang->bidang_lokasi == 4 ? 'selected' : '' }}>
+                                                            Cabjari</option>
+                                                    </select>
                                                 </div>
+
                                             </div>
 
                                             <div class="row">
@@ -89,11 +102,17 @@
                                                         required>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
-                                                    <label for="hide" class="form-label">Hide (0/1)</label>
-                                                    <input type="number" class="form-control" id="hide"
-                                                        name="hide" value="{{ $bidang->hide ?? '' }}"
-                                                        placeholder="Masukkan status hide (0/1)" required>
+                                                    <label for="hide" class="form-label">Hide</label>
+                                                    <select class="form-control" id="hide" name="hide" required>
+                                                        <option value="0"
+                                                            {{ isset($bidang->hide) && $bidang->hide == 0 ? 'selected' : '' }}>
+                                                            Tampil</option>
+                                                        <option value="1"
+                                                            {{ isset($bidang->hide) && $bidang->hide == 1 ? 'selected' : '' }}>
+                                                            Sembunyikan</option>
+                                                    </select>
                                                 </div>
+
                                             </div>
 
                                             <button type="submit" class="btn btn-success">
@@ -117,7 +136,7 @@
                                         <th>Level</th>
                                         <th>Lokasi</th>
                                         <th>Rumpun</th>
-                                        <th>Hide (0/1)</th>
+                                        <th>Hide</th>
                                         <th style="width: 150px;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -178,10 +197,23 @@
                                             @csrf
 
                                             <!-- Link -->
-                                            <div class="form-group">
-                                                <label for="link">Link</label>
-                                                <input type="text" class="form-control" id="link" name="link"
+                                            {{-- <div class="form-group">
+                                                <label for="link">Bidang</label>
+                                                <input type="number" class="form-control" id="link" name="link"
                                                     placeholder="Masukkan Link" required>
+                                            </div> --}}
+                                            <!-- Bidang -->
+                                            <div class="form-group">
+                                                <label for="link">Bidang</label>
+                                                <select class="form-control" id="link" name="link" required>
+                                                    <option value="">Pilih Bidang</option>
+                                                    @foreach ($bidangall as $bidang)
+                                                        <option value="{{ $bidang->id }}"
+                                                            data-rumpun="{{ $bidang->rumpun }}">
+                                                            {{ $bidang->bidang_nama }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
 
                                             <!-- Nama Saspro -->
@@ -190,7 +222,7 @@
                                                 <input type="text" class="form-control" id="saspro_nama"
                                                     name="saspro_nama" placeholder="Masukkan Nama Saspro" required>
                                             </div>
-
+ 
                                             <!-- Penjelasan Saspro -->
                                             <div class="form-group">
                                                 <label for="penjelasan_saspro">Penjelasan Saspro</label>
@@ -198,6 +230,28 @@
                                                     placeholder="Masukkan Penjelasan Saspro" required></textarea>
                                             </div>
 
+                                            <div class="row">
+                                                <!-- Tahun -->
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="tahun">Tahun</label>
+                                                        <input type="text" class="form-control" id="tahun"
+                                                            name="tahun" placeholder="Masukkan Tahun" required>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Hide -->
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="hide">Hide</label>
+                                                        <select class="form-control" id="hide" name="hide"
+                                                            required>
+                                                            <option value="0">Tampil</option>
+                                                            <option value="1">Sembunyikan</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <br>
                                             <!-- Submit Button -->
                                             <button type="submit" class="btn btn-success">Submit</button>
@@ -216,9 +270,11 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Rumpun</th>
+                                        <th>Lingkup</th>
                                         <th>Nama Saspro</th>
                                         <th>Penjelasan Saspro</th>
+                                        <th>tahun</th>
+                                        <th>hide</th>
                                         <th style="width: 150px;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -227,16 +283,20 @@
                                         <tr>
                                             <td>{{ ($saspros->currentPage() - 1) * $saspros->perPage() + $loop->iteration }}
                                             </td>
-                                            <td>{{ $saspro->link }}</td>
+                                            <td>{{ $saspro->bidang->bidang_nama ?? '-' }}</td>
+
                                             <td>{{ $saspro->saspro_nama }}</td>
                                             <td>{{ $saspro->saspro_penjelasan }}</td>
+                                            <td>{{ $saspro->tahun }}</td>
+                                            <td>{{ $saspro->hide }}</td>
                                             <td>
                                                 <!-- Tombol Edit -->
                                                 <button class="btn btn-warning btn-sm edit-saspro-button"
                                                     data-bs-toggle="modal" data-bs-target="#editSasproModal"
                                                     data-id="{{ $saspro->id }}" data-rumpun="{{ $saspro->link }}"
                                                     data-nama="{{ $saspro->saspro_nama }}"
-                                                    data-penjelasan="{{ $saspro->saspro_penjelasan }}">
+                                                    data-penjelasan="{{ $saspro->saspro_penjelasan }}"
+                                                    data-tahun="{{ $saspro->tahun }}" data-hide="{{ $saspro->hide }}">
                                                     Edit
                                                 </button>
 
@@ -292,13 +352,24 @@
                                                 </select>
                                             </div>
                                             <!-- Link (Hidden Input) -->
-                                            <input type="hidden" id="rumpun_hidden" name="link">
+                                            {{-- <div class="form-group">
+                                                <label for="link">Link</label>
+                                                <input type="number" class="form-control" id="link" name="link"
+                                                    required>
+                                            </div> --}}
 
                                             <!-- Lingkup -->
                                             <div class="form-group">
-                                                <label for="lingkup">Lingkup</label>
-                                                <input type="number" class="form-control" id="lingkup" name="lingkup"
-                                                    required>
+                                                <label for="lingkup"> Lingkup</label>
+                                                <select class="form-control" id="lingkup" name="lingkup" required>
+                                                    <option value="0">Semua Satker</option>
+                                                    <option value="1">Pusat</option>
+                                                    <option value="2">Kejati</option>
+                                                    <option value="3">Kejari</option>
+                                                    <option value="4">Cabjari</option>
+                                                    <option value="5">Kejati, Kejari</option>
+                                                    <option value="6">Kejari, Cabjari</option>
+                                                </select>
                                             </div>
 
                                             <!-- Indikator Nama -->
@@ -378,6 +449,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Bidang</th>
+                                        {{-- <th>Link</th> --}}
                                         <th>Lingkup</th>
                                         <th>Indikator Nama</th>
                                         <th>Indikator Pembilang</th>
@@ -395,8 +467,28 @@
                                         <tr>
                                             <td>{{ ($indikators->currentPage() - 1) * $indikators->perPage() + $loop->iteration }}
                                             </td>
-                                            <td>{{ $indikator->bidangById->bidang_nama ?? '-' }}</td>
-                                            <td>{{ $indikator->lingkup }}</td>
+                                            <td>{{ $indikator->bidangByLink->bidang_nama ?? '-' }}</td>
+                                            {{-- <td>{{ $indikator->link }}</td> --}}
+                                            @php
+                                                $mapping = [
+                                                    0 => 'Semua Satker',
+                                                    1 => 'Pusat',
+                                                    2 => 'Kejati',
+                                                    3 => 'Kejari',
+                                                    4 => 'Cabjari',
+                                                    5 => 'Kejati, Kejari',
+                                                    6 => 'Kejari, Cabjari',
+                                                ];
+
+                                                $lingkup = $indikator->lingkup;
+
+                                                // Jika lingkup berupa angka tunggal (0–4), tampilkan langsung
+                                                // Tapi jika 5 atau 6, kita konversi ke bentuk teks dengan pemisah koma
+                                                $lingkupLabel = $mapping[$lingkup] ?? 'Tidak diketahui';
+                                            @endphp
+
+                                            <td>{{ $lingkupLabel }}</td>
+
                                             <td>{{ $indikator->indikator_nama }}</td>
                                             <td>{{ $indikator->indikator_pembilang }}</td>
                                             <td>{{ $indikator->indikator_penyebut }}</td>
@@ -417,7 +509,8 @@
                                                     data-penjelasan="{{ $indikator->indikator_penjelasan }}"
                                                     data-sub-indikator="{{ $indikator->sub_indikator }}"
                                                     data-penghitungan="{{ $indikator->indikator_penghitungan }}"
-                                                    data-tahun="{{ $indikator->tahun }}">
+                                                    data-tahun1="{{ $indikator->tahun }}"
+                                                    data-tren="{{ $indikator->tren }}">
                                                     Edit
                                                 </button>
                                                 <form action="{{ route('indikator.delete', $indikator->id) }}"
@@ -525,8 +618,6 @@
                                 <input type="hidden" name="_method" value="POST">
                                 <input type="hidden" id="edit_saspro_id" name="id">
 
-
-
                                 <!-- Link -->
                                 <div class="form-group">
                                     <label for="edit_link">Link</label>
@@ -544,6 +635,18 @@
                                 <div class="form-group">
                                     <label for="edit_penjelasan_saspro">Penjelasan Saspro</label>
                                     <textarea class="form-control" id="edit_penjelasan_saspro" name="penjelasan_saspro" rows="3" required></textarea>
+                                </div>
+
+                                <!-- Tahun -->
+                                <div class="form-group">
+                                    <label for="edit_tahun">Tahun</label>
+                                    <input type="text" class="form-control" id="edit_tahun" name="tahun" required>
+                                </div>
+
+                                <!-- Hide -->
+                                <div class="form-group">
+                                    <label for="edit_hide">Hide</label>
+                                    <input type="text" class="form-control" id="edit_hide" name="hide" required>
                                 </div>
                             </form>
                         </div>
@@ -589,11 +692,20 @@
                                 </div>
 
                                 <!-- Lingkup -->
-                                <div class="form-group">
-                                    <label for="edit_lingkup">Lingkup</label>
-                                    <input type="number" class="form-control" id="edit_lingkup" name="lingkup"
-                                        required>
-                                </div>
+<div class="form-group">
+    <label for="edit_lingkup">Lingkup</label>
+    <select class="form-control" id="edit_lingkup" name="lingkup" required>
+        <option value="">Pilih Lingkup</option>
+        <option value="0">Semua Satker</option>
+        <option value="1">Pusat</option>
+        <option value="2">Kejati</option>
+        <option value="3">Kejari</option>
+        <option value="4">Cabjari</option>
+        <option value="5">Kejati, Kejari</option>
+        <option value="6">Kejari, Cabjari</option>
+    </select>
+</div>
+
 
                                 <!-- Indikator Nama -->
                                 <div class="form-group">
@@ -640,8 +752,8 @@
 
                                 <!-- Tahun -->
                                 <div class="form-group">
-                                    <label for="edit_tahun">Tahun</label>
-                                    <input type="text" class="form-control" id="edit_tahun" name="tahun" required>
+                                    <label for="edit_tahun1">Tahun</label>
+                                    <input type="text" class="form-control" id="edit_tahun1" name="tahun1" required>
                                 </div>
 
                                 <!-- Tren -->
@@ -705,6 +817,8 @@
                 document.getElementById('edit_link').value = button.dataset.rumpun;
                 document.getElementById('edit_saspro_nama').value = button.dataset.nama;
                 document.getElementById('edit_penjelasan_saspro').value = button.dataset.penjelasan;
+                document.getElementById('edit_tahun').value = button.dataset.tahun;
+                document.getElementById('edit_hide').value = button.dataset.hide;
 
                 // Set action form dengan metode POST
                 document.getElementById('editSasproForm').action = `/keloladata/update/${sasproId}`;
@@ -784,6 +898,7 @@
 </script>
 
 <script>
+    //modal edit indikator
     document.addEventListener("DOMContentLoaded", function() {
         let editModal = document.getElementById("editIndikatorModal");
         let editForm = document.getElementById("editIndikatorForm");
@@ -793,6 +908,7 @@
             button.addEventListener("click", function() {
                 let indikatorId = this.getAttribute("data-id");
                 let bidangId = this.getAttribute("data-bidang");
+                let link = this.getAttribute("data-link");
                 let lingkup = this.getAttribute("data-lingkup");
                 let indikatorNama = this.getAttribute("data-nama");
                 let indikatorPembilang = this.getAttribute("data-pembilang");
@@ -800,12 +916,13 @@
                 let indikatorPenjelasan = this.getAttribute("data-penjelasan");
                 let subIndikator = this.getAttribute("data-sub-indikator");
                 let indikatorPenghitungan = this.getAttribute("data-penghitungan");
-                let tahun = this.getAttribute("data-tahun");
+                let tahun1 = this.getAttribute("data-tahun1");
                 let tren = this.getAttribute("data-tren");
-
+                console.log(tahun1);
                 // Isi form modal dengan data yang diambil dari tombol edit
                 document.getElementById("indikator_id").value = indikatorId;
-                document.getElementById("edit_lingkup").value = lingkup;
+                // document.getElementById("edit_link").value = link;
+                document.getElementById('edit_lingkup').value = button.dataset.lingkup;
                 document.getElementById("edit_indikator_nama").value = indikatorNama;
                 document.getElementById("edit_indikator_pembilang").value = indikatorPembilang;
                 document.getElementById("edit_indikator_penyebut").value = indikatorPenyebut;
@@ -814,7 +931,7 @@
                 document.getElementById("edit_sub_indikator").value = subIndikator;
                 document.getElementById("edit_indikator_penghitungan").value =
                     indikatorPenghitungan;
-                document.getElementById("edit_tahun").value = tahun;
+                document.getElementById("edit_tahun").value = tahun1;
                 document.getElementById("edit_tren").value = tren;
 
                 // Set dropdown bidang dengan bidang yang sesuai
@@ -971,6 +1088,12 @@
             console.log("Bidang Dipilih:", selectedOption.textContent);
             console.log("Rumpun Ditemukan:", rumpunValue);
         });
+    });
+</script>
+
+<script>
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 

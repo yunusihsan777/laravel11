@@ -16,17 +16,11 @@
                 </div>
                 <div class="card-body">
                     @php
-                        $activeTab = session('active_tab', 'capaian');
+                        $activeTab = session('active_tab', 'lkjip');
                     @endphp
                     <!-- Tabs Navigation -->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $activeTab == 'capaian' ? 'active' : '' }}" id="capaian-tab"
-                                data-bs-toggle="tab" href="#capaian" role="tab"
-                                aria-controls="{{ $activeTab == 'capaian' ? 'true' : 'false' }}"
-                                aria-selected="true">Capaian Kinerja</a>
-                        </li>
                         @if ($levelSakip == 99)
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link {{ $activeTab == 'triwulan2' ? 'active' : '' }}" id="triwulan2-tab"
@@ -55,7 +49,15 @@
                                 Kinerja (LKJiP)</a>
                         </li>
 
-
+                        @if ($tahun != 2024)
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link {{ $activeTab == 'capaian' ? 'active' : '' }}" id="capaian-tab"
+                                    data-bs-toggle="tab" href="#capaian" role="tab"
+                                    aria-controls="{{ $activeTab == 'capaian' ? 'true' : 'false' }}"
+                                    aria-selected="true">Capaian Kinerja</a>
+                            </li>
+                        @endif
+                        
                         <li class="nav-item" role="presentation">
                             <a class="nav-link {{ $activeTab == 'rapat-staff-eka' ? 'active' : '' }}"
                                 id="rapat-staff-eka-tab" data-bs-toggle="tab" href="#rapat-staff-eka" role="tab"
@@ -73,6 +75,7 @@
                             </li>
                         @endif
                     </ul>
+
                     @php
                         use App\Models\Bidang;
                     @endphp
@@ -90,13 +93,39 @@
                                         </div>
                                         <div class="card-body">
                                             @php
-                                                $level = session('id_sakip_level');
-                                                $bidangs = in_array($level, [2, 3])
-                                                    ? \App\Models\Bidang::where('bidang_lokasi', $level)
-                                                        ->where('bidang_level', '!=', null)
-                                                        ->orderBy('bidang_level', 'asc')
-                                                        ->get()
-                                                    : [];
+                                                 $level = session('id_sakip_level');
+                                $satkernama = session('satkernama') ?? '';
+                                // $bidangs = [];
+                                $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
+                               if ($level == 0) {
+                                    // Admin atau superuser: ambil semua bidang
+                                    $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
+                                        ->where('hide', 0)
+                                        ->orderBy('bidang_lokasi', 'asc')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+                                } elseif ($level == 1) {
+                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->where('hide', 0)
+                                        ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+                                } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
+                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+
+                                    if ($bidangs->isNotEmpty() && stripos($bidangs[0]->bidang_nama, 'kepala') === 0) {
+                                        $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
+                                    }
+                                } elseif ($level > 1) {
+                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+                                }
                                             @endphp
                                             @foreach ($bidangs as $bidang)
                                                 <button class="btn btn-outline-success text-black w-100 mb-2 bidang-item"
@@ -129,7 +158,7 @@
 
                                                 <div class="text-end mt-4">
                                                     <button type="submit" class="btn btn-success" id="btn-simpan"
-                                                        style="display: none;">Simpan</button>
+                                                        style="background-color: #198754; color: white; display: none;">Simpan</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -409,7 +438,7 @@
                 if (indikator.indikator_penghitungan) {
                     labelPenghitungan = indikator.indikator_penghitungan.split(',').map(s => s.trim());
                 }
-                console.log(labelPenghitungan);
+                // console.log(labelPenghitungan);
 
                 function loadSubIndikator(rumpun, triwulan) {
                     $('#subindikator-wrapper').html('<p>Loading...</p>');
@@ -420,63 +449,64 @@
                             triwulan
                         },
                         success: function(data) {
-                            let html = '';
+    let html = '';
 
-                            if (data.length === 0) {
-                                html = '<p class="text-muted">Tidak ada indikator ditemukan.</p>';
-                            }
+    if (data.length === 0) {
+        html = '<p class="text-muted">Tidak ada indikator ditemukan.</p>';
+    }
 
-                            data.forEach((item, index) => {
-                                html += `
-                                    <div class="mb-4 p-3 border rounded shadow-sm">
-                                        <strong>${item.indikator_nama}</strong>
-                                        <table class="table table-bordered align-middle mt-3">
-                                            <thead class="text-center bg-warning">
-                                                <tr>
-                                                    <th>${labelPenghitungan[0]}</th>
-                                                    <th>${labelPenghitungan[1]}</th>
-                                                    <th>Persentase Penyelesaian</th>
-                                                    <th>Target PK TW</th>
-                                                    <th>Capaian Target PK TW</th>
-                                                   <!-- <th style="width: 20%;">Trend Capaian Kinerja (dibandingkan dengan tahun lalu)</th> -->
-                                                </tr>
-                                            </thead>
-                                            <tbody class="text-center">
-                                                <tr>
-                                                    <td>${item.ditangani}</td>
-                                                    <td>${item.diselesaikan}</td>
-                                                    <td>${item.persentase}%</td>
-                                                    <td>${item.target_pk}%</td>
-                                                    <td>${item.capaian_pk}%</td>
-                                                   <!--  <td>
-                                                        <select class="form-select" disabled>
-                                                            <option selected>Naik</option>
-                                                            <option>Turun</option>
-                                                            <option>Tetap</option>
-                                                        </select>
-                                                    </td> -->
-                                                </tr>
-                                            </tbody>
-                                        </table>
-        
-                                        <div class="mb-2">
-                                            <label><strong>Faktor-Faktor yang mempengaruhi capaian kinerja tersebut:</strong></label>
-                                            <textarea class="form-control faktor-input" rows="2" data-indikator-id="${item.indikator_id}">${item.faktor ?? ''}</textarea>
-                                        </div>
-        
-                                        <div class="mb-2">
-                                            <label><strong>Upaya optimalisasi kinerja yang akan/telah dilaksanakan:</strong></label>
-                                            <textarea class="form-control langkah-input" rows="2" data-indikator-id="${item.indikator_id}">${item.langkah ?? ''}</textarea>
-                                        </div>
-        
-                                        <button class="btn btn-sm btn-primary btn-simpan-faktor" data-indikator-id="${item.indikator_id}">Simpan</button>
+    data.forEach((item, index) => {
+        // Ambil label penghitungan dari item, default ke Ditangani/Diselesaikan
+        let labelPenghitungan = ['Ditangani', 'Diselesaikan'];
+        if (item.indikator_penghitungan) {
+            let labels = item.indikator_penghitungan.split(',').map(s => s.trim());
+            if (labels.length === 2 && labels[0] && labels[1]) {
+                labelPenghitungan = labels;
+            }
+        }
 
-                                    </div>
-                                `;
-                            });
+        html += `
+            <div class="mb-4 p-3 border rounded shadow-sm">
+                <strong>${item.indikator_nama}</strong>
+                <table class="table table-bordered align-middle mt-3">
+                    <thead class="text-center bg-warning">
+                        <tr>
+                            <th>${labelPenghitungan[0]}</th>
+                            <th>${labelPenghitungan[1]}</th>
+                            <th>Persentase Penyelesaian</th>
+                            <th>Target PK TW</th>
+                            <th>Capaian Target PK TW</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr>
+                            <td>${item.ditangani}</td>
+                            <td>${item.diselesaikan}</td>
+                            <td>${item.persentase}%</td>
+                            <td>${item.target_pk}%</td>
+                            <td>${item.capaian_pk}%</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                            $('#subindikator-wrapper').html(html);
-                        },
+                <div class="mb-2">
+                    <label><strong>Faktor-Faktor yang mempengaruhi capaian kinerja tersebut:</strong></label>
+                    <textarea class="form-control faktor-input" rows="2" data-indikator-id="${item.indikator_id}">${item.faktor ?? ''}</textarea>
+                </div>
+
+                <div class="mb-2">
+                    <label><strong>Upaya optimalisasi kinerja yang akan/telah dilaksanakan:</strong></label>
+                    <textarea class="form-control langkah-input" rows="2" data-indikator-id="${item.indikator_id}">${item.langkah ?? ''}</textarea>
+                </div>
+
+                <button class="btn btn-sm btn-primary btn-simpan-faktor" data-indikator-id="${item.indikator_id}">Simpan</button>
+            </div>
+        `;
+    });
+
+    $('#subindikator-wrapper').html(html);
+}
+,
                         error: function() {
                             $('#subindikator-wrapper').html(
                                 '<p class="text-danger">Gagal memuat data.</p>');
@@ -501,7 +531,7 @@
 
                 $(document).on('click', '.btn-simpan-faktor', function() {
                     const indikatorId = $(this).data('indikator-id');
-                    console.log('Indikator ID:', indikatorId); // Pastikan indikatorId tidak undefined
+                    // console.log('Indikator ID:', indikatorId); // Pastikan indikatorId tidak undefined
 
                     const faktor = $(`.faktor-input[data-indikator-id='${indikatorId}']`).val();
                     const langkah = $(`.langkah-input[data-indikator-id='${indikatorId}']`).val();
@@ -515,8 +545,8 @@
 
                     btn.prop('disabled', true).text('Menyimpan...');
 
-                    console.log('ID:', indikatorId, 'Faktor:', faktor, 'Langkah:', langkah, 'Triwulan:',
-                        triwulan);
+                    // console.log('ID:', indikatorId, 'Faktor:', faktor, 'Langkah:', langkah, 'Triwulan:',
+                    //     triwulan);
 
                     $.ajax({
                         url: '/pelaporan/simpan-keterangan',

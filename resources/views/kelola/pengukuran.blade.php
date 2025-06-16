@@ -22,13 +22,39 @@
                                     @php
                                         use App\Models\Bidang;
                                         $level = session('id_sakip_level');
-                                        $bidangs = in_array($level, [2, 3])
-                                            ? \App\Models\Bidang::where('bidang_lokasi', $level)
-                                                ->where('bidang_level', '!=', null) // atau angka tertentu
-                                                ->orderBy('bidang_level', 'asc')
-                                                ->get()
-                                            : [];
+                                $satkernama = session('satkernama') ?? '';
+                                // $bidangs = [];
+                                $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
+                                if ($level == 0) {
+                                    // Admin atau superuser: ambil semua bidang
+                                    $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
+                                        ->where('hide', 0)
+                                        ->orderBy('bidang_lokasi', 'asc')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+                                } elseif ($level == 1) {
+                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->where('hide', 0)
+                                        ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+                                } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
+                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
 
+                                    if ($bidangs->isNotEmpty() && stripos($bidangs[0]->bidang_nama, 'kepala') === 0) {
+                                        $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
+                                    }
+                                } elseif ($level > 1) {
+                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+                                }
+ 
                                     @endphp
                                     @foreach ($bidangs as $bidang)
                                         <button class="btn btn-outline-warning text-black w-100 mb-2 bidang-item"
@@ -53,7 +79,7 @@
                                                 <div class="alert alert-success">{{ session('success') }}</div>
                                             @endif
                                             <p>Pilih bidang untuk melihat indikator.</p>
-                                        </div>
+                                        </div> 
                                         <div class="text-end mt-4">
                                             <button type="submit" class="btn btn-success" id="btn-simpan"
                                                 style="display: none;">Simpan</button>
@@ -155,7 +181,7 @@
                                     labelPenghitungan = labels;
                                 }
                             }
-
+ 
                             subIndikators.forEach(sub => {
                                 let table = `
                         <div class="table-responsive mb-4">
@@ -191,9 +217,12 @@
                 <td>
                     <input type="text" style="width:120px" class="form-control angka-format" name="diselesaikan[${sub}][${bulan}]" placeholder=" ">
                 </td>`).join('')}
+                
 </tr>
+
                 </tbody>
             </table>
+            
         </div>
     `;
 

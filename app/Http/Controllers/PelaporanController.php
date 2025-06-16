@@ -74,6 +74,7 @@ class PelaporanController extends Controller
 
         return view('kelola.pelaporan', ['tahun' => $tahun, 'bidangs' => $bidangs, 'lkjipFiles' => $lkjipFiles,  'rapatStaffEkaFiles' => $rapatStaffEkaFiles,]);
     }
+
     public function getIndikatorByBidang($id_bidang)
     {
         $indikator = Indikator::where('id_bidang', $id_bidang)
@@ -90,11 +91,47 @@ class PelaporanController extends Controller
     //     return response()->json($indikator);
     // }
 
-    public function getSubIndikator($rumpun) //milik pengukuran
-    {
-        $indikators = Indikator::where('link', $rumpun)->get();
+    // public function getSubIndikator($rumpun) //milik pengukuran
+    // {
+    //     $indikators = Indikator::where('link', $rumpun)->get();
 
-        return response()->json($indikators);
+    //     return response()->json($indikators);
+    // }
+
+    //Indikator untuk menu pengukuran
+    public function getSubIndikator($rumpun)
+    {
+        $tahun = session('tahun_terpilih');
+        $level = session('id_sakip_level');
+
+        // Ambil semua indikator dengan filter rumpun dan tahun
+        $indikators = Indikator::where('link', $rumpun)
+            ->where('tahun', 'LIKE', "%$tahun%")
+            ->get();
+
+        // Filter berdasarkan lingkup & level
+        $filtered = $indikators->filter(function ($indikator) use ($level) {
+            switch ($indikator->lingkup ?? 0) {
+                case 0:
+                    return in_array($level, [1, 2, 3, 4]);
+                case 1:
+                    return $level == 1;
+                case 2:
+                    return $level == 2;
+                case 3:
+                    return $level == 3;
+                case 4:
+                    return $level == 4;
+                case 5:
+                    return in_array($level, [2, 3]);
+                case 6:
+                    return in_array($level, [3, 4]);
+                default:
+                    return false;
+            }
+        })->values(); // reset keys
+
+        return response()->json($filtered);
     }
 
     public function getSubIndikator2($rumpun, Request $request)
@@ -104,8 +141,27 @@ class PelaporanController extends Controller
         $tahun = session('tahun_terpilih');
         $bulan_awal = ($tw - 1) * 3 + 1;
         $bulan_akhir = $bulan_awal + 2;
-        $indikators = Indikator::where('link', $rumpun)->get();
-
+        $level = session('id_sakip_level');
+        
+        // dd(session('level'));
+        // $indikators = Indikator::where('link', $rumpun)->get();
+        $indikators = Indikator::where('link', $rumpun)
+        ->where(function ($query) use ($tahun) {
+            $query->where('tahun', 'LIKE', "%$tahun%");
+        })
+        ->where(function ($query) use ($level) {
+            if ($level == 1) {
+                $query->whereIn('lingkup', [0, 1]);
+            } elseif ($level == 2) {
+                $query->whereIn('lingkup', [0, 2, 5]);
+            } elseif ($level == 3) {
+                $query->whereIn('lingkup', [0, 3, 5, 6]);
+            } elseif ($level == 4) {
+                $query->whereIn('lingkup', [0, 4, 6]);
+            }
+        })
+        ->get();
+        
         $data = [];
         foreach ($indikators as $indikator) {
             $total_ditangani = DB::table('pengukuran')
@@ -154,6 +210,7 @@ class PelaporanController extends Controller
                 'indikator_id' => $indikator->id,
                 'indikator_nama' => $indikator->indikator_nama,
                 'ditangani' => number_format($total_ditangani, 0, ',', '.'),
+                'indikator_penghitungan' => $indikator->indikator_penghitungan,
                 'diselesaikan' => number_format($total_diselesaikan, 0, ',', '.'),
                 'persentase' => $persentase,
                 'target_pk' => $target_pk,
@@ -162,10 +219,11 @@ class PelaporanController extends Controller
                 'langkah' => $first->langkah_optimalisasi ?? '',
             ];
 
-            \Log::info('Simpan Keterangan Request:', $request->all());
+            // \Log::info('Simpan Keterangan Request:', $request->all());
         }
         return response()->json($data);
     }
+
 
     public function simpanKeterangan(Request $request)
     {

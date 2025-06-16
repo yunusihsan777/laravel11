@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\Models\Aturan;
 
 class AturanController extends Controller
@@ -19,7 +20,7 @@ class AturanController extends Controller
         
         // $aturan = Aturan::all();
         $aturan = DB::table('sinori_sakip_literasi') // Atau gunakan model jika ada
-            ->orderBy('id_tahun', 'asc') // Urutkan berdasarkan kolom 'id_tahun'
+            ->orderBy('id_tahun', 'desc') // Urutkan berdasarkan kolom 'id_tahun'
             ->get();
         return view('aturan', ['aturan' => $aturan, 'tahun' => $tahun]);
     }
@@ -34,7 +35,7 @@ class AturanController extends Controller
         $tahun = session('tahun_terpilih');
         return view('aturan.create', ['tahun' => $tahun]);
     }
-
+ 
     // Function untuk menyimpan peraturan baru
     public function store(Request $request)
     {
@@ -49,7 +50,7 @@ class AturanController extends Controller
         // Handle file upload
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = $file->getClientOriginalName(); // Buat nama unik untuk file
+            $filename = Str::slug($request->id_namaproduk, '_') . '.' . $file->getClientOriginalExtension();// Buat nama unik untuk file
             $file->move(public_path('uploads/peraturan'), $filename); // Simpan file ke folder "uploads"
 
             // Simpan data ke database
@@ -94,8 +95,8 @@ class AturanController extends Controller
         // Handle file upload jika ada
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = time() . '_' . $file->getClientOriginalName(); // Buat nama unik untuk file
-            $file->move(public_path('uploads'), $filename); // Simpan file ke folder "uploads"
+            $filename = Str::slug($request->id_namaproduk, '_') . '.' . $file->getClientOriginalExtension();// Buat nama unik untuk file
+            $file->move(public_path('uploads/peraturan'), $filename); // Simpan file ke folder "uploads"
 
             // Update nama file di database
             $aturan->update([

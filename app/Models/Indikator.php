@@ -24,7 +24,8 @@ class Indikator extends Model
         'indikator_penjelasan',
         'sub_indikator',
         'indikator_penghitungan',
-        'tahun'
+        'tahun',
+        'tren',
     ];
 
     // Jika tidak ada timestamps
@@ -33,7 +34,7 @@ class Indikator extends Model
     // Relasi berdasarkan id_bidang
     public function bidangById()
     {
-        return $this->belongsTo(Bidang::class, 'id_bidang', 'id');
+        return $this->belongsTo(Bidang::class, 'link', 'id');
     }
 
     // Relasi berdasarkan link dan rumpun

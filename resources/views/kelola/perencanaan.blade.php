@@ -52,20 +52,22 @@
                                 aria-controls="{{ $activeTab == 'renaksi' ? 'true' : 'false' }}"
                                 aria-selected="false">Rencana Aksi</a>
                         </li>
-                        {{-- @if ($levelSakip == 99) --}}
-                        <!--|| $levelSakip == 2 || $levelSakip == 3 -->
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $activeTab == 'perjanjian-kinerja' ? 'active' : '' }}"
-                                id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja" role="tab"
-                                aria-controls="{{ $activeTab == 'perjanjian-kinerja' ? 'true' : 'false' }}"
-                                aria-selected="false">Perjanjian Kinerja</a>
-                        </li>
-                        {{-- @endif --}}
-                        @if ($levelSakip == 99)
+                        @if ($tahun != 2024)
+                            <!--|| $levelSakip == 2 || $levelSakip == 3 -->
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="cetak-pk-tab" data-bs-toggle="tab" href="#cetak-pk" role="tab"
-                                    aria-controls="cetak-pk" aria-selected="false">Cetak PK</a>
+                                <a class="nav-link {{ $activeTab == 'perjanjian-kinerja' ? 'active' : '' }}"
+                                    id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja"
+                                    role="tab"
+                                    aria-controls="{{ $activeTab == 'perjanjian-kinerja' ? 'true' : 'false' }}"
+                                    aria-selected="false">Perjanjian Kinerja</a>
                             </li>
+                            {{-- @endif --}}
+                            @if ($levelSakip == 99)
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="cetak-pk-tab" data-bs-toggle="tab" href="#cetak-pk"
+                                        role="tab" aria-controls="cetak-pk" aria-selected="false">Cetak PK</a>
+                                </li>
+                            @endif
                         @endif
                     </ul>
 
@@ -631,22 +633,67 @@
                             <h3><strong>Perjanjian Kinerja</strong></h3>
                             <p class="card-title p-2" style="background-color: #f1e022; color: black;">Pengisian Target
                                 Perjanjian Kinerja</p>
+
                             @php
                                 $level = session('id_sakip_level');
-                                $bidangs = in_array($level, [2, 3])
-                                    ? \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->where('bidang_level', '!=', null) // atau angka tertentu
+                                $satkernama = session('satkernama') ?? '';
+                                $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
+
+                                if ($level == 0) {
+                                    // Admin atau superuser: ambil semua bidang
+                                    $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
+                                        ->where('hide', 0)
+                                        ->orderBy('bidang_lokasi', 'asc')
                                         ->orderBy('bidang_level', 'asc')
-                                        ->get()
-                                    : [];
+                                        ->get();
+                                } elseif ($level == 1) {
+                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->where('hide', 0)
+                                        ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+                                } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
+                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+
+                                    if ($bidangs->isNotEmpty() && stripos($bidangs[0]->bidang_nama, 'kepala') === 0) {
+                                        $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
+                                    }
+                                } elseif ($level > 1) {
+                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
+                                }
+
+                                //kurang rumah sakit dan atase where $level=5
 
                             @endphp
 
                             @foreach ($bidangs as $index => $bidang)
                                 @php
-                                    // Ambil indikator yang memiliki link sesuai dengan rumpun bidang
-                                    $indikators = \App\Models\Indikator::where('link', $bidang->rumpun)->get();
+
+                                    $indikators = \App\Models\Indikator::where('link', $bidang->rumpun)
+                                        ->where(function ($query) use ($tahun) {
+                                            $query->where('tahun', 'LIKE', "%$tahun%"); // cocokkan sebagian tahun
+                                        })
+                                        ->where(function ($query) use ($level) {
+                                            if ($level == 1) {
+                                                $query->whereIn('lingkup', [0, 1]);
+                                            } elseif ($level == 2) {
+                                                $query->whereIn('lingkup', [0, 2, 5]);
+                                            } elseif ($level == 3) {
+                                                $query->whereIn('lingkup', [0, 3, 5, 6]);
+                                            } elseif ($level == 4) {
+                                                $query->whereIn('lingkup', [0, 4, 6]);
+                                            }
+                                        })
+                                        ->get();
                                 @endphp
+
 
                                 <div class="card mb-2">
                                     <div class="card-header d-flex justify-content-between align-items-center"
@@ -662,62 +709,59 @@
 
                                     <div class="collapse" id="collapseBidang{{ $index }}">
                                         <div class="card-body">
-                                            <div class="card-body">
-                                                @if ($indikators->isNotEmpty())
-                                                    <div class="row">
-                                                        @foreach ($indikators as $key => $indikator)
-                                                            <div class="col-md-6">
-                                                                <div class="card mb-2">
-                                                                    <div class="card-body">
-                                                                        <!-- Indikator Nama -->
-                                                                        <h5 class="text-center"
-                                                                            style="font-weight: bold; color: black;">
-                                                                            {{ $indikator->indikator_nama }}
-                                                                        </h5>
+                                            @if ($indikators->isNotEmpty())
+                                                <div class="row">
+                                                    @foreach ($indikators as $key => $indikator)
+                                                        <div class="col-md-6">
+                                                            <div class="card mb-2">
+                                                                <div class="card-body">
+                                                                    <!-- Indikator Nama -->
+                                                                    <h5 class="text-center"
+                                                                        style="font-weight: bold; color: black;">
+                                                                        {{ $indikator->indikator_nama }}
+                                                                    </h5>
 
+                                                                    <!-- Form Target -->
+                                                                    <form method="POST"
+                                                                        action="{{ route('target.store') }}">
+                                                                        @csrf
+                                                                        <input type="hidden" name="indikator_id"
+                                                                            value="{{ $indikator->id }}">
 
-                                                                        <!-- Form Target -->
-                                                                        <form method="POST"
-                                                                            action="{{ route('target.store') }}">
-                                                                            @csrf
-                                                                            <input type="hidden" name="indikator_id"
-                                                                                value="{{ $indikator->id }}">
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">Target Pertahun
+                                                                                (%)
+                                                                            </label>
+                                                                            <input type="number" class="form-control"
+                                                                                name="target_tahun"
+                                                                                value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
+                                                                        </div>
 
+                                                                        <div class="row">
+                                                                            @for ($i = 1; $i <= 4; $i++)
+                                                                                <div class="col-md-6">
+                                                                                    <label class="form-label">Triwulan
+                                                                                        {{ $i }} (%)</label>
+                                                                                    <input type="number"
+                                                                                        class="form-control"
+                                                                                        name="target_triwulan_{{ $i }}"
+                                                                                        value="{{ $target[$indikator->id]->{"target_triwulan_{$i}"} ?? '' }}">
+                                                                                </div>
+                                                                            @endfor
+                                                                        </div>
 
-                                                                            <div class="mb-2">
-                                                                                <label class="form-label">Target Pertahun
-                                                                                    (%)
-                                                                                </label>
-                                                                                <input type="number" class="form-control"
-                                                                                    name="target_tahun"
-                                                                                    value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
-                                                                            </div>
-
-                                                                            <div class="row">
-                                                                                @for ($i = 1; $i <= 4; $i++)
-                                                                                    <div class="col-md-6">
-                                                                                        <label class="form-label">Triwulan
-                                                                                            {{ $i }} (%)</label>
-                                                                                        <input type="number"
-                                                                                            class="form-control"
-                                                                                            name="target_triwulan_{{ $i }}"
-                                                                                            value="{{ $target[$indikator->id]->{'target_triwulan_' . $i} ?? '' }}">
-                                                                                    </div>
-                                                                                @endfor
-                                                                            </div>
-
-                                                                            <br>
-                                                                            <button type="submit"
-                                                                                class="btn btn-success w-100">Simpan</button>
-                                                                        </form>
-                                                                    </div>
+                                                                        <br>
+                                                                        <button type="submit"
+                                                                            class="btn btn-success w-100">Simpan</button>
+                                                                    </form>
                                                                 </div>
                                                             </div>
+                                                        </div>
 
-                                                            @if (($key + 1) % 2 == 0)
-                                                    </div>
-                                                    <div class="row"> <!-- Tutup & Buka Row Setiap 2 Indikator -->
-                                                @endif
+                                                        @if (($key + 1) % 2 == 0 && !$loop->last)
+                                                </div>
+                                                <div class="row">
+                                            @endif
                             @endforeach
                         </div>
                     @else
@@ -727,12 +771,8 @@
                 </div>
             </div>
             @endforeach
-        </div>
-    </div>
-    </div>
 
-    </div>
-    </div>
+        </div>
     </div>
 @endsection
 

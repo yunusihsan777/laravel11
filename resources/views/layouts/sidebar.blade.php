@@ -37,9 +37,11 @@
                 <i class="fas fa-file-alt"></i> Perencanaan
             </a>
             {{-- @if ($levelSakip == 99) --}}
+            @if ($tahun != 2024)
             <a href="{{ route('pengukuran') }}" class="{{ request()->is('pengukuran') ? 'active' : '' }}">
                 <i class="fas fa-chart-line"></i> Pengukuran
             </a>
+            @endif
             {{-- @endif --}}
             @if ($levelSakip == 99 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 1)
             <a href="{{ route('pelaporan') }}" class="{{ request()->is('pelaporan') ? 'active' : '' }}">
