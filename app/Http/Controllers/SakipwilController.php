@@ -20,12 +20,10 @@ class SakipwilController extends Controller
         $tahun = session('tahun_terpilih');
         $level = session('id_sakip_level');
 
-        $bidangs = in_array($level, [2, 3])
-            ? Bidang::where('bidang_lokasi', $level)
+        $bidangs = Bidang::where('bidang_lokasi', $level)
             ->where('bidang_level', '!=', null)
             ->orderBy('bidang_level', 'asc')
-            ->get()
-            : [];
+            ->get();
 
         // Ambil data pengguna
         $id = DB::table('sinori_login')->where('id_satker', $id_satker)->first();
@@ -50,13 +48,84 @@ class SakipwilController extends Controller
         $sortedKepList = $data->pluck('id_satker')->map(function ($id) use ($kepList) {
             return $kepList[$id] ?? null;
         });
-        // dd($sortedkepList);
         // Memeriksa tahun dan menentukan id_periode
         if ($tahun == "2024") {
             $id_periode = "P1";
         } else {
             $id_periode = "P2";
         }
+
+        $renstraList = DB::table('sinori_sakip_renstra')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $id_periode)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedRenstraList = $data->pluck('id_satker')->map(function ($id) use ($renstraList) {
+            return $renstraList[$id] ?? null;
+        });
+
+        $renjaList = DB::table('sinori_sakip_renja')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedRenjaList = $data->pluck('id_satker')->map(function ($id) use ($renjaList) {
+            return $renjaList[$id] ?? null;
+        });
+
+        $ikuList = DB::table('sinori_sakip_iku')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedIkuList = $data->pluck('id_satker')->map(function ($id) use ($ikuList) {
+            return $ikuList[$id] ?? null;
+        });
+
+        $rkaklList = DB::table('sinori_sakip_rkakl')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedRkaklList = $data->pluck('id_satker')->map(function ($id) use ($rkaklList) {
+            return $rkaklList[$id] ?? null;
+        });
+
+        $dipaList = DB::table('sinori_sakip_dipa')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedDipaList = $data->pluck('id_satker')->map(function ($id) use ($dipaList) {
+            return $dipaList[$id] ?? null;
+        });
+
+        $renaksiList = DB::table('sinori_sakip_renaksi')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedRenaksiList = $data->pluck('id_satker')->map(function ($id) use ($renaksiList) {
+            return $renaksiList[$id] ?? null;
+        });
+
+        $lkjipList = DB::table('sinori_sakip_lakip')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedLkjipList = $data->pluck('id_satker')->map(function ($id) use ($lkjipList) {
+            return $lkjipList[$id] ?? null;
+        });
+
+        $rastaffList = DB::table('sinori_sakip_rastaff')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedRastaffList = $data->pluck('id_satker')->map(function ($id) use ($rastaffList) {
+            return $rastaffList[$id] ?? null;
+        });
 
         // Mengambil id_filename berdasarkan id_satker
         $renstra = DB::table('sinori_sakip_renstra')
@@ -131,6 +200,14 @@ class SakipwilController extends Controller
             'tahun' => $tahun,
             'satkernamaList' => $satkernamaList,
             'sortedKepList' => $sortedKepList,
+            'sortedRenstraList' => $sortedRenstraList,
+            'sortedRenjaList' => $sortedRenjaList,
+            'sortedIkuList' => $sortedIkuList,
+            'sortedRkaklList' => $sortedRkaklList,
+            'sortedDipaList' => $sortedDipaList,
+            'sortedRenaksiList' => $sortedRenaksiList,
+            'sortedLkjipList' => $sortedLkjipList,
+            'sortedRastaffList' => $sortedRastaffList,
             'renstra' => $renstra,
             'iku' => $iku,
             'renja' => $renja,

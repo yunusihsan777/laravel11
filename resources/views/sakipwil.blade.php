@@ -50,7 +50,7 @@
                                             <td style="text-align: left;">{{ $satkernamaList[$index] }}</td>
                                             <td>
                                                 @if (!empty($sortedKepList[$index]))
-                                                    <a href="{{ asset('uploads/repository/KEP/' . $row->id_satker . '.pdf') }}"
+                                                    <a href="{{ asset('uploads/KEP/' . $row->id_satker . '.pdf') }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
                                                         &#10003; <!-- Tanda centang -->
                                                     </a>
@@ -91,7 +91,7 @@
                                                     @php
                                                         $latestrenja = $renja[$row->id_satker]->first();
                                                     @endphp
-                                                    <a href="{{ asset('uploads/repository/' . $latestrenja->id_satker . '/renja_' . $latestrenja->id_filename) }}"
+                                                    <a href="{{ asset('uploads/repository/' . $latestrenja->id_satker . '/' . $latestrenja->id_filename) }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
                                                         &#10003; <!-- Tanda centang -->
                                                     </a>
@@ -104,7 +104,7 @@
                                                     @php
                                                         $latestRkakl = $rkakl[$row->id_satker]->first();
                                                     @endphp
-                                                    <a href="{{ asset('uploads/repository/' . $latestRkakl->id_satker . '/RKAKL_' . $latestRkakl->id_filename) }}"
+                                                    <a href="{{ asset('uploads/repository/' . $latestRkakl->id_satker . '/' . $latestRkakl->id_filename) }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
                                                         &#10003; <!-- Tanda centang -->
                                                     </a>
@@ -182,20 +182,117 @@
                             </tbody>
                         </table>
                     </div>
-                        <div class="card mb-4">
+                    <div class="col-md-12">
+                        <div class="card shadow-sm mb-4">
                             <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
                                 <center>
                                     <h2><b>Distribusi Keputusan</b></h2>
                                 </center>
                             </div>
-                            <div class="card-body">
-                                <canvas id="pieChart"></canvas>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>Keputusan Terisi</b></h5>
+                                            </center>
+                                            <canvas id="pieChart1"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>Keputusan Belum Terisi</b></h5>
+                                            </center>
+                                            <canvas id="pieChart2"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><b>IKU</b></h5>
+                                            <canvas id="pieChart3"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>Renja</b></h5>
+                                            </center>
+                                            <canvas id="pieChart4"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>RKAKL</b></h5>
+                                            </center>
+                                            <canvas id="pieChart5"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>DIPA</b></h5>
+                                            </center>
+                                            <canvas id="pieChart6"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>Renaksi</b></h5>
+                                            </center>
+                                            <canvas id="pieChart7"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>LKJIP</b></h5>
+                                            </center>
+                                            <canvas id="pieChart8"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>Rapat Staff</b></h5>
+                                            </center>
+                                            <canvas id="pieChart9"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
+
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
-
+    </div>
     @endsection
 
     @section('style')
@@ -249,13 +346,14 @@
         </style>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                // keputusan
                 const sortedKepList = @json($sortedKepList); // Mengambil data dari PHP
 
                 // Menghitung jumlah keputusan yang terisi dan belum terisi
                 const terisi = sortedKepList.filter(item => item).length; // Menghitung yang terisi
                 const belumTerisi = sortedKepList.length - terisi; // Menghitung yang belum terisi
 
-                const ctx = document.getElementById('pieChart').getContext('2d');
+                const ctx = document.getElementById('pieChart1').getContext('2d');
                 const pieChart = new Chart(ctx, {
                     type: 'pie',
                     data: {
@@ -278,7 +376,7 @@
                         responsive: true,
                         plugins: {
                             legend: {
-                                position: 'top',
+                                position: 'bottom',
                             },
                             tooltip: {
                                 callbacks: {
@@ -290,5 +388,233 @@
                         }
                     }
                 });
+                //renstra
+                const sortedRenstraList = @json($sortedRenstraList);
+                const terisiRenstra = sortedRenstraList.filter(item => item).length;
+                const belumTerisiRenstra = sortedRenstraList.length - terisiRenstra;
+
+                const ctx3 = document.getElementById('pieChart2').getContext('2d');
+                new Chart(ctx3, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Terisi', 'Belum Terisi'],
+                        datasets: [{
+                            data: [terisiRenstra, belumTerisiRenstra],
+                            backgroundColor: [
+                                'rgba(153, 102, 255, 0.6)',
+                                'rgba(255, 206, 86, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 206, 86, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+                //IKU
+                const sortedIkuList = @json($sortedIkuList);
+                const terisiIku = sortedIkuList.filter(item => item).length;
+                const belumTerisiIku = sortedIkuList.length - terisiIku;
+
+                const ctxIku = document.getElementById('pieChart3').getContext('2d');
+                new Chart(ctxIku, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Terisi', 'Belum Terisi'],
+                        datasets: [{
+                            data: [terisiIku, belumTerisiIku],
+                            backgroundColor: [
+                                'rgba(0, 200, 83, 0.6)', // Terisi: hijau terang
+                                'rgba(255, 87, 34, 0.6)' // Belum: oranye
+                            ],
+                            borderColor: [
+                                'rgba(0, 200, 83, 1)',
+                                'rgba(255, 87, 34, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+                //renja
+                const sortedRenjaList = @json($sortedRenjaList);
+                const terisiRenja = sortedRenjaList.filter(item => item).length;
+                const belumTerisiRenja = sortedRenjaList.length - terisiRenja;
+
+                const ctxRenja = document.getElementById('pieChart4').getContext('2d');
+                new Chart(ctxRenja, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Terisi', 'Belum Terisi'],
+                        datasets: [{
+                            data: [terisiRenja, belumTerisiRenja],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 159, 64, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+                //rkakl
+                const sortedRkaklList = @json($sortedRkaklList);
+                const terisiRkakl = sortedRkaklList.filter(item => item).length;
+                const belumTerisiRkakl = sortedRkaklList.length - terisiRkakl;
+
+                const ctxRkakl = document.getElementById('pieChart5').getContext('2d');
+                new Chart(ctxRkakl, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Terisi', 'Belum Terisi'],
+                        datasets: [{
+                            data: [terisiRkakl, belumTerisiRkakl],
+                            backgroundColor: ['#4CAF50', '#FFC107'],
+                            borderColor: ['#388E3C', '#FFA000'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+                //dipa
+                const sortedDipaList = @json($sortedDipaList);
+                const terisiDipa = sortedDipaList.filter(item => item).length;
+                const belumTerisiDipa = sortedDipaList.length - terisiDipa;
+
+                const ctxDipa = document.getElementById('pieChart6').getContext('2d');
+                new Chart(ctxDipa, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Terisi', 'Belum Terisi'],
+                        datasets: [{
+                            data: [terisiDipa, belumTerisiDipa],
+                            backgroundColor: ['#00ACC1', '#E53935'],
+                            borderColor: ['#00838F', '#C62828'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+                //renaksi
+                const sortedRenaksiList = @json($sortedRenaksiList);
+                const terisiRenaksi = sortedRenaksiList.filter(item => item).length;
+                const belumTerisiRenaksi = sortedRenaksiList.length - terisiRenaksi;
+
+                const ctxRenaksi = document.getElementById('pieChart7').getContext('2d');
+                new Chart(ctxRenaksi, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Terisi', 'Belum Terisi'],
+                        datasets: [{
+                            data: [terisiRenaksi, belumTerisiRenaksi],
+                            backgroundColor: ['#009688', '#FF5722'],
+                            borderColor: ['#00796B', '#E64A19'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+
+                //lkjip
+                const sortedLkjipList = @json($sortedLkjipList);
+                const terisiLkjip = sortedLkjipList.filter(item => item).length;
+                const belumTerisiLkjip = sortedLkjipList.length - terisiLkjip;
+
+                const ctxLkjip = document.getElementById('pieChart8').getContext('2d');
+                new Chart(ctxLkjip, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Terisi', 'Belum Terisi'],
+                        datasets: [{
+                            data: [terisiLkjip, belumTerisiLkjip],
+                            backgroundColor: ['#9C27B0', '#CDDC39'],
+                            borderColor: ['#7B1FA2', '#AFB42B'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+                //rastaff
+                const sortedRastaffList = @json($sortedRastaffList);
+                const terisiRastaff = sortedRastaffList.filter(item => item).length;
+                const belumTerisiRastaff = sortedRastaffList.length - terisiRastaff;
+
+                const ctxRastaff = document.getElementById('pieChart9').getContext('2d');
+                new Chart(ctxRastaff, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Terisi', 'Belum Terisi'],
+                        datasets: [{
+                            data: [terisiRastaff, belumTerisiRastaff],
+                            backgroundColor: ['#3F51B5', '#F44336'],
+                            borderColor: ['#303F9F', '#D32F2F'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+
             });
         </script>

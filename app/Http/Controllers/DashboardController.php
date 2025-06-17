@@ -40,11 +40,10 @@ class DashboardController extends Controller
         $pengumuman = DB::table('sinori_sakip_inbox')->get();
         $jumlahAturan = DB::table('sinori_sakip_literasi')->count(); // Hitung jumlah aturan
         // Data untuk chart
-        $data = [
-            'pengisian_pk' => 80,
-            'tw1' => 50,
-            'tw2' => 50
-        ];
+        $id = DB::table('sinori_login')->where('id_satker', $idSatker)->first();
+        $data = DB::table('sinori_login')
+            ->where('id_kejati', $id->id_kejati)
+            ->get();
 
         $renstraTerisi = Renstra::where('id_satker', $idSatker)->where('id_periode', $periode)->exists();
         $ikuTerisi = Iku::where('id_satker', $idSatker)->where('id_periode', $tahun)->exists();
@@ -54,6 +53,23 @@ class DashboardController extends Controller
         $rencanaAksiTerisi = Renaksi::where('id_satker', $idSatker)->where('id_periode', $tahun)->exists();
         $keputusanTimSakipTerisi = Kep::where('id_satker', $idSatker)->where('id_tahun', $tahun)->exists();
 
+       $kepList = DB::table('sinori_sakip_keputusan')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_tahun', $tahun)
+            ->pluck('id_filesurat', 'id_satker');
+        // dd($kepList);
+        // Menyelaraskan urutan kepList dengan satker
+        $sortedKepList = $data->pluck('id_satker')->map(function ($id) use ($kepList) {
+            return $kepList[$id] ?? null;
+        });
+        // dd($sortedkepList);
+        // Memeriksa tahun dan menentukan id_periode
+        if ($tahun == "2024") {
+            $id_periode = "P1";
+        } else {
+            $id_periode = "P2";
+        }
+    // pastikan kolom bernama `keputusan`, sesuaikan jika beda
 
         // Kirim data ke view
         // return view('dashboard', compact('pengumuman', 'jumlahAturan', 'data', ['tahun' => $tahun]));
@@ -68,7 +84,8 @@ class DashboardController extends Controller
             'rkaklTerisi' => $rkaklTerisi,
             'dipaTerisi' => $dipaTerisi,
             'rencanaAksiTerisi' => $rencanaAksiTerisi,
-            'keputusanTimSakipTerisi' => $keputusanTimSakipTerisi
+            'keputusanTimSakipTerisi' => $keputusanTimSakipTerisi,
+            'sortedKepList' => $sortedKepList,
 
         ]);
     }

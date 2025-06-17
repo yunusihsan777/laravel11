@@ -70,7 +70,7 @@
 @stack('scripts')
 
 @include('layouts.head')
-<body class="section-with-background" style="background-image: url('{{ asset('gambar/background.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 400px;">
+<body class="section-with-background" style="background-image: url('{{ asset('gambar/backgrounds.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 400px;">
     
     {{-- <div class="container-fluid"> --}}
         {{-- <div class="row"> --}}

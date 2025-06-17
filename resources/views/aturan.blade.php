@@ -30,12 +30,12 @@
                         <thead class="table-warning">
                             <tr>
                                 <th>No</th> <!-- Kolom nomor -->
-                                <th>Nama Peraturan</th>
+                                <th style="width: 70%;">Nama Peraturan</th>
                                 <th>Pemilik</th>
-                                @if ($levelSakip == 99)
                                     <th>Tahun</th>
-                                @endif
+                                @if ($levelSakip == 99)
                                 <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -44,10 +44,10 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>
                                         @if (!empty($item->id_filename))
-                                            <a href="{{ asset('uploads/peraturan/' . $item->id_filename) }}" target="_blank" style="text-decoration: none; color: inherit;">
-    {{ $item->id_namaproduk }}
-</a>
-
+                                            <a href="{{ asset('uploads/peraturan/' . $item->id_filename) }}" target="_blank"
+                                                style="text-decoration: none; color: inherit;">
+                                                {{ $item->id_namaproduk }}
+                                            </a>
                                         @else
                                             {{ $item->id_namaproduk }}
                                         @endif

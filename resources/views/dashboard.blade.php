@@ -136,26 +136,6 @@
                         </div>
                     </div>
                 </div>
-                {{-- Card --}}
-                <div class="col-md-12">
-                    <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
-                        <center>
-                            <h2><b>Distribusi Keputusan</b></h2>
-                        </center>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <canvas id="pieChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <canvas id="pieChart"></canvas>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Card Sumber Aturan (1:3) -->
 
@@ -306,40 +286,7 @@
     }
 </style>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Pilih semua elemen dengan class 'card'
-        const cards = document.querySelectorAll('.card');
-
-        // Tambahkan class 'show' untuk memulai animasi slide up
-        cards.forEach((card, index) => {
-            setTimeout(() => {
-                card.classList.add('show');
-            }, index * 100); // Animasi akan muncul satu per satu dengan delay 100ms
-        });
-    });
-
-    //chart
-    const ctx = document.getElementById('progressChart').getContext('2d');
-    const progressChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Pengisian PK', 'TW1 Otentikasi', 'TW2 Otentikasi'],
-            datasets: [{
-                data: [{{ $data['pengisian_pk'] }}, {{ $data['tw1'] }}, {{ $data['tw2'] }}],
-                backgroundColor: ['#f0bb49', '#ff6384', '#36a2eb'],
-                hoverBackgroundColor: ['#f79f2a', '#ff4567', '#3381ca'],
-                borderColor: '#ffffff',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                }
-            }
-        }
-    });
-</script>
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+@endpush

@@ -91,12 +91,6 @@
         </a>
     @endif
 
-    <div class="footer">
-        <br><br>
-        <center>
-            <p class="text-dark">Panev BiroCana Kejaksaan RI @2024</p>
-        </center>
-    </div>
 </div>
 
 
