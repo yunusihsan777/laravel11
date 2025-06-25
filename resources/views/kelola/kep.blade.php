@@ -75,7 +75,11 @@
                     @else
                         <center>
                             <div class="alert alert-success">
-                                Anda sudah mengupload Surat Keputusan TIM SAKIP Tahun {{ $tahun }} untuk satker ini.
+                                <a href="{{ asset('uploads/kep/' . $idSatker . '.pdf') }}"
+                                                                        target="_blank"
+                                                                        style="text-decoration: none; color: inherit;">
+                                                                         Anda sudah mengupload Surat Keputusan TIM SAKIP Tahun {{ $tahun }} untuk satker ini.
+                                                                    </a>
                             </div>
                         </center>
                     @endif

@@ -215,7 +215,7 @@
                                 <div class="col-md-4">
                                     <div class="card shadow-sm mb-4">
                                         <div class="card-body">
-                                            <h5 class="card-title"><b>IKU</b></h5>
+                                            <center><h5 class="card-title"><b>IKU</b></h5></center>
                                             <canvas id="pieChart3"></canvas>
                                         </div>
                                     </div>
@@ -361,14 +361,8 @@
                         datasets: [{
                             label: 'Jumlah Keputusan',
                             data: [terisi, belumTerisi],
-                            backgroundColor: [
-                                'rgba(75, 192, 192, 0.6)', // Warna untuk terisi
-                                'rgba(255, 99, 132, 0.6)', // Warna untuk belum terisi
-                            ],
-                            borderColor: [
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(255, 99, 132, 1)',
-                            ],
+                            backgroundColor: ['#4CAF50', '#E53935'],
+                            borderColor: ['#00838F', '#C62828'],
                             borderWidth: 1
                         }]
                     },
@@ -400,14 +394,8 @@
                         labels: ['Terisi', 'Belum Terisi'],
                         datasets: [{
                             data: [terisiRenstra, belumTerisiRenstra],
-                            backgroundColor: [
-                                'rgba(153, 102, 255, 0.6)',
-                                'rgba(255, 206, 86, 0.6)'
-                            ],
-                            borderColor: [
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 206, 86, 1)'
-                            ],
+                             backgroundColor: ['#4CAF50', '#E53935'],
+                            borderColor: ['#00838F', '#C62828'],
                             borderWidth: 1
                         }]
                     },
@@ -432,14 +420,8 @@
                         labels: ['Terisi', 'Belum Terisi'],
                         datasets: [{
                             data: [terisiIku, belumTerisiIku],
-                            backgroundColor: [
-                                'rgba(0, 200, 83, 0.6)', // Terisi: hijau terang
-                                'rgba(255, 87, 34, 0.6)' // Belum: oranye
-                            ],
-                            borderColor: [
-                                'rgba(0, 200, 83, 1)',
-                                'rgba(255, 87, 34, 1)'
-                            ],
+                             backgroundColor: ['#4CAF50', '#E53935'],
+                            borderColor: ['#00838F', '#C62828'],
                             borderWidth: 1
                         }]
                     },
@@ -464,14 +446,8 @@
                         labels: ['Terisi', 'Belum Terisi'],
                         datasets: [{
                             data: [terisiRenja, belumTerisiRenja],
-                            backgroundColor: [
-                                'rgba(54, 162, 235, 0.6)',
-                                'rgba(255, 159, 64, 0.6)'
-                            ],
-                            borderColor: [
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
+                             backgroundColor: ['#4CAF50', '#E53935'],
+                            borderColor: ['#00838F', '#C62828'],
                             borderWidth: 1
                         }]
                     },
@@ -496,8 +472,8 @@
                         labels: ['Terisi', 'Belum Terisi'],
                         datasets: [{
                             data: [terisiRkakl, belumTerisiRkakl],
-                            backgroundColor: ['#4CAF50', '#FFC107'],
-                            borderColor: ['#388E3C', '#FFA000'],
+                             backgroundColor: ['#4CAF50', '#E53935'],
+                            borderColor: ['#00838F', '#C62828'],
                             borderWidth: 1
                         }]
                     },
@@ -522,7 +498,7 @@
                         labels: ['Terisi', 'Belum Terisi'],
                         datasets: [{
                             data: [terisiDipa, belumTerisiDipa],
-                            backgroundColor: ['#00ACC1', '#E53935'],
+                            backgroundColor: ['#4CAF50', '#E53935'],
                             borderColor: ['#00838F', '#C62828'],
                             borderWidth: 1
                         }]
@@ -548,8 +524,8 @@
                         labels: ['Terisi', 'Belum Terisi'],
                         datasets: [{
                             data: [terisiRenaksi, belumTerisiRenaksi],
-                            backgroundColor: ['#009688', '#FF5722'],
-                            borderColor: ['#00796B', '#E64A19'],
+                             backgroundColor: ['#4CAF50', '#E53935'],
+                            borderColor: ['#00838F', '#C62828'],
                             borderWidth: 1
                         }]
                     },
@@ -575,8 +551,8 @@
                         labels: ['Terisi', 'Belum Terisi'],
                         datasets: [{
                             data: [terisiLkjip, belumTerisiLkjip],
-                            backgroundColor: ['#9C27B0', '#CDDC39'],
-                            borderColor: ['#7B1FA2', '#AFB42B'],
+                            backgroundColor: ['#4CAF50', '#E53935'],
+                            borderColor: ['#00838F', '#C62828'],
                             borderWidth: 1
                         }]
                     },
@@ -601,8 +577,8 @@
                         labels: ['Terisi', 'Belum Terisi'],
                         datasets: [{
                             data: [terisiRastaff, belumTerisiRastaff],
-                            backgroundColor: ['#3F51B5', '#F44336'],
-                            borderColor: ['#303F9F', '#D32F2F'],
+                             backgroundColor: ['#4CAF50', '#E53935'],
+                            borderColor: ['#00838F', '#C62828'],
                             borderWidth: 1
                         }]
                     },

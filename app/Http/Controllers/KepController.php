@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\kep;
+use App\Models\Kep;
  
 class kepController extends Controller
 {
@@ -26,7 +26,7 @@ class kepController extends Controller
                 ->first();
         // Kirim variabel $kep ke view
         // return view('kelola.kep', compact('kep'));
-        return view('kelola.kep', ['kep' => $kep, 'tahun' => $tahun]);
+        return view('kelola.kep', ['kep' => $kep, 'tahun' => $tahun, 'idSatker' => $idSatker]);
     }
 
     public function store(Request $request)
