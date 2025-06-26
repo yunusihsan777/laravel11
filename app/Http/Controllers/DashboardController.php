@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/DashboardController.php
 namespace App\Http\Controllers;
 
 use App\Models\Renstra;
@@ -8,38 +7,41 @@ use App\Models\Iku;
 use App\Models\Renja;
 use App\Models\Rkakl;
 use App\Models\Dipa;
+use App\Models\Inbox;
 use App\Models\Renaksi;
 use App\Models\Kep;
+use App\Models\Literasi;
 use Illuminate\Http\Request;
+USE App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Cek apakah tahun sudah dipilih
-        // if (!session()->has('tahun_terpilih')) {
-        //     return redirect()->route('pilih.tahun');
-        // }
+        $tahun = session('tahun', date('Y'));
+        session(['tahun' => $tahun]);
 
-        // Set tahun_terpilih ke tahun sekarang jika belum ada di session
-        $tahun = session('tahun_terpilih', date('Y'));
-        session(['tahun_terpilih' => $tahun]);
-        $idSatker = session('id_satker'); // Ambil id_satker dari session
-        $periode = 'P2'; // Periode yang dicek
+        $idSatker = session('tahun');
+        if (!$idSatker) {
+            return redirect()->route('pilih.tahun')->withErrors('ID Satker tidak ditemukan.');
+        }
 
-        // Lanjutkan dengan logika untuk menampilkan data berdasarkan tahun
-        // return view('dashboard', ['tahun' => $tahun]);
+        $periode = 'P2';
 
-        $pengumuman = DB::table('sinori_sakip_inbox')->get();
-        $jumlahAturan = DB::table('sinori_sakip_literasi')->count(); // Hitung jumlah aturan
-        // Data untuk chart
-        $data = [
+        $pengumuman = Inbox::all();
+        $jumlahAturan = Literasi::count();
+
+/*         $data = [
             'pengisian_pk' => 80,
             'tw1' => 50,
-            'tw2' => 50
+            'tw2' => 50,
         ];
-
+ */
+        $user = Auth::user();
+        $idSatker = $user->id_satker;
         $renstraTerisi = Renstra::where('id_satker', $idSatker)->where('id_periode', $periode)->exists();
         $ikuTerisi = Iku::where('id_satker', $idSatker)->where('id_periode', $tahun)->exists();
         $renjaTerisi = Renja::where('id_satker', $idSatker)->where('id_periode', $tahun)->exists();
@@ -48,13 +50,9 @@ class DashboardController extends Controller
         $rencanaAksiTerisi = Renaksi::where('id_satker', $idSatker)->where('id_periode', $tahun)->exists();
         $keputusanTimSakipTerisi = Kep::where('id_satker', $idSatker)->where('id_tahun', $tahun)->exists();
 
-
-        // Kirim data ke view
-        // return view('dashboard', compact('pengumuman', 'jumlahAturan', 'data', ['tahun' => $tahun]));
-        return view('dashboard', [
+        return Inertia::render('dashboard', [
             'pengumuman' => $pengumuman,
             'jumlahAturan' => $jumlahAturan,
-            'data' => $data,
             'tahun' => $tahun,
             'renstraTerisi' => $renstraTerisi,
             'ikuTerisi' => $ikuTerisi,
@@ -62,8 +60,7 @@ class DashboardController extends Controller
             'rkaklTerisi' => $rkaklTerisi,
             'dipaTerisi' => $dipaTerisi,
             'rencanaAksiTerisi' => $rencanaAksiTerisi,
-            'keputusanTimSakipTerisi' => $keputusanTimSakipTerisi
-
+            'keputusanTimSakipTerisi' => $keputusanTimSakipTerisi,
         ]);
     }
 }

@@ -11,16 +11,15 @@ class User extends Authenticatable
 
     protected $table = 'sinori_login'; 
     protected $fillable = [
-        'id_satker', 'satkernama', 'password',
+        'id_satker', 'satkerpass', 'satkernama', 'satkerkey', 'token',
+        'pejabat_kasatker', 'pejabat_bin', 'pejabat_intel', 'pejabat_pidum', 
+        'pejabat_pidsus', 'pejabat_datun', 'pejabat_militer', 'pejabat_pengawasan', 'pejabat_aset'
     ];
 
     protected $hidden = [
-        'satkerpass',
+        'password',
     ];
 
-    // Jika Anda menggunakan ID yang bukan auto-increment, tentukan ini
-    protected $primaryKey = 'id_satker';
-    public $timestamps = false;
 
     
     public function keputusan()

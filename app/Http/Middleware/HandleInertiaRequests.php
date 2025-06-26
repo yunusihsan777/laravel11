@@ -34,6 +34,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'tahun' => session('tahun_terpilih', date('Y')), // Kirim tahun ke frontend
         ];
     }
 }

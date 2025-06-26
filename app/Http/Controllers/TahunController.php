@@ -3,40 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
+
 
 class TahunController extends Controller
 {
     // Menampilkan form pemilihan tahun
     public function showTahunForm()
     {
-        return view('pilih_tahun');
+        return Inertia::render('PilihTahun');
     }
 
     // Menyimpan pilihan tahun ke dalam session
     public function setTahun(Request $request)
     {
         $request->validate([
-            'tahun' => 'required|integer|min:2024', // Validasi minimal tahun 2024
+            'tahun' => 'required|integer|min:2024|max:' . (date('Y') + 5),
         ]);
 
-        // Simpan tahun ke dalam session
-        session(['tahun_terpilih' => $request->tahun]);
+        // Simpan tahun ke session
+        Session::put('tahun', $request->tahun);
 
-        // Redirect ke dashboard
-        return redirect()->route('dashboard');
+        return back()->with('success', 'Tahun berhasil diperbarui!');
+
     }
 
     public function pilihTahun(Request $request)
     {
         $request->validate([
-            'tahun' => 'required|integer|min:2024', // Validasi minimal tahun 2024
+            'tahun' => 'required|integer|min:2024|max:' . (date('Y') + 5),
         ]);
 
-        // Simpan tahun ke dalam session
-        session(['tahun_terpilih' => $request->tahun]);
+                // Simpan tahun ke session atau database
+                Session::put('tahun', $request->tahun);
 
-        // Redirect ke dashboard
-        return redirect()->back();
+                return redirect()->route('dashboard')->with('success', 'Tahun berhasil disimpan!');
     }
 
     public function setBulan(Request $request)

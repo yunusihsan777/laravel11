@@ -1,176 +1,224 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import Dropdown from '@/Components/Dropdown';
-import NavLink from '@/Components/NavLink';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import * as React from 'react';
+import { Link, useForm, usePage } from '@inertiajs/react';
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Select,
+    MenuItem,
+    Button,
+    Box,
+    Drawer,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Collapse,
+    Divider,
+    IconButton,
+} from '@mui/material';
+import {
+    Home as HomeIcon,
+    Task as TaskIcon,
+    People as PeopleIcon,
+    FileCopy as FileCopyIcon,
+    BarChart as BarChartIcon,
+    CheckCircle as CheckCircleIcon,
+    ExpandLess,
+    ExpandMore,
+    Menu as MenuIcon,
+    Close as CloseIcon,
+} from '@mui/icons-material';
 
 export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth.user;
+    const { auth, tahun: sessionTahun } = usePage().props; // Ambil data user dan tahun dari backend
+    const user = auth.user;
 
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
+    const [submenuOpen, setSubmenuOpen] = React.useState(false);
+    const [drawerOpen, setDrawerOpen] = React.useState(true); // Sidebar default terbuka
+
+    const toggleSubmenu = () => {
+        setSubmenuOpen(!submenuOpen);
+    };
+
+    const toggleDrawer = () => {
+        setDrawerOpen(!drawerOpen); // Toggle state drawerOpen
+    };
+
+    const { data, setData, post } = useForm({
+        tahun: sessionTahun || new Date().getFullYear(), // Default tahun
+    });
+
+    const handleTahunChange = (event) => {
+        setData('tahun', event.target.value); // Perbarui data tahun
+        post(route('set.tahun')); // Kirim data ke backend
+    };
 
     return (
-        <div className="min-h-screen bg-gray-100">
-            <nav className="border-b border-gray-100 bg-white">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex">
-                            <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
-                                </Link>
-                            </div>
+        <Box sx={{ display: 'flex' }}>
+            {/* Tombol Toggle Sidebar */}
+            <IconButton
+                onClick={toggleDrawer}
+                sx={{
+                    position: 'fixed',
+                    top: 16,
+                    left: drawerOpen ? 260 : 16, // Geser tombol sesuai posisi sidebar
+                    zIndex: 1300,
+                    backgroundColor: 'white',
+                    boxShadow: 2,
+                }}
+            >
+                {drawerOpen ? <CloseIcon /> : <MenuIcon />}
+            </IconButton>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('dashboard')}
-                                    active={route().current('dashboard')}
-                                >
-                                    Dashboard
-                                </NavLink>
-                            </div>
-                        </div>
+            {/* Sidebar */}
+            <Drawer
+                variant="persistent"
+                open={drawerOpen}
+                sx={{
+                    width: drawerOpen ? 250 : 0,
+                    flexShrink: 0,
+                    [`& .MuiDrawer-paper`]: {
+                        width: 250,
+                        boxSizing: 'border-box',
+                        transition: 'width 0.3s',
+                    },
+                }}
+            >
+                <Box textAlign="center" mt={2}>
+                    <img
+                        src="/gambar/kejaksaan.png"
+                        alt="Profile"
+                        style={{ width: 100, height: 100, borderRadius: '50%' }}
+                    />
+                    <Typography variant="h6" color="textPrimary">
+                        Selamat Datang
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        {user.satkernama.replace(/_/g, ' ')}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        ID Satker: {user.id_satker}
+                    </Typography>
+                </Box>
+                <Divider />
+                <List>
+                    <ListItem button component={Link} href={route('dashboard')}>
+                        <ListItemIcon>
+                            <HomeIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Beranda" />
+                    </ListItem>
+                    {(user.id_sakip_level === 99 || user.id_sakip_level === 2 || user.id_sakip_level === 3) && (
+                        <>
+                            <ListItem button onClick={toggleSubmenu}>
+                                <ListItemIcon>
+                                    <TaskIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Tata Kelola AKIP" />
+                                {submenuOpen ? <ExpandLess /> : <ExpandMore />}
+                            </ListItem>
+                            <Collapse in={submenuOpen} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+                                    <ListItem button component={Link} href={route('kep')}>
+                                        <ListItemIcon>
+                                            <PeopleIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Kep Tim SAKIP" />
+                                    </ListItem>
+                                    <ListItem button component={Link} href={route('perencanaan')}>
+                                        <ListItemIcon>
+                                            <FileCopyIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Perencanaan" />
+                                    </ListItem>
+                                    {user.id_sakip_level === 99 && (
+                                        <ListItem button component={Link} href={route('pengukuran')}>
+                                            <ListItemIcon>
+                                                <BarChartIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Pengukuran" />
+                                        </ListItem>
+                                    )}
+                                    <ListItem button component={Link} href={route('pelaporan')}>
+                                        <ListItemIcon>
+                                            <FileCopyIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Pelaporan" />
+                                    </ListItem>
+                                    {user.id_sakip_level === 99 && (
+                                        <ListItem button component={Link} href={route('evaluasi')}>
+                                            <ListItemIcon>
+                                                <CheckCircleIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Evaluasi" />
+                                        </ListItem>
+                                    )}
+                                </List>
+                            </Collapse>
+                        </>
+                    )}
+                </List>
+                <Divider />
+                <Typography variant="body2" color="textSecondary" align="center" mt={2}>
+                    Panev BiroCana Kejaksaan RI @2024
+                </Typography>
+            </Drawer>
 
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <div className="relative ms-3">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
-
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href={route('logout')}
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
-                            </div>
-                        </div>
-
-                        <div className="-me-2 flex items-center sm:hidden">
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState,
-                                    )
-                                }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
-                            >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden'
-                    }
+            {/* Main Content */}
+            <Box
+                sx={{
+                    flexGrow: 1,
+                    marginLeft: drawerOpen ? 250 : 0, // Geser konten utama sesuai lebar sidebar
+                    transition: 'margin-left 0.3s', // Tambahkan transisi untuk animasi
+                }}
+            >
+                {/* Navbar */}
+                <AppBar
+                    position="fixed"
+                    color="default"
+                    elevation={1}
+                    sx={{
+                        marginLeft: drawerOpen ? 250 : 0, // Geser navbar sesuai lebar sidebar
+                        width: drawerOpen ? `calc(100% - 250px)` : '100%', // Sesuaikan lebar navbar
+                        transition: 'margin-left 0.3s, width 0.3s', // Tambahkan transisi untuk animasi
+                    }}
                 >
-                    <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <div className="border-t border-gray-200 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
-                                {user.name}
-                            </div>
-                            <div className="text-sm font-medium text-gray-500">
-                                {user.email}
-                            </div>
-                        </div>
-
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href={route('logout')}
-                                as="button"
+                    <Toolbar>
+                        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                            {user.satkernama.replace(/_/g, ' ')}
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Select
+                                value={data.tahun} // Gunakan data dari useForm
+                                onChange={handleTahunChange}
+                                displayEmpty
+                                sx={{ minWidth: 120 }}
                             >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+                                <MenuItem value="" disabled>
+                                    Pilih Tahun
+                                </MenuItem>
+                                {[...Array(6)].map((_, index) => {
+                                    const tahun = 2024 + index;
+                                    return (
+                                        <MenuItem key={tahun} value={tahun}>
+                                            {tahun}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </Select>
+                            <form action={route('logout')} method="POST">
+                                <Button type="submit" variant="contained" color="error">
+                                    Logout
+                                </Button>
+                            </form>
+                        </Box>
+                    </Toolbar>
+                </AppBar>
 
-            {header && (
-                <header className="bg-white shadow">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                        {header}
-                    </div>
-                </header>
-            )}
-
-            <main>{children}</main>
-        </div>
+                {/* Page Content */}
+                <Box sx={{ padding: 3, marginTop: 8 }}>{children}</Box>
+            </Box>
+        </Box>
     );
 }

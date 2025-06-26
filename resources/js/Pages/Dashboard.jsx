@@ -1,7 +1,11 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
 
-export default function Dashboard() {
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Head, usePage } from '@inertiajs/react';
+
+export default function Dashboard( ) {
+    const { pengumuman, jumlahAturan, tahun, renstraTerisi, ikuTerusu, renjaTerisi, rkaklTerisi, dipaTerisi, rencanaAksiTerisi, keputusanTImSakipTerisi } = usePage().props;
+
+
     return (
         <AuthenticatedLayout
             header={
@@ -11,12 +15,11 @@ export default function Dashboard() {
             }
         >
             <Head title="Dashboard" />
-
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            You're logged in!
+                            You're logged in!                         
                         </div>
                     </div>
                 </div>
