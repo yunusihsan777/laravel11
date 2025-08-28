@@ -29,9 +29,25 @@ class SakipwilController extends Controller
         $id = DB::table('sinori_login')->where('id_satker', $id_satker)->first();
 
         // Ambil data satkernama dan id_satker sesuai id_kejati
-        $data = DB::table('sinori_login')
-            ->where('id_kejati', $id->id_kejati)
-            ->get();
+        // $data = DB::table('sinori_login')
+        //     ->where('id_kejati', $id->id_kejati)
+        //     ->get();
+
+
+        // Cek apakah kode satker adalah 999999
+        if (in_array($id_satker, [999999, 'admin', 'Pengawasan', 'Panev'])) {
+            // Ambil semua satker, urutkan berdasarkan id_kejati
+            $data = DB::table('sinori_login')
+                ->whereNotIn('id_satker', [888881, 888882, 'admin', 999999, 'Pengawasan', 'Panev']) // dikecualikan
+                ->orderBy('id_kejati', 'asc')
+                ->get();
+        } else {
+            // Ambil data satkernama dan id_satker sesuai id_kejati
+            $data = DB::table('sinori_login')
+                ->where('id_kejati', $id->id_kejati)
+                // ->orderBy('id_satker', 'asc')
+                ->get();
+        }
 
         // Ganti underscore dengan spasi dan ambil id_satker
         $satkernamaList = $data->pluck('satkernama')->map(function ($satkernama) {

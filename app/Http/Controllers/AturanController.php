@@ -44,7 +44,7 @@ class AturanController extends Controller
             'id_namaproduk' => 'required|string|max:255',
             'id_produsen' => 'required|string|max:255',
             'id_tahun' => 'required|numeric|min:1900|max:' . date('Y'),
-            'file' => 'required|mimes:pdf|max:2048' // Validasi hanya menerima file PDF dengan ukuran maksimal 2MB
+            'file' => 'required|mimes:pdf|max:20048' // Validasi hanya menerima file PDF dengan ukuran maksimal 20MB
         ]);
 
         // Handle file upload
@@ -87,7 +87,7 @@ class AturanController extends Controller
             'id_namaproduk' => 'required|string|max:255',
             'id_produsen' => 'required|string|max:255',
             'id_tahun' => 'required|numeric|min:1900|max:' . date('Y'),
-            'file' => 'nullable|mimes:pdf|max:2048' // Validasi opsional untuk PDF
+            'file' => 'nullable|mimes:pdf|max:20048' // Validasi opsional untuk PDF
         ]);
 
         $aturan = Aturan::findOrFail($id);

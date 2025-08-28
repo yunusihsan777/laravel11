@@ -101,7 +101,7 @@
                                                 @csrf
                                                 <div class="mb-3">
                                                     <label for="renstra_file" class="form-label">Upload File PDF
-                                                        Renstra</label>
+                                                        Renstra (Max: 2MB)</label>
                                                     <input type="file" class="form-control" id="renstra_file"
                                                         name="renstra_file" accept=".pdf" required>
                                                 </div>
@@ -173,7 +173,7 @@
                                                 enctype="multipart/form-data" class="mb-4">
                                                 @csrf
                                                 <div class="mb-3">
-                                                    <label for="iku_file" class="form-label">Upload File PDF Iku</label>
+                                                    <label for="iku_file" class="form-label">Upload File PDF Iku (Max: 2MB)</label>
                                                     <input type="file" class="form-control" id="iku_file"
                                                         name="iku_file" accept=".pdf" required>
                                                 </div>
@@ -255,7 +255,7 @@
                                                 @csrf
                                                 <div class="mb-3">
                                                     <label for="renja_file" class="form-label">Upload File PDF
-                                                        Renja</label>
+                                                        Renja (Max: 2MB)</label>
                                                     <input type="file" class="form-control" id="renja_file"
                                                         name="renja_file" accept=".pdf" required>
                                                 </div>
@@ -332,7 +332,7 @@
                                                 @csrf
                                                 <div class="mb-3">
                                                     <label for="rkakl_file" class="form-label">Upload File PDF
-                                                        RKAKL</label>
+                                                        RKAKL (Max: 2MB)</label>
                                                     <input type="file" class="form-control" id="rkakl_file"
                                                         name="rkakl_file" accept=".pdf" required>
                                                 </div>
@@ -410,7 +410,7 @@
                                             enctype="multipart/form-data">
                                             @csrf
                                             <div class="mb-3">
-                                                <label for="dipa_file" class="form-label">Upload File PDF DIPA</label>
+                                                <label for="dipa_file" class="form-label">Upload File PDF DIPA (Max: 2MB)</label>
                                                 <input type="file" class="form-control" id="dipa_file"
                                                     name="dipa_file" accept=".pdf" required>
                                                 @error('dipa_file')
@@ -569,7 +569,7 @@
                                                 @csrf
                                                 <div class="mb-3">
                                                     <label for="renaksi_file" class="form-label">Upload File PDF
-                                                        Rencana Aksi</label>
+                                                        Rencana Aksi (Max: 2MB)</label>
                                                     <input type="file" class="form-control" id="renaksi_file"
                                                         name="renaksi_file" accept=".pdf" required>
                                                 </div>

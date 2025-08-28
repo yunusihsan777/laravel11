@@ -146,6 +146,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ubahpassword', [UbahpasswordController::class, 'index'])->name('ubahpassword');
     Route::post('/upload-dipa', [PerencanaanController::class, 'uploadDipa'])->name('upload.dipa');
 });
+// use App\Http\Controllers\Auth\SicanaController;
+// Route::get('/receive_token', [SicanaController::class, 'receiveToken']);
 
 // Handle file upload menu keputusan
 // use App\Http\Controllers\FileUploadController;
