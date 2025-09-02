@@ -15,7 +15,7 @@ Schema::create('lke_subkomponen', function (Blueprint $table) {
     $table->id();
     $table->unsignedBigInteger('id_komponen'); // FK ke lke_komponen.id
     $table->string('subkomponen', 255);
-    $table->integer('bobot'); // cukup integer tanpa panjang
+    $table->float('bobot'); // cukup integer tanpa panjang
     $table->timestamps();
 
     // Kalau mau relasi FK

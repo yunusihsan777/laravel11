@@ -17,7 +17,7 @@ return new class extends Migration
     $table->unsignedBigInteger('id_subkomponen');   // FK ke lke_subkomponen
     $table->string('range_nilai', 3);               // atau char(3) jika pasti fix 3 karakter
     $table->string('bentuk_bukti', 255);
-    $table->integer('bobot');
+    $table->float('bobot');
     $table->string('kriteria', 255);
     $table->timestamps();
 
