@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('lke_komponen', function (Blueprint $table) {
             $table->id();
-            $table->komponen();
-            $table->bobot();
+            $table->string('komponen',255);
+            $table->integer('bobot',3);
         });
     }
 

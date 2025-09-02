@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lke_kriteria', function (Blueprint $table) {
+        Schema::create('lke_isian', function (Blueprint $table) {
             $table->id();
+            $table->char('id_satker',20);
             $table->char('id_komponen',3);
             $table->char('id_subkomponen',3);
-            $table->char('range_nilai',3);
-            $table->string('bentuk_bukti',255);
-            $table->integer('bobot',3);
-            $table->string('kriteria',255);
-            
+            $table->char('id_kriteria',3);
+            $table->integer('nilai',3);
+            $table->string('bukti',255);
+            $table->string('catatan',255);
         });
     }
 

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('lke_subkomponen', function (Blueprint $table) {
             $table->id();
-            $table->id_komponen();
-            $table->subkomponen();
-            $table->bobot();
+            $table->char('id_komponen',3);
+            $table->string('subkomponen',255);
+            $table->integer('bobot',3);
         });
     }
 
