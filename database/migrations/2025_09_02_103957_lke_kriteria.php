@@ -16,9 +16,9 @@ return new class extends Migration
     $table->unsignedBigInteger('id_komponen');      // FK ke lke_komponen
     $table->unsignedBigInteger('id_subkomponen');   // FK ke lke_subkomponen
     $table->string('range_nilai', 3);               // atau char(3) jika pasti fix 3 karakter
-    $table->string('bentuk_bukti', 255);
+    $table->text('bentuk_bukti');
     $table->float('bobot');
-    $table->string('kriteria', 255);
+    $table->text('kriteria', 255);
     $table->timestamps();
 
     // Foreign keys

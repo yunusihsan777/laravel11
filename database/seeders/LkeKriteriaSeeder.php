@@ -231,7 +231,7 @@ class LkeKriteriaSeeder extends Seeder
                 'kriteria'      => 'Setiap Pegawai memahami dan peduli, serta berkomitmen dalam mencapai kinerja yang telah direncanakan.',
             ],[
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '1',
+                'id_subkomponen'=> '4',
                 'range_nilai'   => '0-2',
                 'bentuk_bukti'  => 'Dokumen:
                                     1. Pedoman 4 Tahun 2024 tentang Penyelenggaraan SAKIP di Lingkungan Kejaksaan RI
@@ -241,7 +241,7 @@ class LkeKriteriaSeeder extends Seeder
             ],
             [
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '1',
+                'id_subkomponen'=> '4',
                 'range_nilai'   => '0-2',
                 'bentuk_bukti'  => 'Dokumen:
                                     Indikator Kinerja Utama (IKU) Satuan Kerja/Penetapan Target Kinerja Satuan Kerja ',
@@ -250,7 +250,7 @@ class LkeKriteriaSeeder extends Seeder
             ],
             [
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '1',
+                'id_subkomponen'=> '4',
                 'range_nilai'   => '0-2',
                 'bentuk_bukti'  => 'Dokumen:
                                     1. Pedoman 4 Tahun 2024 tentang Penyelenggaraan SAKIP di Lingkungan Kejaksaan RI
@@ -261,7 +261,7 @@ class LkeKriteriaSeeder extends Seeder
                 'kriteria'      => 'Terdapat mekanisme yang jelas terhadap pengumpulan data kinerja yang dapat diandalkan',
             ],[
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '2',
+                'id_subkomponen'=> '5',
                 'range_nilai'   => '0-2',
                 'bentuk_bukti'  => 'Dokumen:
                                     1. Dokumen/laporan yang menunjukkan bahwa Pimpinan terlibat langsung dalam setiap pengambilan keputusan dalam pengukuran kinerja 
@@ -271,7 +271,7 @@ class LkeKriteriaSeeder extends Seeder
                 'kriteria'      => 'Pimpinan selalu terlibat sebagai pengambil keputusan (decision maker) dalam mengukur capaian kinerja',
             ],[
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '2',
+                'id_subkomponen'=> '5',
                 'range_nilai'   => '0-2',
                 'bentuk_bukti'  => 'Dokumen:
                                     1. Data Kinerja pada Laporan Kinerja maupun pada SICANA AKIP
@@ -280,7 +280,7 @@ class LkeKriteriaSeeder extends Seeder
                 'kriteria'      => 'Data kinerja yang dikumpulkan telah relevan untuk mengukur capaian kinerja yang diharapkan dan mendukung capaian kinerja yang diharapkan',
             ],[
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '2',
+                'id_subkomponen'=> '5',
                 'range_nilai'   => '0-2',
                 'bentuk_bukti'  => 'Dokumen:
                                         1. Data Kinerja pada Laporan Kinerja maupun pada SICANA AKIP
@@ -289,7 +289,7 @@ class LkeKriteriaSeeder extends Seeder
                 'kriteria'      => 'Data kinerja yang dikumpulkan telah mendukung capaian kinerja yang diharapkan.',
             ],[
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '2',
+                'id_subkomponen'=> '5',
                 'range_nilai'   => '0-2',
                 'bentuk_bukti'  => 'Dokumen:
                                 1. Nota Dinas Pimpinan Satuan Kerja tentang permintaan data kinerja kepada setiap bidang yang dilakukan secara berkala
@@ -300,7 +300,7 @@ class LkeKriteriaSeeder extends Seeder
                 'kriteria'      => 'Pengukuran kinerja telah dilakukan secara berkala',
             ],[
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '2',
+                'id_subkomponen'=> '5',
                 'range_nilai'   => '0-2',
                 'bentuk_bukti'  => 'Dokumen:
                                     Hasil Pemantauan atas pengukuran capaian kinerja ',
@@ -308,7 +308,7 @@ class LkeKriteriaSeeder extends Seeder
                 'kriteria'      => 'Setiap satuan kerja  melakukan pemantauan atas pengukuran capaian kinerja unit dibawahnya secara berjenjang',
             ],[
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '2',
+                'id_subkomponen'=> '5',
                 'range_nilai'   => '0-2',
                 'bentuk_bukti'  => 'Dokumen:
                                     Pengumpulan data kinerja pada Satuan Kerja telah memanfaatkan teknologi informasi melalui apliksi sicana',
@@ -316,12 +316,79 @@ class LkeKriteriaSeeder extends Seeder
                 'kriteria'      => 'Pengumpulan data kinerja telah memanfaatkan Teknologi Informasi',
             ],[
                 'id_komponen'   => '2',
-                'id_subkomponen'=> '2',
+                'id_subkomponen'=> '5',
                 'range_nilai'   => '0-2',
-                'bentuk_bukti'  => 'Pengisian aplikasi SICANA AKIP
-',
+                'bentuk_bukti'  => 'Pengisian aplikasi SICANA AKIP',
                 'bobot'         => 1.00,
                 'kriteria'      => 'Pengukuran capaian kinerja telah memanfaatkan Teknologi Informasi',
+            ],[
+                'id_komponen'   => '2',
+                'id_subkomponen'=> '6',
+                'range_nilai'   => '0-2',
+                'bentuk_bukti'  => 'Pedoman 4 Tahun 2024 tentang Penyelenggaraan SAKIP di Lingkungan Kejaksaan RI 
+                                    Dokumen pemberian penghargaan dan pembinaan yang telah dilakukan oleh internal Satuan Kerja yang berdasarkan pada capaian kinerja',
+                'bobot'         => 1.00,
+                'kriteria'      => 'Pegukuran kinerja telah menjadi dasar dalam pemberian penghargaan dan pembinaan',
+            ],[
+                'id_komponen'   => '2',
+                'id_subkomponen'=> '6',
+                'range_nilai'   => '0-2',
+                'bentuk_bukti'  => 'SK Mutasi Lokal
+                                    Surat Perintah Tugas',
+                'bobot'         => 1.00,
+                'kriteria'      => 'Pengukuran kinerja telah menjadi salah satu pertimbangan penempatan baik dalam jabatan struktural maupun fungsional.',
+            ],[
+                'id_komponen'   => '2',
+                'id_subkomponen'=> '6',
+                'range_nilai'   => '0-2',
+                'bentuk_bukti'  => 'Dokumen:
+                                    Laporan/notulensi pelaksanaan Rastaf EKA Satuan Kerja',
+                'bobot'         => 1.00,
+                'kriteria'      => 'Pengukuran Kinerja telah mempengaruhi penyesuaian strategi dalam mencapai Kinerja.',
+            ],[
+                'id_komponen'   => '2',
+                'id_subkomponen'=> '6',
+                'range_nilai'   => '0-2',
+                'bentuk_bukti'  => 'Dokumen:
+                                    Laporan hasil evaluasi pengukuran kinerja
+                                    Usulan perubahan (penambahan/pengurangan)  kegiatan untuk periode selanjutnya
+                                    atau dokumen pendukung lainnya (Rapat Staff)',
+                'bobot'         => 1.00,
+                'kriteria'      => 'Pengukuran Kinerja telah mempengaruhi penyesuaian kegiatan dalam mencapai kinerja',
+            ],[
+                'id_komponen'   => '2',
+                'id_subkomponen'=> '6',
+                'range_nilai'   => '0-2',
+                'bentuk_bukti'  => 'Dokumen:
+                                    1. Dokumen revisi anggaran, dimana revisi dilakukan berdasarkan hasil pengukuran kinerja
+                                    2. Dokumen realisasi kinerja dan anggaran',
+                'bobot'         => 1.00,
+                'kriteria'      => 'Pengukuran kinerja telah mempengaruhi penyesuaian anggaran dalam mencapai kinerja',
+            ],[
+                'id_komponen'   => '2',
+                'id_subkomponen'=> '6',
+                'range_nilai'   => '0-2',
+                'bentuk_bukti'  => 'Dokumen:
+                                    Dokumen realisasi kinerja dan anggaran satuan kerja
+                                    Laporan Kinerja Satuan Kerja',
+                'bobot'         => 1.00,
+                'kriteria'      => 'Terdapat efisiensi atas penggunaan anggaran dalam mencapai kinerja',
+            ],[
+                'id_komponen'   => '2',
+                'id_subkomponen'=> '6',
+                'range_nilai'   => '0-2',
+                'bentuk_bukti'  => 'Dokumen:
+                                    Notulensi Tindak lanjut atas hasil pengukuran kinerja',
+                'bobot'         => 1.00,
+                'kriteria'      => 'Setiap satuan kerja memahami dan peduli atas hasil pengukuran kinerja',
+            ],[
+                'id_komponen'   => '2',
+                'id_subkomponen'=> '6',
+                'range_nilai'   => '0-2',
+                'bentuk_bukti'  => 'Dokumen:
+                                    Penilaian SKP',
+                'bobot'         => 1.00,
+                'kriteria'      => 'Setiap pegawai memahami dan peduli atas hasil pengukuran kinerja',
             ],
             
 
