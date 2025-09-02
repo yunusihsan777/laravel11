@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lke_komponen', function (Blueprint $table) {
-            $table->id();
-            $table->string('komponen',255);
-            $table->integer('bobot',3);
-        });
+    Schema::create('lke_komponen', function (Blueprint $table) {
+    $table->id(); // bigint unsigned auto_increment primary key
+    $table->string('komponen', 255);
+    $table->integer('bobot'); // angka, bukan autoIncrement
+    $table->timestamps();
+});
     }
 
     /**

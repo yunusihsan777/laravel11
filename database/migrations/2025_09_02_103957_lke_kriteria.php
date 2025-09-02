@@ -12,15 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lke_kriteria', function (Blueprint $table) {
-            $table->id();
-            $table->char('id_komponen',3);
-            $table->char('id_subkomponen',3);
-            $table->char('range_nilai',3);
-            $table->string('bentuk_bukti',255);
-            $table->integer('bobot',3);
-            $table->string('kriteria',255);
-            
-        });
+    $table->id();
+    $table->unsignedBigInteger('id_komponen');      // FK ke lke_komponen
+    $table->unsignedBigInteger('id_subkomponen');   // FK ke lke_subkomponen
+    $table->string('range_nilai', 3);               // atau char(3) jika pasti fix 3 karakter
+    $table->string('bentuk_bukti', 255);
+    $table->integer('bobot');
+    $table->string('kriteria', 255);
+    $table->timestamps();
+
+    // Foreign keys
+    $table->foreign('id_komponen')
+          ->references('id')
+          ->on('lke_komponen')
+          ->onDelete('cascade');
+
+    $table->foreign('id_subkomponen')
+          ->references('id')
+          ->on('lke_subkomponen')
+          ->onDelete('cascade');
+});
+
     }
 
     /**
