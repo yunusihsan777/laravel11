@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+
 class LkeSubKomponenSeeder extends Seeder
 {
     /**
@@ -12,17 +13,16 @@ class LkeSubKomponenSeeder extends Seeder
      */
     public function run(): void
     {
-       DB::table('lke_subkomponen')->insert([
+        DB::table('lke_subkomponen')->insert([
             // Subkomponen untuk Komponen: Perencanaan (id_komponen = 1)
-            
             [
                 'id_komponen' => 1,
                 'subkomponen' => 'Tersedianyan Dokumen Perencanaan Kinerja',
                 'bobot'       => 6,
                 'created_at'  => now(),
                 'updated_at'  => now(),
-             
-            ],[
+            ],
+            [
                 'id_komponen' => 1,
                 'subkomponen' => 'Dokumen Perencanaan kinerja telah memenuhi standar yang baik, yaitu untuk mencapai hasil dengan ukuran kinerja yang SMART, menggunakan penyelarasan (cascading) disetiap level secara logis, serta memperhatikan kinerja bidang lain (crosscutting)',
                 'bobot'       => 9,
@@ -71,14 +71,14 @@ class LkeSubKomponenSeeder extends Seeder
             [
                 'id_komponen' => 3,
                 'subkomponen' => 'Dokumen Laporan Kinerja telah memenuhi Standar menggambarkan Kualitas atas Pencapaian Kinerja, informasi keberhasilan/kegagalan kinerja serta upaya perbaikan/penyempurnaannya',
-                'bobot'       => 4,5,
+                'bobot'       => 4.5,
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
             [
                 'id_komponen' => 3,
                 'subkomponen' => 'Pelaporan Kinerja telah memerikan dampak yang besar dalam penyesuaian strategi/kebijakan dalam mencapai kinerja berikutnya',
-                'bobot'       => 7,5,
+                'bobot'       => 7.5,
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
@@ -94,17 +94,17 @@ class LkeSubKomponenSeeder extends Seeder
             [
                 'id_komponen' => 4,
                 'subkomponen' => 'Evaluasi Akuntabilitas Kinerja Internal telah dilaksanakan secara berkualitas dengan Sumber Daya yang memadai',
-                'bobot'       => 7,5,
-                'created_at'  => now(),
-                'updated_at'  => now(),
-            ],[
-                'id_komponen' => 4,
-                'subkomponen' => 'Implementasi SAKIP telah meningkat karena evaluasi Akuntabilitas Kinerja Internal sehingga memberikan kesan yang nyata (dampak) dalam efektifitas dan efisiensi kinerja',
-                'bobot'       => 12,5,
+                'bobot'       => 7.5,
                 'created_at'  => now(),
                 'updated_at'  => now(),
             ],
-        
-    ]);
+            [
+                'id_komponen' => 4,
+                'subkomponen' => 'Implementasi SAKIP telah meningkat karena evaluasi Akuntabilitas Kinerja Internal sehingga memberikan kesan yang nyata (dampak) dalam efektifitas dan efisiensi kinerja',
+                'bobot'       => 12.5,
+                'created_at'  => now(),
+                'updated_at'  => now(),
+            ],
+        ]);
     }
 }
