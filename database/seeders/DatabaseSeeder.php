@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
          $this->call([
         LkeKomponenSeeder::class,
         LkeSubKomponenSeeder::class,
-        //LkeKriteriaSeeder::class,
+        LkeKriteriaSeeder::class,
     ]);
 
     }
