@@ -22,39 +22,42 @@
                                     @php
                                         use App\Models\Bidang;
                                         $level = session('id_sakip_level');
-                                $satkernama = session('satkernama') ?? '';
-                                // $bidangs = [];
-                                $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
-                                if ($level == 0) {
-                                    // Admin atau superuser: ambil semua bidang
-                                    $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
-                                        ->where('hide', 0)
-                                        ->orderBy('bidang_lokasi', 'asc')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-                                } elseif ($level == 1) {
-                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->where('hide', 0)
-                                        ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
-                                        ->whereNotNull('bidang_level')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-                                } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
-                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->whereNotNull('bidang_level')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
+                                        $satkernama = session('satkernama') ?? '';
+                                        // $bidangs = [];
+                                        $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
+                                        if ($level == 0) {
+                                            // Admin atau superuser: ambil semua bidang
+                                            $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
+                                                ->where('hide', 0)
+                                                ->orderBy('bidang_lokasi', 'asc')
+                                                ->orderBy('bidang_level', 'asc')
+                                                ->get();
+                                        } elseif ($level == 1) {
+                                            $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                ->where('hide', 0)
+                                                ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
+                                                ->whereNotNull('bidang_level')
+                                                ->orderBy('bidang_level', 'asc')
+                                                ->get();
+                                        } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
+                                            $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                ->whereNotNull('bidang_level')
+                                                ->orderBy('bidang_level', 'asc')
+                                                ->get();
 
-                                    if ($bidangs->isNotEmpty() && stripos($bidangs[0]->bidang_nama, 'kepala') === 0) {
-                                        $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
-                                    }
-                                } elseif ($level > 1) {
-                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->whereNotNull('bidang_level')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-                                }
- 
+                                            if (
+                                                $bidangs->isNotEmpty() &&
+                                                stripos($bidangs[0]->bidang_nama, 'kepala') === 0
+                                            ) {
+                                                $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
+                                            }
+                                        } elseif ($level > 1) {
+                                            $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                ->whereNotNull('bidang_level')
+                                                ->orderBy('bidang_level', 'asc')
+                                                ->get();
+                                        }
+
                                     @endphp
                                     @foreach ($bidangs as $bidang)
                                         <button class="btn btn-outline-warning text-black w-100 mb-2 bidang-item"
@@ -68,6 +71,27 @@
                         </div>
 
                         <div class="col-md-9">
+                        <!-- Indikator 2025 -->
+                        <div class="card">
+                            <div class="card-header bg-info text-black">📋 Indikator 2025</div>
+                            <div class="card-body" id="subindikator-wrapper-2025">
+
+                                {{-- <form action="{{ route('pengukuran2025.store') }}" method="POST"> --}}
+                                    @csrf
+                                    <div id="indikator-section-2025">
+                                        @if (session('success_2025'))
+                                            <div class="alert alert-success">{{ session('success_2025') }}</div>
+                                        @endif
+                                        <p>Pilih bidang untuk melihat indikator tahun 2025.</p>
+                                    </div>
+                                    <div class="text-end mt-4">
+                                        <button type="submit" class="btn btn-primary" id="btn-simpan-2025"
+                                            style="display: none;">Simpan</button>
+                                    </div>
+                                {{-- </form> --}}
+                            </div>
+                        </div>
+                        <br>
                             <div class="card">
                                 <div class="card-header bg-warning text-black">📋 Indikator</div>
                                 <div class="card-body" id="subindikator-wrapper">
@@ -79,7 +103,7 @@
                                                 <div class="alert alert-success">{{ session('success') }}</div>
                                             @endif
                                             <p>Pilih bidang untuk melihat indikator.</p>
-                                        </div> 
+                                        </div>
                                         <div class="text-end mt-4">
                                             <button type="submit" class="btn btn-success" id="btn-simpan"
                                                 style="display: none;">Simpan</button>
@@ -181,7 +205,7 @@
                                     labelPenghitungan = labels;
                                 }
                             }
- 
+
                             subIndikators.forEach(sub => {
                                 let table = `
                         <div class="table-responsive mb-4">
@@ -206,17 +230,17 @@
                     <tr>
     <td>${labelPenghitungan[0]}</td>
     ${bulanList.map(bulan => `
-                <td>
-                    <input type="text" style="width:120px" class="form-control angka-format" name="ditangani[${sub}][${bulan}]" placeholder=" ">
-                </td>`).join('')}
+                        <td>
+                            <input type="text" style="width:120px" class="form-control angka-format" name="ditangani[${sub}][${bulan}]" placeholder=" ">
+                        </td>`).join('')}
                  
 </tr>
 <tr>
     <td>${labelPenghitungan[1]}</td>
     ${bulanList.map(bulan => `
-                <td>
-                    <input type="text" style="width:120px" class="form-control angka-format" name="diselesaikan[${sub}][${bulan}]" placeholder=" ">
-                </td>`).join('')}
+                        <td>
+                            <input type="text" style="width:120px" class="form-control angka-format" name="diselesaikan[${sub}][${bulan}]" placeholder=" ">
+                        </td>`).join('')}
                 
 </tr>
 

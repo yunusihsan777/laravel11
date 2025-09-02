@@ -145,7 +145,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/keloladata', [KeloladataController::class, 'index'])->name('keloladata');
     Route::get('/ubahpassword', [UbahpasswordController::class, 'index'])->name('ubahpassword');
     Route::post('/upload-dipa', [PerencanaanController::class, 'uploadDipa'])->name('upload.dipa');
+
+    Route::get('/indikator2025', [App\Http\Controllers\Indikator2025Controller::class, 'index'])->name('indikator2025.index');
+Route::post('/pengukuran2025/store', [App\Http\Controllers\Indikator2025Controller::class, 'store'])->name('pengukuran2025.store');
+
 });
+
+
+
+
 // use App\Http\Controllers\Auth\SicanaController;
 // Route::get('/receive_token', [SicanaController::class, 'receiveToken']);
 

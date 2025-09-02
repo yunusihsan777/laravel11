@@ -315,10 +315,10 @@ $satkernama = session('satkernama');
         $request->validate([
             'indikator_id' => 'required|exists:sinori_sakip_indikator,id',
             'target_tahun' => 'required|numeric',
-            'target_triwulan_1' => 'required|numeric',
-            'target_triwulan_2' => 'required|numeric',
-            'target_triwulan_3' => 'required|numeric',
-            'target_triwulan_4' => 'required|numeric',
+            'target_triwulan_1' => 'numeric',
+            'target_triwulan_2' => 'numeric',
+            'target_triwulan_3' => 'numeric',
+            'target_triwulan_4' => 'numeric',
         ]);
  
         // Ambil session id_satker dan tahun

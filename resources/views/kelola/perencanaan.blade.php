@@ -736,8 +736,8 @@
                                                                                 name="target_tahun"
                                                                                 value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
                                                                         </div>
-
-                                                                        <div class="row">
+@if ($tahun != 2025)
+                                                                        {{-- <div class="row">
                                                                             @for ($i = 1; $i <= 4; $i++)
                                                                                 <div class="col-md-6">
                                                                                     <label class="form-label">Triwulan
@@ -748,8 +748,8 @@
                                                                                         value="{{ $target[$indikator->id]->{"target_triwulan_{$i}"} ?? '' }}">
                                                                                 </div>
                                                                             @endfor
-                                                                        </div>
-
+                                                                        </div> --}}
+@endif
                                                                         <br>
                                                                         <button type="submit"
                                                                             class="btn btn-success w-100">Simpan</button>
