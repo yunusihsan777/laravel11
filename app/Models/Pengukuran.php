@@ -16,6 +16,8 @@ class Pengukuran extends Model
         'id_satker',
         'tahun',
         'sub_indikator',
+        'capaian',
+        'perhitungan',
         'ditangani',
         'diselesaikan',
         'uraian_capaian',
