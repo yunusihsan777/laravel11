@@ -12,15 +12,43 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lke_isian', function (Blueprint $table) {
-            $table->id();
-            $table->char('id_satker',20);
-            $table->char('id_komponen',3);
-            $table->char('id_subkomponen',3);
-            $table->char('id_kriteria',3);
-            $table->integer('nilai',3);
-            $table->string('bukti',255);
-            $table->string('catatan',255);
-        });
+    $table->id();
+
+    // Jika id_satker berupa kode teks:
+    // $table->string('id_satker', 20);
+
+    // Jika id_satker foreign key (numeric):
+    $table->unsignedBigInteger('id_satker');
+
+    $table->unsignedBigInteger('id_komponen');
+    $table->unsignedBigInteger('id_subkomponen');
+    $table->unsignedBigInteger('id_kriteria');
+
+    $table->integer('nilai'); // atau smallInteger() jika nilai kecil
+    $table->string('bukti', 255);
+    $table->string('catatan', 255);
+    $table->timestamps();
+
+    // Foreign Keys
+    $table->foreign('id_komponen')
+          ->references('id')
+          ->on('lke_komponen')
+          ->onDelete('cascade');
+
+    $table->foreign('id_subkomponen')
+          ->references('id')
+          ->on('lke_subkomponen')
+          ->onDelete('cascade');
+
+    $table->foreign('id_kriteria')
+          ->references('id')
+          ->on('lke_kriteria')
+          ->onDelete('cascade');
+
+ 
+
+});
+
     }
 
     /**
