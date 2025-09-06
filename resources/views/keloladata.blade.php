@@ -369,6 +369,7 @@
                                                     <option value="4">Cabjari</option>
                                                     <option value="5">Kejati, Kejari</option>
                                                     <option value="6">Kejari, Cabjari</option>
+                                                    <option value="7">Kejati, Kejari, Cabjari</option>
                                                 </select>
                                             </div>
 
@@ -403,7 +404,7 @@
                                             <div class="form-group">
                                                 <label for="sub_indikator">Sub Indikator</label>
                                                 <input type="text" class="form-control" name="sub_indikator"
-                                                    id="sub_indikator">
+                                                    id="sub_indikator" placeholder="Penyelamatan Aset Negara,Pemulihan Aset Negara">
                                                 <p style="color: red">"Pisahkan dengan koma jika lebih dari satu"</p>
                                             </div>
 
@@ -411,9 +412,8 @@
                                             <div class="form-group">
                                                 <label for="indikator_penghitungan">Indikator Penghitungan</label>
                                                 <input type="text" class="form-control" name="indikator_penghitungan"
-                                                    id="indikator_penghitungan">
-                                                <p style="color: red">"Pisahkan dengan koma jika lebih dari satu"<br>"Maks
-                                                    1 koma"</p>
+                                                    id="indikator_penghitungan" placeholder="Ditangani, Diselesaikan">
+                                                <p style="color: red">*Pisahkan dengan koma jika lebih dari satu<br>*default jika kosong: "ditangani, diselesaikan"</p>
                                             </div>
 
                                             <!-- Tahun -->
@@ -478,6 +478,7 @@
                                                     4 => 'Cabjari',
                                                     5 => 'Kejati, Kejari',
                                                     6 => 'Kejari, Cabjari',
+                                                    7 => 'Kejati, Kejari, Cabjari',
                                                 ];
 
                                                 $lingkup = $indikator->lingkup;
@@ -494,7 +495,10 @@
                                             <td>{{ $indikator->indikator_penyebut }}</td>
                                             <td>{{ $indikator->indikator_penjelasan }}</td>
                                             <td>{{ $indikator->sub_indikator }}</td>
-                                            <td>{{ $indikator->indikator_penghitungan }}</td>
+                                            <td>
+    {{ $indikator->indikator_penghitungan ?: 'Ditangani, Diselesaikan' }}
+</td>
+
                                             {{-- <td>{{ $indikator->bidangById->rumpun ?? '-' }}</td> --}}
                                             <td>{{ $indikator->tahun }}</td>
                                             <td>{{ $indikator->tren }}</td>

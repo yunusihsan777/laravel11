@@ -50,6 +50,7 @@ Route::post('/perencanaan/upload-renaksi', [PerencanaanController::class, 'uploa
 Route::get('/perencanaan/indikator', [PerencanaanController::class, 'showIndikator'])->name('perencanaan.indikator');
 Route::post('/perencanaan/store', [PerencanaanController::class, 'store'])->name('perencanaan.store');
 Route::post('/target/store', [PerencanaanController::class, 'storetarget'])->name('target.store');
+Route::post('/upload-pk', [PerencanaanController::class, 'uploadPK'])->name('upload.pk');
 
 use App\Http\Controllers\PengukuranController;
 Route::get('/pengukuran', [PengukuranController::class, 'index'])->name('pengukuran');

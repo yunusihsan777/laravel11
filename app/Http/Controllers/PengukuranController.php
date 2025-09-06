@@ -10,37 +10,37 @@ class PengukuranController extends Controller
 {
     public function index(Request $request)
     {
-        // $id_bidang = $request->get('id_bidang');
+        $id_bidang = $request->get('id_bidang');
         $tahun = session('tahun_terpilih');
         $id_satker = session('id_satker');
 
         $indikators = [];
         $data = [];
 
-        // if ($id_bidang) {
-        //     $indikators = Indikator::where('id_bidang', $id_bidang)->get();
+        if ($id_bidang) {
+            $indikators = Indikator::where('id_bidang', $id_bidang)->get();
 
-        //     foreach ($indikators as $indikator) {
-        //         $subIndikators = explode(',', $indikator->sub_indikator);
-        //         $pengukuranData = Pengukuran::where('indikator_id', $indikator->id)
-        //             ->where('id_satker', $id_satker)
-        //             ->where('tahun', $tahun)
-        //             ->get();
+            foreach ($indikators as $indikator) {
+                $subIndikators = explode(',', $indikator->sub_indikator);
+                $pengukuranData = Pengukuran::where('indikator_id', $indikator->id)
+                    ->where('id_satker', $id_satker)
+                    ->where('tahun', $tahun)
+                    ->get();
 
-        //         $data[$indikator->id] = [
-        //             'nama' => $indikator->indikator_nama,
-        //             'sub' => []
-        //         ];
+                $data[$indikator->id] = [
+                    'nama' => $indikator->indikator_nama,
+                    'sub' => []
+                ];
 
-        //         foreach ($subIndikators as $sub) {
-        //             $sub = trim($sub);
-        //             $data[$indikator->id]['sub'][$sub] = $pengukuranData
-        //                 ->where('sub_indikator', $sub)
-        //                 ->where('id_satker', $id_satker)
-        //                 ->keyBy('bulan'); // <--- agar mudah akses berdasarkan bulan
-        //         }
-        //     }
-        // }
+                foreach ($subIndikators as $sub) {
+                    $sub = trim($sub);
+                    $data[$indikator->id]['sub'][$sub] = $pengukuranData
+                        ->where('sub_indikator', $sub)
+                        ->where('id_satker', $id_satker)
+                        ->keyBy('bulan'); // <--- agar mudah akses berdasarkan bulan
+                }
+            }
+        }
 
         return view('kelola.pengukuran', compact('data', 'indikators', 'tahun'));
     }
@@ -258,21 +258,16 @@ class PengukuranController extends Controller
         return view('pengukuran.form_pengukuran', compact('indikator'));
     }
 
-    public function getPengukuran($indikator_id)
-    {
-        $id_satker = session('id_satker');
-        $data = Pengukuran::where('indikator_id', $indikator_id)->where('id_satker', $id_satker)->get([
-            'sub_indikator',
-            'bulan',
-            'capaian',
-            'perhitungan',
-            'ditangani',
-            'diselesaikan',
-            'sisa_tahun_lalu'
-        ]);
+    public function getPengukuran($indikatorId)
+{
+    $idSatker = auth()->user()->id_satker;
 
-        return response()->json($data);
-    }
+    $pengukuran = \App\Models\Pengukuran::where('indikator_id', $indikatorId)
+        ->where('id_satker', $idSatker)
+        ->get(['sub_indikator', 'bulan', 'perhitungan', 'sisa_tahun_lalu', 'capaian']);
+
+    return response()->json($pengukuran);
+}
 
     public function getSubindikator($rumpun)
     {
@@ -287,12 +282,12 @@ class PengukuranController extends Controller
                 if ($level == 1) {
                     $query->whereIn('lingkup', [0, 1]);
                 } elseif ($level == 2) {
-                    $query->whereIn('lingkup', [0, 2, 5]);
+                    $query->whereIn('lingkup', [0, 2, 5, 7]);
                 } elseif ($level == 3) {
-                    $query->whereIn('lingkup', [0, 3, 5, 6]);
+                    $query->whereIn('lingkup', [0, 3, 5, 6, 7]);
                 } elseif ($level == 4) {
                     $query->whereIn('lingkup', [0, 4, 6]);
-                }
+                } 
             })
             ->get();
 

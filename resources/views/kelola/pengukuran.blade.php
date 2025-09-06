@@ -284,7 +284,7 @@
                                 indikatorSection.append(table);
                             });
 
-                          // Ambil data pengukuran dari DB
+                         // Ambil data pengukuran dari DB
 $.ajax({
     url: '/get-pengukuran/' + indikator.id,
     method: 'GET',
@@ -335,9 +335,6 @@ $.ajax({
                 }
             }
         });
-    },
-    error: function(err) {
-        console.error("Gagal load pengukuran:", err);
     }
 });
 

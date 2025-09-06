@@ -200,6 +200,7 @@
                             @endif
 
                             <!-- Form Upload File -->
+                            @if ($tahun != 2024)
                             <div class="card shadow-sm mb-3">
                                 <div class="card-header text-white" style="background-color: #e6bf3e;">
                                     <h6 class="mb-0">Upload Dokumen LKJiP</h6>
@@ -228,6 +229,7 @@
                                     </form>
                                 </div>
                             </div>
+@endif
 
                             <!-- Tabel Data LKJiP -->
                             <div class="table-responsive">
@@ -247,13 +249,21 @@
                                                 <!-- Mengubah warna isi tabel menjadi kuning muda -->
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
-                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/lkjip_' . $tahun . '_' . $file->id_perubahan . '_' . $file->triwulan . '.pdf') }}"
-                                                        target="_blank">
-                                                        LKJIP
-                                                        ({{ $tahun }})
-                                                        -
-                                                        Triwulan {{ $file->triwulan }}
-                                                    </a>
+                                                   @php
+    if ($tahun == 2024) {
+        // prioritas tanpa triwulan
+        $finalPath = 'uploads/repository/' . $file->id_satker . '/lkjip_' . $tahun . '_' . $file->id_perubahan . '.pdf';
+
+    } else {
+        // tahun selain 2024 langsung pakai triwulan
+        $finalPath = 'uploads/repository/' . $file->id_satker . '/lkjip_' . $tahun . '_' . $file->id_perubahan . '_' . $file->triwulan . '.pdf';
+    }
+@endphp
+
+<a href="{{ asset($finalPath) }}" target="_blank">
+    LKJIP ({{ $tahun }}) - Triwulan {{ $file->triwulan }}
+</a>
+
                                                 </td>
                                                 <td>Triwulan {{ $file->triwulan }}</td>
                                                 <td>{{ $file->id_perubahan }}</td>
@@ -281,6 +291,7 @@
                             @endif
 
                             <!-- Form Upload File -->
+                            @if ($tahun != 2024)
                             <div class="card shadow-sm mb-3">
                                 <div class="card-header text-white" style="background-color: #e6bf3e;">
                                     <h6 class="mb-0">Upload Dokumen Rapat Staff EKA</h6>
@@ -309,6 +320,7 @@
                                     </form>
                                 </div>
                             </div>
+@endif
 
                             <!-- Tabel Data Rapat Staff EKA -->
                             <div class="table-responsive">
