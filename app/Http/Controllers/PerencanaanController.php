@@ -15,6 +15,7 @@ use App\Models\Bidang;
 use App\Models\SinoriSakipPidum;
 use App\Models\SinoriSakipIndikator;
 use App\Models\TargetPK;
+use App\Models\Pk;
 
 class PerencanaanController extends Controller
 {
@@ -60,9 +61,15 @@ $satkernama = session('satkernama');
         // return view('perencanaan.input_indikator', compact('indikator', 'pidumTargets'));
         // );
 
+        // Ambil data PK untuk satker & tahun
+        $pk = Pk::where('id_satker', $id_satker)
+                ->where('id_periode', $tahun)
+                ->orderBy('id_perubahan', 'asc')
+                ->get();
+
         // dd ($indikator_pidum);
         // Kembalikan view beserta data yang telah difilter
-        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'indikator' => $indikator, 'target' => $target, 'bidang' => $bidang]);
+        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'indikator' => $indikator, 'target' => $target, 'bidang' => $bidang, 'pk' => $pk]);
     }
 
     // Fungsi untuk menangani upload file Renstra
@@ -359,4 +366,41 @@ $satkernama = session('satkernama');
         // return redirect()->back()->with('success', 'Target berhasil disimpan!');
         return redirect()->route('perencanaan')->with('success-pk', 'Target berhasil disimpan!')->with('active_tab', 'perjanjian-kinerja');
     }
+
+  // Fungsi untuk menangani upload file PK
+public function uploadPK(Request $request)
+{
+    $tahun = session('tahun_terpilih');
+    $request->validate([
+        'pk_file' => 'required|mimes:pdf|max:5120', // Maksimal 5MB
+    ]);
+
+    $idSatker = session('id_satker'); // Ambil id_satker dari session
+
+    // Cek id_perubahan terakhir
+    $latestPK = Pk::where('id_satker', $idSatker)
+        ->where('id_periode', $tahun)
+        ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc')
+        ->first();
+
+    // Tentukan id_perubahan baru
+    $id_perubahan = $latestPK ? $latestPK->id_perubahan + 1 : 0;
+
+    // Upload file ke folder public/uploads/repository/{id_satker}
+    $file = $request->file('pk_file');
+    $fileName = 'pk_' . $tahun . '_' . $id_perubahan . '.pdf';
+    $file->move(public_path('uploads/repository/' . $idSatker), $fileName);
+
+    // Simpan ke database
+    Pk::create([
+        'id_satker'    => $idSatker,
+        'id_periode'   => $tahun,
+        'id_perubahan' => $id_perubahan,
+        'id_filename'  => $fileName,
+        'id_tglupload' => now()->format('d/m/Y h:i A'),
+    ]);
+
+     return redirect()->route('perencanaan')->with('success-pk-file','File PK berhasil diupload!')->with('active_tab', 'perjanjian-kinerja');
+}
+
 }

@@ -57,7 +57,7 @@
                                     aria-selected="true">Capaian Kinerja</a>
                             </li>
                         @endif
-                        
+
                         <li class="nav-item" role="presentation">
                             <a class="nav-link {{ $activeTab == 'rapat-staff-eka' ? 'active' : '' }}"
                                 id="rapat-staff-eka-tab" data-bs-toggle="tab" href="#rapat-staff-eka" role="tab"
@@ -93,39 +93,42 @@
                                         </div>
                                         <div class="card-body">
                                             @php
-                                                 $level = session('id_sakip_level');
-                                $satkernama = session('satkernama') ?? '';
-                                // $bidangs = [];
-                                $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
-                               if ($level == 0) {
-                                    // Admin atau superuser: ambil semua bidang
-                                    $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
-                                        ->where('hide', 0)
-                                        ->orderBy('bidang_lokasi', 'asc')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-                                } elseif ($level == 1) {
-                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->where('hide', 0)
-                                        ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
-                                        ->whereNotNull('bidang_level')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-                                } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
-                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->whereNotNull('bidang_level')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
+                                                $level = session('id_sakip_level');
+                                                $satkernama = session('satkernama') ?? '';
+                                                // $bidangs = [];
+                                                $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
+                                                if ($level == 0) {
+                                                    // Admin atau superuser: ambil semua bidang
+                                                    $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
+                                                        ->where('hide', 0)
+                                                        ->orderBy('bidang_lokasi', 'asc')
+                                                        ->orderBy('bidang_level', 'asc')
+                                                        ->get();
+                                                } elseif ($level == 1) {
+                                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                        ->where('hide', 0)
+                                                        ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
+                                                        ->whereNotNull('bidang_level')
+                                                        ->orderBy('bidang_level', 'asc')
+                                                        ->get();
+                                                } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
+                                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                        ->whereNotNull('bidang_level')
+                                                        ->orderBy('bidang_level', 'asc')
+                                                        ->get();
 
-                                    if ($bidangs->isNotEmpty() && stripos($bidangs[0]->bidang_nama, 'kepala') === 0) {
-                                        $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
-                                    }
-                                } elseif ($level > 1) {
-                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->whereNotNull('bidang_level')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-                                }
+                                                    if (
+                                                        $bidangs->isNotEmpty() &&
+                                                        stripos($bidangs[0]->bidang_nama, 'kepala') === 0
+                                                    ) {
+                                                        $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
+                                                    }
+                                                } elseif ($level > 1) {
+                                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                        ->whereNotNull('bidang_level')
+                                                        ->orderBy('bidang_level', 'asc')
+                                                        ->get();
+                                                }
                                             @endphp
                                             @foreach ($bidangs as $bidang)
                                                 <button class="btn btn-outline-success text-black w-100 mb-2 bidang-item"
@@ -197,6 +200,7 @@
                             @endif
 
                             <!-- Form Upload File -->
+                            @if ($tahun != 2024)
                             <div class="card shadow-sm mb-3">
                                 <div class="card-header text-white" style="background-color: #e6bf3e;">
                                     <h6 class="mb-0">Upload Dokumen LKJiP</h6>
@@ -225,6 +229,7 @@
                                     </form>
                                 </div>
                             </div>
+@endif
 
                             <!-- Tabel Data LKJiP -->
                             <div class="table-responsive">
@@ -244,13 +249,21 @@
                                                 <!-- Mengubah warna isi tabel menjadi kuning muda -->
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
-                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/lkjip_' . $tahun . '_' . $file->id_perubahan . '_' . $file->triwulan . '.pdf') }}"
-                                                        target="_blank">
-                                                        LKJIP
-                                                        ({{ $tahun }})
-                                                        -
-                                                        Triwulan {{ $file->triwulan }}
-                                                    </a>
+                                                   @php
+    if ($tahun == 2024) {
+        // prioritas tanpa triwulan
+        $finalPath = 'uploads/repository/' . $file->id_satker . '/lkjip_' . $tahun . '_' . $file->id_perubahan . '.pdf';
+
+    } else {
+        // tahun selain 2024 langsung pakai triwulan
+        $finalPath = 'uploads/repository/' . $file->id_satker . '/lkjip_' . $tahun . '_' . $file->id_perubahan . '_' . $file->triwulan . '.pdf';
+    }
+@endphp
+
+<a href="{{ asset($finalPath) }}" target="_blank">
+    LKJIP ({{ $tahun }}) - Triwulan {{ $file->triwulan }}
+</a>
+
                                                 </td>
                                                 <td>Triwulan {{ $file->triwulan }}</td>
                                                 <td>{{ $file->id_perubahan }}</td>
@@ -278,6 +291,7 @@
                             @endif
 
                             <!-- Form Upload File -->
+                            @if ($tahun != 2024)
                             <div class="card shadow-sm mb-3">
                                 <div class="card-header text-white" style="background-color: #e6bf3e;">
                                     <h6 class="mb-0">Upload Dokumen Rapat Staff EKA</h6>
@@ -306,6 +320,7 @@
                                     </form>
                                 </div>
                             </div>
+@endif
 
                             <!-- Tabel Data Rapat Staff EKA -->
                             <div class="table-responsive">
@@ -449,39 +464,36 @@
                             triwulan
                         },
                         success: function(data) {
-    let html = '';
+                            let html = '';
 
-    if (data.length === 0) {
-        html = '<p class="text-muted">Tidak ada indikator ditemukan.</p>';
-    }
+                            if (data.length === 0) {
+                                html = '<p class="text-muted">Tidak ada indikator ditemukan.</p>';
+                            }
 
-    data.forEach((item, index) => {
-        // Ambil label penghitungan dari item, default ke Ditangani/Diselesaikan
-        let labelPenghitungan = ['Ditangani', 'Diselesaikan'];
-        if (item.indikator_penghitungan) {
-            let labels = item.indikator_penghitungan.split(',').map(s => s.trim());
-            if (labels.length === 2 && labels[0] && labels[1]) {
-                labelPenghitungan = labels;
-            }
-        }
+                            data.forEach((item, index) => {
+                                // Ambil label penghitungan dari item, default ke Ditangani/Diselesaikan
+                                let labelPenghitungan = ['Ditangani', 'Diselesaikan'];
+                                if (item.indikator_penghitungan) {
+                                    let labels = item.indikator_penghitungan.split(',').map(s => s
+                                        .trim());
+                                    if (labels.length === 2 && labels[0] && labels[1]) {
+                                        labelPenghitungan = labels;
+                                    }
+                                }
 
-        html += `
+                                html += `
             <div class="mb-4 p-3 border rounded shadow-sm">
                 <strong>${item.indikator_nama}</strong>
                 <table class="table table-bordered align-middle mt-3">
                     <thead class="text-center bg-warning">
                         <tr>
-                            <th>${labelPenghitungan[0]}</th>
-                            <th>${labelPenghitungan[1]}</th>
                             <th>Persentase Penyelesaian</th>
-                            <th>Target PK TW</th>
-                            <th>Capaian Target PK TW</th>
+                            <th>Target PK Tahunan</th>
+                            <th>Capaian Target PK Tahunan</th>
                         </tr>
                     </thead>
                     <tbody class="text-center">
                         <tr>
-                            <td>${item.ditangani}</td>
-                            <td>${item.diselesaikan}</td>
                             <td>${item.persentase}%</td>
                             <td>${item.target_pk}%</td>
                             <td>${item.capaian_pk}%</td>
@@ -502,11 +514,10 @@
                 <button class="btn btn-sm btn-primary btn-simpan-faktor" data-indikator-id="${item.indikator_id}">Simpan</button>
             </div>
         `;
-    });
+                            });
 
-    $('#subindikator-wrapper').html(html);
-}
-,
+                            $('#subindikator-wrapper').html(html);
+                        },
                         error: function() {
                             $('#subindikator-wrapper').html(
                                 '<p class="text-danger">Gagal memuat data.</p>');
@@ -524,6 +535,7 @@
                 // Ketika ganti triwulan
                 $('#triwulan').on('change', function() {
                     let triwulan = $(this).val();
+                     console.log('Triwulan ganti:', triwulan, 'Rumpun:', selectedRumpun);
                     if (selectedRumpun) {
                         loadSubIndikator(selectedRumpun, triwulan);
                     }

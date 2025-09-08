@@ -66,32 +66,12 @@
                                         </button>
                                     @endforeach
 
+
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-9">
-                        <!-- Indikator 2025 -->
-                        <div class="card">
-                            <div class="card-header bg-info text-black">📋 Indikator 2025</div>
-                            <div class="card-body" id="subindikator-wrapper-2025">
-
-                                {{-- <form action="{{ route('pengukuran2025.store') }}" method="POST"> --}}
-                                    @csrf
-                                    <div id="indikator-section-2025">
-                                        @if (session('success_2025'))
-                                            <div class="alert alert-success">{{ session('success_2025') }}</div>
-                                        @endif
-                                        <p>Pilih bidang untuk melihat indikator tahun 2025.</p>
-                                    </div>
-                                    <div class="text-end mt-4">
-                                        <button type="submit" class="btn btn-primary" id="btn-simpan-2025"
-                                            style="display: none;">Simpan</button>
-                                    </div>
-                                {{-- </form> --}}
-                            </div>
-                        </div>
-                        <br>
                             <div class="card">
                                 <div class="card-header bg-warning text-black">📋 Indikator</div>
                                 <div class="card-body" id="subindikator-wrapper">
@@ -197,126 +177,168 @@
                             let subIndikators = indikator.sub_indikator.split(',').map(
                                 s => s.trim());
 
-                            let labelPenghitungan = ['Ditangani', 'Diselesaikan'];
+                            // Ambil label dari indikator_penghitungan
+                            let labelPenghitungan = ['Ditangani',
+                                'Diselesaikan'
+                            ]; // default
                             if (indikator.indikator_penghitungan) {
                                 let labels = indikator.indikator_penghitungan.split(',')
                                     .map(s => s.trim());
-                                if (labels.length === 2 && labels[0] && labels[1]) {
+                                // kalau hanya ada 1 label → jadikan array 1 elemen
+                                if (labels.length >= 1) {
                                     labelPenghitungan = labels;
                                 }
                             }
 
                             subIndikators.forEach(sub => {
-                                let table = `
-                        <div class="table-responsive mb-4">
-                            <strong>${sub}</strong>
-                            <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}" />
-                            <input type="hidden" name="sub_indikator_list[]" value="${sub}" />
-                            <div class="mb-2 d-flex align-items-center">
-                    <label class="me-2 mb-0" style="white-space: nowrap;">Sisa tahun lalu:</label>
-                    <input type="text" class="form-control angka-format mb-2" 
+                                let table = '';
+
+                                if (labelPenghitungan.length === 1) {
+                                    // === MODE TRIWULAN ===
+                                    let triwulanList = ['TW1', 'TW2', 'TW3',
+                                        'TW4'
+                                    ];
+
+                                    table = `
+            <div class="table-responsive mb-4">
+                <strong>${sub}</strong>
+                <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}" />
+                <input type="hidden" name="sub_indikator_list[]" value="${sub}" />
+
+                <table class="table table-bordered text-center mt-2">
+                    <thead>
+                        <tr>
+                            <th>Label</th>
+                            ${triwulanList.map(tw => `<th>${tw}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${labelPenghitungan[0]}</td>
+                            ${triwulanList.map(tw => `
+                                            <td>
+                                                <input type="text" style="width:120px text-align:center"
+                                                    class="form-control angka-format"
+                                                    name="${labelPenghitungan[0].toLowerCase()}[${sub}][${tw}]"
+                                                    placeholder="-">
+                                            </td>
+                                        `).join('')}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
+                                } else {
+                                    // === MODE BULANAN ===
+                                    let bulanList = [
+                                        'JANUARI', 'FEBRUARI', 'MARET',
+                                        'APRIL', 'MEI', 'JUNI',
+                                        'JULI', 'AGUSTUS', 'SEPTEMBER',
+                                        'OKTOBER', 'NOVEMBER', 'DESEMBER'
+                                    ];
+
+
+                                    let sisaTahunLaluInput = `
+            <div class="mb-2 d-flex align-items-center">
+                <label class="me-2 mb-0" style="white-space: nowrap;">Sisa tahun lalu:</label>
+                <input type="text" class="form-control angka-format mb-2"
                     name="sisa_tahun_lalu[${sub}]" style="width:200px;" />
+            </div>
+        `;
 
-                </div>
+                                    table = `
+            <div class="table-responsive mb-4">
+                <strong>${sub}</strong>
+                <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}" />
+                <input type="hidden" name="sub_indikator_list[]" value="${sub}" />
 
-            <table class="table table-bordered text-center mt-2">
-                <thead>
-                    <tr>
-                        <th>Bulan</th>
-                        ${bulanList.map(bulan => `<th>${bulan}</th>`).join('')}
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-    <td>${labelPenghitungan[0]}</td>
-    ${bulanList.map(bulan => `
-                        <td>
-                            <input type="text" style="width:120px" class="form-control angka-format" name="ditangani[${sub}][${bulan}]" placeholder=" ">
-                        </td>`).join('')}
-                 
-</tr>
-<tr>
-    <td>${labelPenghitungan[1]}</td>
-    ${bulanList.map(bulan => `
-                        <td>
-                            <input type="text" style="width:120px" class="form-control angka-format" name="diselesaikan[${sub}][${bulan}]" placeholder=" ">
-                        </td>`).join('')}
-                
-</tr>
+                ${sisaTahunLaluInput}
 
-                </tbody>
-            </table>
-            
-        </div>
-    `;
+                <table class="table table-bordered text-center mt-2">
+                    <thead>
+                        <tr>
+                            <th>Bulan</th>
+                            ${bulanList.map(bulan => `<th>${bulan}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${labelPenghitungan.map(label => `
+                                        <tr>
+                                            <td>${label}</td>
+                                            ${bulanList.map(bulan => `
+                                    <td>
+                                        <input type="text" style="width:120px"
+                                            class="form-control angka-format"
+                                            name="${label.toLowerCase()}[${sub}][${bulan}]"
+                                            placeholder="-">
+                                    </td>
+                                `).join('')}
+                                        </tr>
+                                    `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+                                }
 
                                 indikatorSection.append(table);
                             });
 
+                         // Ambil data pengukuran dari DB
+$.ajax({
+    url: '/get-pengukuran/' + indikator.id,
+    method: 'GET',
+    success: function(pengukuranData) {
+        const bulanIndex = [
+            '', 'JANUARI', 'FEBRUARI', 'MARET', 'APRIL', 'MEI', 'JUNI',
+            'JULI', 'AGUSTUS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DESEMBER'
+        ];
 
-                            // Ambil data pengukuran dari DB
-                            $.ajax({
-                                url: '/get-pengukuran/' + indikator.id,
-                                method: 'GET',
-                                success: function(pengukuranData) {
-                                    const bulanIndex = [
-                                        '', 'JANUARI', 'FEBRUARI',
-                                        'MARET',
-                                        'APRIL', 'MEI', 'JUNI',
-                                        'JULI', 'AGUSTUS', 'SEPTEMBER',
-                                        'OKTOBER', 'NOVEMBER',
-                                        'DESEMBER'
-                                    ];
+        // mapping bulan -> triwulan
+        const triwulanMap = {3: 'TW1', 6: 'TW2', 9: 'TW3', 12: 'TW4'};
 
-                                    pengukuranData.forEach(item => {
-                                        let bulanNama = bulanIndex[
-                                            item.bulan];
+        let labels = indikator.indikator_penghitungan
+            ? indikator.indikator_penghitungan.split(',').map(s => s.trim().toLowerCase())
+            : ['ditangani', 'diselesaikan']; // default
 
-                                        // Tampilkan Ditangani
-                                        let d =
-                                            `input[name="ditangani[${item.sub_indikator}][${bulanNama}]"]`;
-                                        if ($(d).length && item
-                                            .ditangani !== null) {
-                                            $(d).val(formatRibuan(
-                                                item
-                                                .ditangani
-                                                .toString()
-                                            ));
-                                        }
+        pengukuranData.forEach(item => {
+            // === MODE BULANAN ===
+            if (labels.length > 1) {
+                if (item.perhitungan) {
+                    let parts = item.perhitungan.split(';');
+                    labels.forEach((label, idx) => {
+                        let val = parts[idx] ?? '';
+                        let bulanNama = bulanIndex[item.bulan];
+                        let selector = `input[name="${label}[${item.sub_indikator}][${bulanNama}]"]`;
+                        if ($(selector).length) {
+                            $(selector).val(val ? formatRibuan(val.toString()) : '-');
+                        }
+                    });
+                }
 
-                                        // Tampilkan Diselesaikan
-                                        let s =
-                                            `input[name="diselesaikan[${item.sub_indikator}][${bulanNama}]"]`;
-                                        if ($(s).length && item
-                                            .diselesaikan !== null
-                                        ) {
-                                            $(s).val(formatRibuan(
-                                                item
-                                                .diselesaikan
-                                                .toString()
-                                            ));
-                                        }
+                if (item.bulan === 1 && item.sisa_tahun_lalu !== null) {
+                    let sisaInput = $(`input[name="sisa_tahun_lalu[${item.sub_indikator}]"]`);
+                    if (sisaInput.length) {
+                        sisaInput.val(formatRibuan(item.sisa_tahun_lalu.toString()));
+                    }
+                }
+            }
 
-                                        // Tampilkan Sisa Tahun Lalu hanya untuk bulan Januari
-                                        if (item.bulan === 1 && item
-                                            .sisa_tahun_lalu !==
-                                            null) {
-                                            let sisaInput = $(
-                                                `input[name="sisa_tahun_lalu[${item.sub_indikator}]"]`
-                                            );
-                                            if (sisaInput.length) {
-                                                sisaInput.val(
-                                                    formatRibuan(
-                                                        item
-                                                        .sisa_tahun_lalu
-                                                        .toString()
-                                                    ));
-                                            }
-                                        }
-                                    });
-                                }
+            // === MODE TRIWULAN ===
+            if (labels.length === 1) {
+                let tw = triwulanMap[item.bulan];
+                if (tw && item.capaian !== null) {
+                    let selector = `input[name="${labels[0]}[${item.sub_indikator}][${tw}]"]`;
+                    if ($(selector).length) {
+                        $(selector).val(item.capaian ? formatRibuan(item.capaian.toString()) : '-');
+                    }
+                }
+            }
+        });
+    }
+});
 
-                            });
+
                         });
                     },
                     error: function() {

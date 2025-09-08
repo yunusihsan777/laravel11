@@ -105,9 +105,9 @@
 
 
 <!-- Sidebar Toggler Button -->
-<button class="btn btn-yellow toggler-btn" id="toggler-btn">
+{{-- <button class="btn btn-yellow toggler-btn" id="toggler-btn">
     <i class="fas fa-chevron-left"></i>
-</button>
+</button> --}}
 
 <!-- Top Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light" id="navbar"
