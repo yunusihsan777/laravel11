@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lke_kriteria', function (Blueprint $table) {
+    Schema::create('lke_kriteria', function (Blueprint $table) {
     $table->id();
     $table->unsignedBigInteger('id_komponen');      // FK ke lke_komponen
-    $table->unsignedBigInteger('id_subkomponen');   // FK ke lke_subkomponen
+    $table->char('id_subkomponen', 10);   // FK ke lke_subkomponen
     $table->string('range_nilai', 3);               // atau char(3) jika pasti fix 3 karakter
-    $table->text('bentuk_bukti');
+    $table->unsignedBigInteger('bentuk_bukti');
     $table->float('bobot');
     $table->text('kriteria', 255);
     $table->timestamps();
@@ -31,6 +31,11 @@ return new class extends Migration
           ->references('id')
           ->on('lke_subkomponen')
           ->onDelete('cascade');
+
+/*     $table->foreign('bentuk_bukti')
+          ->references('id')
+          ->on('lke_buktidukung')
+          ->onDelete('cascade');     */
 });
 
     }

@@ -122,9 +122,11 @@ Route::get('/kelola-data', [KelolaDataController::class, 'index'])->name('kelola
 Route::post('/indikator/delete/{id}', [KelolaDataController::class, 'deleteIndikator'])->name('indikator.delete');
 Route::post('/indikator/update/{id}', [KelolaDataController::class, 'updateIndikator'])->name('indikator.update');
 
-
+use App\Http\Controllers\DataLke;
 use App\Http\Controllers\UbahpasswordController;
 Route::put('/password/update', [UbahpasswordController::class, 'updatePassword'])->name('password.update');
+use App\Http\Controllers\KriteriaController;
+
 
 // Handle Auth
 Route::middleware(['auth'])->group(function () {
@@ -134,6 +136,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pengukuran', [PengukuranController::class, 'index'])->name('pengukuran');
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
     Route::get('/evaluasi', [EvaluasiController::class, 'index'])->name('evaluasi');
+    Route::get('/evaluasi-akip', [DataLke::class, 'index'])->name('dataLke');
     Route::get('/sakipwil', [SakipwilController::class, 'index'])->name('sakipwil');
     Route::get('/sakipvalidasi', [SakipvalidasiController::class, 'index'])->name('sakipvalidasi');
     // Route::get('/kepatuhan', [KepatuhanController::class, 'index'])->name('kepatuhan');
@@ -145,7 +148,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/keloladata', [KeloladataController::class, 'index'])->name('keloladata');
     Route::get('/ubahpassword', [UbahpasswordController::class, 'index'])->name('ubahpassword');
     Route::post('/upload-dipa', [PerencanaanController::class, 'uploadDipa'])->name('upload.dipa');
-
+    Route::get('/input-kriteria', [KriteriaController::class, 'create'])->name('kriteria.create');
+Route::post('/input-kriteria', [KriteriaController::class, 'store'])->name('kriteria.store');
+Route::get('/get-subkomponen/{id}', [KriteriaController::class, 'getSubkomponen']);
     Route::get('/indikator2025', [App\Http\Controllers\Indikator2025Controller::class, 'index'])->name('indikator2025.index');
 Route::post('/pengukuran2025/store', [App\Http\Controllers\Indikator2025Controller::class, 'store'])->name('pengukuran2025.store');
 

@@ -271,7 +271,7 @@
                         <div class="tab-pane fade {{ $activeTab == 'evaluasi-internal' ? 'show active' : '' }}"
                         id="evaluasi-internal" role="tabpanel" aria-labelledby="evaluasi-internal-tab">
                             <h5>Evaluasi Internal</h5>
-                            <p>Content for Evaluasi Internal goes here.</p>
+                            @include('kelola.components.evaluasi_lke')
                         </div>
                         <div class="tab-pane fade {{ $activeTab == 'evaluasi-rencana' ? 'show active' : '' }}"
                         id="evaluasi-rencana" role="tabpanel" aria-labelledby="evaluasi-rencana-tab">
