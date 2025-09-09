@@ -25,13 +25,21 @@ class DataLke extends Controller
    }
    public function cekBuktiDukung($kode){
       $data1 = DataLke1::where('kode', $kode)->get();
-      $kodeBuktiIds = $data1->pluck('kode_bukti')->toArray();
-      $bukti_dukung = null; // Pastikan variabel selalu ada
-      if(in_array($kodeBuktiIds,[1])){
-         $bukti_dukung = Renstra::where('id_satker', '006050')->get();
-      }
-      
-      return view('kelola.components.cekbdeval_lke', compact('data1', 'bukti_dukung'));
+// Ambil semua kode_bukti, pecah jadi array angka
+    $kodeBuktiIds = [];
+    foreach ($data1 as $item) {
+        $ids = explode(',', $item->kode_bukti);
+        foreach ($ids as $id) {
+            $kodeBuktiIds[] = (int)trim($id);
+        }
+    }
+   $bukti_dukung_nama = lke_buktidukung::whereIn('id', $kodeBuktiIds)->pluck('dokumen', 'id');
+    $bukti_dukung = null;
+    if (in_array(1, $kodeBuktiIds)) {
+        $bukti_dukung = lke_buktidukung::where('id', 1)->get(); 
+        $bukti_dukung = Renstra::where('id_satker', '006050')->get();
+    }
+    return view('kelola.components.cekbdeval_lke', compact('data1', 'bukti_dukung', 'bukti_dukung_nama'));
    }
 
    public function lke2(){
