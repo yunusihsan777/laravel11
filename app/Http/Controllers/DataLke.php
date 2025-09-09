@@ -8,6 +8,8 @@ use App\Models\DataLke1;
 use App\Models\lke_subkomponens;
 use Dflydev\DotAccessData\Data;
 use Illuminate\Support\Facades\DB;
+use App\Models\lke_buktidukung;
+use App\Models\Renstra;
 
 class DataLke extends Controller
 {
@@ -20,6 +22,16 @@ class DataLke extends Controller
       $data1 = DataLke1::whereIn('subkomponen_id', [1, 2, 3])->get();
       
        return view('kelola.components.evaluasi_lke', compact('data1', 'tahun'));
+   }
+   public function cekBuktiDukung($kode){
+      $data1 = DataLke1::where('kode', $kode)->get();
+      $kodeBuktiIds = $data1->pluck('kode_bukti')->toArray();
+      $bukti_dukung = null; // Pastikan variabel selalu ada
+      if(in_array($kodeBuktiIds,[1])){
+         $bukti_dukung = Renstra::where('id_satker', '006050')->get();
+      }
+      
+      return view('kelola.components.cekbdeval_lke', compact('data1', 'bukti_dukung'));
    }
 
    public function lke2(){

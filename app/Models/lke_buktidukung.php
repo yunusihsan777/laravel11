@@ -11,7 +11,7 @@ class lke_buktidukung extends Model
 
     protected $table = 'lke_buktidukung';
     protected $fillable = [
-        'id_kriteria',
+        'dokumen',
     ];
     
 }

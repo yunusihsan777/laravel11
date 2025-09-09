@@ -16,15 +16,19 @@
                                 <th>ID</th>
                                 <th>Kriteria</th>
                                 <th>Bukti Dukung</th>
+                                <th>Cek Bukti Dukung</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($data1 as $index => $item)
                             <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ $item->kode }}</td>
+                                <td>{{ $index + 1}}</td>
+                                <td>{{ $item->kode}}</td>
                                 <td>{{ $item->nama}}</td>
-                                <td>{{ $item->dokumen_bukti }}</td>
+                                <td>{{ $item->dokumen_bukti}}</td>
+                                <td>
+                                    <a href="{{ route('cekbdeval_lke', ['kode' => $item->kode]) }}" class="btn btn-primary">Cek Bukti Dukung</a>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
