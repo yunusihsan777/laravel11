@@ -25,7 +25,7 @@
                   @if($item['status'] == 'Ada')
                     <span class="badge bg-success">Ada</span>
                   @else
-                    <span class="badge bg-danger">Tidak Ada</span>
+                    <span class="badge bg-danger">upload</span>
                   @endif
                 </td>
               </tr>
