@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ss_laporanweb extends Model
 {
     use HasFactory;
-    protected $table = 'ss_laporanweb';
+    protected $table = 'ss_laporweb';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

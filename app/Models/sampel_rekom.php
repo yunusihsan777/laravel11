@@ -9,6 +9,8 @@ class sampel_rekom extends Model
 {
     use HasFactory;
     protected $table = 'sampel_rekom';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

@@ -9,6 +9,8 @@ class ba_pleno extends Model
 {
     use HasFactory;
     protected $table = 'ba_pleno';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

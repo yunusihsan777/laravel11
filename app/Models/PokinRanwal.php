@@ -10,6 +10,8 @@ class PokinRanwal extends Model
 
     use HasFactory;
     protected $table = 'pokin_ranwal';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

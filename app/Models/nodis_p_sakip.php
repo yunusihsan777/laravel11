@@ -9,6 +9,8 @@ class nodis_p_sakip extends Model
 {
     use HasFactory;
     protected $table = 'nodis_p_sakip';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

@@ -11,6 +11,7 @@ class TargetPK extends Model
 
     protected $table = 'target'; // Ganti sesuai nama tabel di database
 
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'indikator_id',
         'id_satker',

@@ -140,6 +140,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/evaluasi-akip', [DataLke::class, 'index'])->name('dataLke');
     Route::get('/sakipwil', [SakipwilController::class, 'index'])->name('sakipwil');
     Route::get('/sakipvalidasi', [SakipvalidasiController::class, 'index'])->name('sakipvalidasi');
+    Route::get('/upload/bukti-dukung', [DataLke::class, 'showUploadForm'])->name('upload_buktidukung');
+    Route::post('/upload/bukti-dukung', [DataLke::class, 'upload'])->name('upload.store');
     Route::get('/cekbdeval-lke/{kode}', [App\Http\Controllers\DataLke::class, 'cekBuktiDukung'])->name('cekbdeval_lke');
    // Route::post('/cekbdeval-lke/{id}', [App\Http\Controllers\DataLke::class, 'cekBuktiLKE1'])->name('cekbuktilke1_lke');
     // Route::get('/kepatuhan', [KepatuhanController::class, 'index'])->name('kepatuhan');

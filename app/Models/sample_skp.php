@@ -9,6 +9,8 @@ class sample_skp extends Model
 {
     use HasFactory;
     protected $table = 'sample_skp';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

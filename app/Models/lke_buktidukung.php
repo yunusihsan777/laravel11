@@ -10,6 +10,7 @@ class lke_buktidukung extends Model
     use HasFactory;
 
     protected $table = 'lke_buktidukung';
+    
     protected $fillable = [
         'dokumen',
     ];

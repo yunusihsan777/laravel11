@@ -9,6 +9,8 @@ class lhe_2023 extends Model
 {
     use HasFactory;
     protected $table = 'lhe_2023';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

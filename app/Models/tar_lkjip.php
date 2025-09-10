@@ -9,6 +9,8 @@ class tar_lkjip extends Model
 {
     use HasFactory;
     protected $table = 'tar_lkjip';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

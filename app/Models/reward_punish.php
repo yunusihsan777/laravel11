@@ -9,6 +9,8 @@ class reward_punish extends Model
 {
     use HasFactory;
     protected $table = 'reward_punish';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

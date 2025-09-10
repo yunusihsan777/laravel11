@@ -62,6 +62,9 @@
                 <i class="fas fa-clipboard-check"></i> input akip
             </a>
             {{-- @endif --}}
+            <a href="{{ route('upload_buktidukung') }}" class="{{ request()->is('upload_buktidukung') ? 'active' : '' }}">
+                <i class="fas fa-clipboard-check"></i> input file
+            </a>
         </div>
     @endif
 

@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class nodis_eval_sakip extends Model
 {
     use HasFactory;
-    protected $table = 'nodis_eval_sakip';
+    protected $table = 'nodis_eval_akip';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

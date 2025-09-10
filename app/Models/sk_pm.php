@@ -9,6 +9,8 @@ class sk_pm extends Model
 {
     use HasFactory;
     protected $table = 'sk_pm';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'no',
         'id_satker',

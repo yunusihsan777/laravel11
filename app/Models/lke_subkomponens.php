@@ -9,6 +9,8 @@ class lke_subkomponens extends Model
 {
     use HasFactory;
     protected $table = 'lke_subkomponen';
+    
+    public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
         'id',
         'id_komponen',
