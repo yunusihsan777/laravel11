@@ -265,7 +265,7 @@ class DataLke extends Controller
             return redirect()->route('pilih.tahun');
         }
         $tahun = session('tahun_terpilih');
-          $mapping = $this->getMapping(); // method getMapping()
+        $mapping = $this->getMapping(); // method getMapping()
         $input = lke_buktidukung::all(); // contoh ambil semua dokumen
         return view('upload_file', compact('tahun', 'input', 'mapping'));
     }
@@ -280,8 +280,8 @@ public function upload(Request $request)
     $file = $request->file('file');
     $tahun = session('tahun_terpilih') ?? date('Y');
     $id_satker = '006050';
-
-    $path = $file->store("uploads/bukti/$id_satker/$tahun", 'public');
+    $namafile =
+    $path = $file->store("uploads/bukti/$id_satker/$tahun");
     $mapping = $this->getMapping();
 
     $target = $mapping[$id_bukti] ?? null;
@@ -290,10 +290,21 @@ public function upload(Request $request)
     }
 
     if (class_exists($target)) {
+
         $model = new $target();
         $model->id_satker = $id_satker;
         $model->id_periode = $tahun;
         $model->id_filename = $path;
+        if (in_array($id_bukti, [10, 11])) {
+            $tw = $id_bukti == 10 ? 'TW 1' : 'TW 2';
+            $model->triwulan = $tw;
+        } elseif (in_array($id_bukti, [37, 38])) {
+            $tw = $id_bukti == 37 ? 1 : 2;
+            $model->TW = $tw;
+        } elseif (in_array($id_bukti, [39, 40])) {
+            $tw = $id_bukti == 39 ? 1 : 2;
+            $model->TW = $tw;
+        }
         $model->id_tglupload = now();
         $model->save();
     } else {

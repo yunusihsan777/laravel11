@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ss_laporanapp extends Model
 {
     use HasFactory;
-    protected $table = 'ss_laporanapp';
+    protected $table = 'ss_laporapp';
     
     public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
