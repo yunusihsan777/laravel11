@@ -109,6 +109,54 @@ class DataLke extends Controller
         44 => lhe_2023::class,
     ];
 }
+private function penamaan(){
+    return [
+        1 => "Renstra",
+        2 => "Renja",
+        3 => "Renaksi",
+        4 => "Rkakl",
+        5 => "Dipa",
+        6 => "Pk",
+        7 => "Pk",
+        8 => "Iku",
+        9 => "Iku",
+        10 => "Lkjip_TW_1",
+        11 => "Lkjip_TW_2",
+        12 => "Lkjip",
+        13 => "ranstaff",
+        14 => "ranstaff",
+        15 => "Lhe",
+        16 => "Lhe",
+        17 => "tl_lhe",
+        18 => "Monev",
+        19 => "Monev",
+        20 => "Pokin_Ranwal",
+        21 => "Renstra",
+        22 => "Lkjip",
+        23 => "sample_skp",
+        24 => "SK_PM",
+        25 => "SK_PK",
+        26 => "Absen_PM",
+        27 => "Notulen_Bimtek_PM",
+        28 => "Nodis_P_Sakip",
+        29 => "Nodis_Eval_Sakip",
+        30 => "Memo_Data_Kinerja",
+        31 => "Nodis_Data_Kinerja",
+        32 => "Reward_Punish",
+        33 => "Sample_Rekomendasi",
+        34 => "SS_Perencanaan",
+        35 => "SS_Laporan_Web",
+        36 => "SS_Laporan_App",
+        37 => "Target_Lkjip_TW_1",
+        38 => "Target_Lkjip_TW_2",
+        39 => "Memo_Lkjip_TW_1",
+        40 => "Memo_Lkjip_TW_2",
+        41 => "Target_PM",
+        42 => "BA_Praevalusi_PM",
+        43 => "BA_Pleno_PM",
+        44 => "LHE"
+    ];
+}
 
    public function cekBuktiDukung($kode){
    if (!session()->has('tahun_terpilih')) {
@@ -273,15 +321,15 @@ public function upload(Request $request)
 {
     $request->validate([
         'id_bukti' => 'required|integer',
-        'file' => 'required|file|max:10240',
+        'file' => 'required|file|max:2048|mimes:pdf',
     ]);
 
     $id_bukti = $request->id_bukti;
     $file = $request->file('file');
     $tahun = session('tahun_terpilih') ?? date('Y');
     $id_satker = '006050';
-    $namafile =
-    $path = $file->store("uploads/bukti/$id_satker/$tahun");
+    $namafile = ($this->penamaan()[$id_bukti] ?? 'dokumen')."_{$id_satker}_{$tahun}." ."pdf";
+    $path = $file->move(public_path('uploads/repository/' . $id_bukti), $namafile);
     $mapping = $this->getMapping();
 
     $target = $mapping[$id_bukti] ?? null;
@@ -294,8 +342,8 @@ public function upload(Request $request)
         $model = new $target();
         $model->id_satker = $id_satker;
         $model->id_periode = $tahun;
-        $model->id_filename = $path;
-        if (in_array($id_bukti, [10, 11])) {
+        $model->id_filename = $namafile;
+        if (in_array($id_bukti, [10, 11, 12])) {
             $tw = $id_bukti == 10 ? 'TW 1' : 'TW 2';
             $model->triwulan = $tw;
         } elseif (in_array($id_bukti, [37, 38])) {
@@ -311,7 +359,7 @@ public function upload(Request $request)
         DB::table($target)->insert([
             'id_satker'   => $id_satker,
             'id_periode'  => $tahun,
-            'id_filename' => $path,
+            'id_filename' => $namafile,
             'id_tglupload'=> now(),
         ]);
     }
