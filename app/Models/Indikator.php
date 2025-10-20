@@ -14,8 +14,7 @@ class Indikator extends Model
 
     // Kolom yang dapat diisi
     protected $fillable = [
-        'id_bidang',
-        // 'tipe',
+        'id_saspro',
         'link',
         'lingkup',
         'indikator_nama',
@@ -41,5 +40,9 @@ class Indikator extends Model
     public function bidangByLink()
     {
         return $this->belongsTo(Bidang::class, 'link', 'rumpun');
+    }
+    public function saspro()
+    {
+        return $this->belongsTo(Saspro::class, 'id_saspro');
     }
 }

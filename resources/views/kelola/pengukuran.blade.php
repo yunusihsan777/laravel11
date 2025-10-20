@@ -34,11 +34,13 @@
                                                 ->get();
                                         } elseif ($level == 1) {
                                             $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                                ->where('hide', 0)
-                                                ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
-                                                ->whereNotNull('bidang_level')
-                                                ->orderBy('bidang_level', 'asc')
-                                                ->get();
+                                        ->where('hide', 0)
+                                        ->whereRaw("LOWER(REPLACE(bidang_nama, '_', ' ')) LIKE ?", [
+                                            '%' . strtolower(trim($kataTerakhir)),
+                                        ])
+                                        ->whereNotNull('bidang_level')
+                                        ->orderBy('bidang_level', 'asc')
+                                        ->get();
                                         } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
                                             $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
                                                 ->whereNotNull('bidang_level')
@@ -109,13 +111,28 @@
         ];
 
         function formatRibuan(angka) {
-            let parts = angka.replace(/[^\d,]/g, '').split(',');
-            let number = parts[0];
-            let decimal = parts[1] || '';
-            let formatted = number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-            return decimal ? `${formatted},${decimal}` : formatted;
-        }
+    if (angka === null || angka === undefined || angka === '') return '';
 
+    // pastikan string
+    angka = angka.toString();
+
+    // ganti titik desimal internasional jadi koma
+    angka = angka.replace('.', ',');
+
+    // pisahkan bagian ribuan dan desimal
+    let parts = angka.split(',');
+    let number = parts[0].replace(/\D/g, ''); // hanya angka di bagian ribuan
+    let decimal = parts[1] || '';
+
+    // format ribuan
+    let formatted = number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    return decimal ? `${formatted},${decimal}` : formatted;
+}
+
+
+
+        
         // $.getJSON('/get-subindikator/' + rumpun, function(response) {
         //     response.forEach(function(indikator) {
         //         let labelPenghitungan = ['Ditangani', 'Diselesaikan'];
@@ -184,7 +201,7 @@
                             if (indikator.indikator_penghitungan) {
                                 let labels = indikator.indikator_penghitungan.split(',')
                                     .map(s => s.trim());
-                                // kalau hanya ada 1 label → jadikan array 1 elemen
+                                // kalau hanya ada 1 label â†’ jadikan array 1 elemen
                                 if (labels.length >= 1) {
                                     labelPenghitungan = labels;
                                 }
@@ -192,7 +209,7 @@
 
                             subIndikators.forEach(sub => {
                                 let table = '';
-
+                                let indikator_penjelasan = indikator.indikator_penjelasan || '';
                                 if (labelPenghitungan.length === 1) {
                                     // === MODE TRIWULAN ===
                                     let triwulanList = ['TW1', 'TW2', 'TW3',
@@ -202,6 +219,7 @@
                                     table = `
             <div class="table-responsive mb-4">
                 <strong>${sub}</strong>
+                <p>${indikator_penjelasan}</p>
                 <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}" />
                 <input type="hidden" name="sub_indikator_list[]" value="${sub}" />
 
@@ -249,6 +267,7 @@
                                     table = `
             <div class="table-responsive mb-4">
                 <strong>${sub}</strong>
+                <p>${indikator_penjelasan}</p>
                 <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}" />
                 <input type="hidden" name="sub_indikator_list[]" value="${sub}" />
 
@@ -366,6 +385,7 @@ $.ajax({
             });
         });
     </script>
+    
 @endpush
 <style>
     .bidang-item.active-bidang {

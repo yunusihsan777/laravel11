@@ -38,32 +38,42 @@ class AturanController extends Controller
  
     // Function untuk menyimpan peraturan baru
     public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'id_namaproduk' => 'required|string|max:255',
-            'id_produsen' => 'required|string|max:255',
-            'id_tahun' => 'required|numeric|min:1900|max:' . date('Y'),
-            'file' => 'required|mimes:pdf|max:20048' // Validasi hanya menerima file PDF dengan ukuran maksimal 20MB
-        ]);
+{
+    // Validasi input
+    $request->validate([
+        'id_namaproduk' => 'required|string|max:255',
+        'id_produsen'   => 'required|string|max:255',
+        'id_tahun'      => 'required|numeric|min:1900|max:' . date('Y'),
+        'file'          => 'required|mimes:pdf|max:20480', // Maksimal 20MB (dalam KB)
+    ]);
 
-        // Handle file upload
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $filename = Str::slug($request->id_namaproduk, '_') . '.' . $file->getClientOriginalExtension();// Buat nama unik untuk file
-            $file->move(public_path('uploads/peraturan'), $filename); // Simpan file ke folder "uploads"
+    // Handle file upload
+    if ($request->hasFile('file')) {
+        $file = $request->file('file');
 
-            // Simpan data ke database
-            Aturan::create([
-                'id_namaproduk' => $request->id_namaproduk,
-                'id_produsen' => $request->id_produsen,
-                'id_tahun' => $request->id_tahun,
-                'id_filename' => $filename // Simpan nama file ke dalam database
-            ]);
+        // Pastikan folder tujuan ada
+        $destinationPath = public_path('uploads/peraturan');
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0777, true);
         }
 
-        return redirect()->route('aturan')->with('success', 'Peraturan berhasil ditambahkan');
+        // Buat nama file unik: slug_namaproduk_timestamp.pdf
+        $filename = Str::slug($request->id_namaproduk, '_') . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+        // Pindahkan file ke folder tujuan
+        $file->move($destinationPath, $filename);
+
+        // Simpan data ke database
+        Aturan::create([
+            'id_namaproduk' => $request->id_namaproduk,
+            'id_produsen'   => $request->id_produsen,
+            'id_tahun'      => $request->id_tahun,
+            'id_filename'   => $filename, // simpan nama file di DB
+        ]);
     }
+
+    return redirect()->route('aturan')->with('success', 'Peraturan berhasil ditambahkan');
+}
 
     // Function untuk menampilkan halaman edit
     public function edit($id)

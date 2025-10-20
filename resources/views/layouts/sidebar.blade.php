@@ -23,30 +23,29 @@
         <i class="fas fa-home"></i> <span class="sidebar-text">Beranda</span>
     </a>
 
-    @if ($levelSakip == 99 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 1)
+    @if ($levelSakip == 99 || $levelSakip == 1 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 4)
         <a href="#" id="toggle-submenu" class="toggle-btn {{ $submenuActive ? 'active' : '' }}">
             <i class="fas fa-tasks"></i> <span class="sidebar-text">Tata Kelola AKIP</span>
             <i class="fas fa-chevron-right arrow-icon"></i>
         </a>
 
         <div class="submenu" id="submenu" style="display: {{ $submenuActive ? 'block' : 'none' }};">
-            <a href="{{ route('kep') }}" class="{{ request()->is('kep') ? 'active' : '' }}">
-                <i class="fas fa-users"></i> Kep Tim SAKIP
-            </a>
+
             <a href="{{ route('perencanaan') }}" class="{{ request()->is('perencanaan') ? 'active' : '' }}">
                 <i class="fas fa-file-alt"></i> Perencanaan
             </a>
             {{-- @if ($levelSakip == 99) --}}
             @if ($tahun != 2024)
-            <a href="{{ route('pengukuran') }}" class="{{ request()->is('pengukuran') ? 'active' : '' }}">
-                <i class="fas fa-chart-line"></i> Pengukuran
-            </a>
+                <a href="{{ route('pengukuran') }}" class="{{ request()->is('pengukuran') ? 'active' : '' }}">
+                    <i class="fas fa-chart-line"></i> Pengukuran
+                </a>
             @endif
             {{-- @endif --}}
-            @if ($levelSakip == 99 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 1)
-            <a href="{{ route('pelaporan') }}" class="{{ request()->is('pelaporan') ? 'active' : '' }}">
-                <i class="fas fa-file-upload"></i> Pelaporan
-            </a>@endif
+            @if ($levelSakip == 99 || $levelSakip == 1 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 4)
+                <a href="{{ route('pelaporan') }}" class="{{ request()->is('pelaporan') ? 'active' : '' }}">
+                    <i class="fas fa-file-upload"></i> Pelaporan
+                </a>
+            @endif
             {{-- @if ($levelSakip == 99) --}}
             <a href="{{ route('evaluasi') }}" class="{{ request()->is('evaluasi') ? 'active' : '' }}">
                 <i class="fas fa-clipboard-check"></i> Evaluasi
@@ -55,13 +54,19 @@
         </div>
     @endif
 
-    @if ($levelSakip == 99 || $levelSakip == 2)
+    @if ($levelSakip == 99 ||  $levelSakip == 0 ||  $levelSakip == 2)
         <a href="{{ route('sakipwil') }}" class="{{ request()->is('sakipwil') ? 'active' : '' }}">
             <i class="fas fa-globe"></i> <span class="sidebar-text">SAKIP Wilayah</span>
+        </a>
+        <a href="{{ route('monitoring') }}" class="{{ request()->is('monitoring') ? 'active' : '' }}">
+            <i class="fas fa-globe"></i> <span class="sidebar-text">Monitoring</span>
         </a>
     @endif
 
     @if ($levelSakip == 99)
+        <a href="{{ route('kep') }}" class="{{ request()->is('kep') ? 'active' : '' }}">
+            <i class="fas fa-users"></i> Kep Tim SAKIP
+        </a>
         <a href="{{ route('sakipvalidasi') }}" class="{{ request()->is('sakipvalidasi') ? 'active' : '' }}">
             <i class="fas fa-check-circle"></i> <span class="sidebar-text">SAKIP Validasi</span>
         </a>
@@ -77,17 +82,17 @@
         <a href="{{ route('keloladata') }}" class="{{ request()->is('keloladata') ? 'active' : '' }}">
             <i class="fas fa-envelope"></i> <span class="sidebar-text">Kelola Data</span>
         </a>
+        <a href="{{ route('ubahpassword') }}" class="{{ request()->is('ubahpassword') ? 'active' : '' }}">
+            <i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span>
+        </a>
     @endif
 
-    @if ($levelSakip == 99 || $levelSakip == 1|| $levelSakip == 2 || $levelSakip == 3)
+    @if ($levelSakip == 99 || $levelSakip == 1 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 4)
         <a href="{{ route('aturan') }}" class="{{ request()->is('aturan') ? 'active' : '' }}">
             <i class="fas fa-gavel"></i> <span class="sidebar-text">Sumber Aturan</span>
         </a>
         <a href="{{ route('faq') }}" class="{{ request()->is('faq') ? 'active' : '' }}">
             <i class="fas fa-question-circle"></i> <span class="sidebar-text">FAQ</span>
-        </a>
-        <a href="{{ route('ubahpassword') }}" class="{{ request()->is('ubahpassword') ? 'active' : '' }}">
-            <i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span>
         </a>
     @endif
 
@@ -140,14 +145,14 @@
 </nav>
 
 <script>
-    $(document).ready(function () {
-        $('#toggle-submenu').on('click', function (e) {
+    $(document).ready(function() {
+        $('#toggle-submenu').on('click', function(e) {
             e.preventDefault();
             $('#submenu').slideToggle();
             $(this).find('.arrow-icon').toggleClass('fa-chevron-right fa-chevron-down');
         });
 
-        $('#toggler-btn').on('click', function () {
+        $('#toggler-btn').on('click', function() {
             $('.sidebar').toggleClass('collapsed');
             $('.navbar').toggleClass('collapsed');
             $('#user-info').toggle();

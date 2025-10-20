@@ -13,11 +13,15 @@
                 </div>
                 <div class="card-body">
                     @php
-                        $activeTab = session('active_tab', 'lhe-akip'); // Default ke renstra
+                        $activeTab = session('active_tab', 'lke'); // Default ke renstra
                         $levelSakip = session('id_sakip_level', 0);
                     @endphp
                     <!-- Tabs Navigation -->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ $activeTab == 'lke' ? 'active' : '' }}" id="lke-tab" data-bs-toggle="tab" href="#lke"
+                                role="tab" aria-controls="{{ $activeTab == 'lke' ? 'true' : 'false' }}" aria-selected="false">Bukti Dukung LKE</a>
+                        </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link {{ $activeTab == 'lhe-akip' ? 'active' : '' }}" id="lhe-akip-tab"
                                 data-bs-toggle="tab" href="#lhe-akip" role="tab"
@@ -49,15 +53,26 @@
                                 role="tab" aria-controls="{{ $activeTab == 'evaluasi-rencana' ? 'true' : 'false' }}" aria-selected="false">Evaluasi Rencana
                                 Aksi</a>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link {{ $activeTab == 'radar-capaian' ? 'active' : '' }}" id="radar-capaian-tab" data-bs-toggle="tab" href="#radar-capaian"
-                                role="tab" aria-controls="{{ $activeTab == 'radar-capaian' ? 'true' : 'false' }}" aria-selected="false">Radar Capaian</a>
-                        </li>
                         @endif
                     </ul>
  
                     <!-- Tabs Content -->
                     <div class="tab-content mt-3" id="myTabContent">
+                        <!-- LKE Section -->
+                        <div class="tab-pane fade {{ $activeTab == 'lke' ? 'show active' : '' }}"
+                        id="lke" role="tabpanel" aria-labelledby="lke-tab">
+                            <h5>Dokumen/Bukti Dukung Lembar Kerja Evaluasi AKIP Internal Kejaksaan Tahun 2025</h5>
+                           <p>
+    Halaman ini digunakan untuk melihat dokumen/bukti dukung sebagaimana tercantum pada Lembar Kerja Evaluasi (LKE) AKIP Tahun 2025 yang terdiri dari:
+    <br>1. Dokumen versi terakhir yang sudah diupload pada menu "Perencanaan" dan "Pelaporan".
+    <br>2. Dokumen baru sebagaimana ditentukan pada LKE yang perlu diupload melalui halaman ini (sesuai dengan kode kriterianya).
+    <br>
+    Adapun untuk memberikan nilai baik di tahap Penilaian Mandiri maupun tahap Evaluasi tetap menggunakan LKE dengan format excel yang dapat diunduh melalui tautan:
+    <a href="https://linktr.ee/ev_akip25" target="_blank">https://linktr.ee/ev_akip25</a>
+</p>
+
+                            @include('kelola.evaluasi.lke')
+                        </div>
                         <!-- LHE AKIP Section -->
                         <div class="tab-pane fade {{ $activeTab == 'lhe-akip' ? 'show active' : '' }}" id="lhe-akip"
                             role="tabpanel" aria-labelledby="lhe-akip-tab">
@@ -107,7 +122,7 @@
                                             <tr class="bg-warning bg-opacity-25">
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
-                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/lhe_' . $tahun . '_' . $file->id_perubahan .'.pdf') }}"
+                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/' . $file->id_filename) }}"
                                                         target="_blank">
                                                         LHE AKIP
                                                         ({{ $tahun }})
@@ -146,10 +161,10 @@
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="tl_lhe_akip_file" class="form-label">Upload File PDF (Max:
+                                            <label for="tllhe_file" class="form-label">Upload File PDF (Max:
                                                 4MB)</label>
-                                            <input type="file" class="form-control" id="tl_lhe_akip_file"
-                                                name="tl_lhe_akip_file" accept=".pdf" required>
+                                            <input type="file" class="form-control" id="tllhe_file"
+                                                name="tllhe_file" accept=".pdf" required>
                                         </div>
                                         <button type="submit" class="btn btn-block"
                                             style="background-color: #e6bf3e;">Upload File</button>
@@ -173,7 +188,7 @@
                                             <tr class="bg-warning bg-opacity-25">
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
-                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/tl_lhe_akip_' . $tahun . '_' . $file->id_perubahan .'.pdf') }}"
+                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/' . $file->id_filename) }}"
                                                         target="_blank">
                                                         TL LHE AKIP
                                                         ({{ $tahun }})
@@ -249,7 +264,7 @@
                                             <tr class="bg-warning bg-opacity-25">
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
-                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/monev_' . $tahun . '_' . $file->id_perubahan .'_'. $file->id_triwulan .'.pdf') }}"
+                                                    <a href="{{ asset('uploads/repository/' . $file->id_satker . '/' . $file->id_filename) }}"
                                                         target="_blank">
                                                         Monev Renaksi
                                                         ({{ $tahun }})
@@ -261,13 +276,13 @@
                                                 <td>{{ $file->id_perubahan }}</td>
                                                 <td>{{ $file->id_tglupload }}</td>
 
-                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+                        
                         <div class="tab-pane fade {{ $activeTab == 'evaluasi-internal' ? 'show active' : '' }}"
                         id="evaluasi-internal" role="tabpanel" aria-labelledby="evaluasi-internal-tab">
                             <h5>Evaluasi Internal</h5>
@@ -277,11 +292,6 @@
                         id="evaluasi-rencana" role="tabpanel" aria-labelledby="evaluasi-rencana-tab">
                             <h5>Evaluasi Rencana Aksi</h5>
                             <p>Content for Evaluasi Rencana Aksi goes here.</p>
-                        </div>
-                        <div class="tab-pane fade {{ $activeTab == 'radar-capaian' ? 'show active' : '' }}"
-                        id="radar-capaian" role="tabpanel" aria-labelledby="radar-capaian-tab">
-                            <h5>Radar Capaian</h5>
-                            <p>Content for Radar Capaian goes here.</p>
                         </div>
                     </div>
                 </div>

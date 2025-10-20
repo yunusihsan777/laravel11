@@ -17,6 +17,7 @@ class Saspro extends Model
         'saspro_penjelasan',
         'lingkup',
         'tahun',
+        'nilai',
         'hide',
     ];
     // Jika tidak ada timestamps

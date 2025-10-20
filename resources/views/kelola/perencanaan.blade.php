@@ -53,16 +53,15 @@
                                 aria-controls="{{ $activeTab == 'renaksi' ? 'true' : 'false' }}"
                                 aria-selected="false">Rencana Aksi</a>
                         </li>
+                        <!--|| $levelSakip == 2 || $levelSakip == 3 -->
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link {{ $activeTab == 'perjanjian-kinerja' ? 'active' : '' }}"
+                                id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja" role="tab"
+                                aria-controls="{{ $activeTab == 'perjanjian-kinerja' ? 'true' : 'false' }}"
+                                aria-selected="false">Perjanjian Kinerja</a>
+                        </li>
+                        {{-- @endif --}}
                         @if ($tahun != 2024)
-                            <!--|| $levelSakip == 2 || $levelSakip == 3 -->
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link {{ $activeTab == 'perjanjian-kinerja' ? 'active' : '' }}"
-                                    id="perjanjian-kinerja-tab" data-bs-toggle="tab" href="#perjanjian-kinerja"
-                                    role="tab"
-                                    aria-controls="{{ $activeTab == 'perjanjian-kinerja' ? 'true' : 'false' }}"
-                                    aria-selected="false">Perjanjian Kinerja</a>
-                            </li>
-                            {{-- @endif --}}
                             @if ($levelSakip == 99)
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" id="cetak-pk-tab" data-bs-toggle="tab" href="#cetak-pk"
@@ -97,20 +96,19 @@
                                         </div>
                                         <div class="card-body">
                                             <!-- Form Upload File Renstra -->
-                                            @if ($tahun != 2024)
-                                                <form action="{{ route('upload.renstra') }}" method="POST"
-                                                    enctype="multipart/form-data" class="mb-4">
-                                                    @csrf
-                                                    <div class="mb-3">
-                                                        <label for="renstra_file" class="form-label">Upload File PDF
-                                                            Renstra (Max: 2MB)</label>
-                                                        <input type="file" class="form-control" id="renstra_file"
-                                                            name="renstra_file" accept=".pdf" required>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-warning btn-block">Upload
-                                                        File</button>
-                                                </form>
-                                            @endif
+
+                                            <form action="{{ route('upload.renstra') }}" method="POST"
+                                                enctype="multipart/form-data" class="mb-4">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label for="renstra_file" class="form-label">Upload File PDF
+                                                        Renstra (Max: 2MB)</label>
+                                                    <input type="file" class="form-control" id="renstra_file"
+                                                        name="renstra_file" accept=".pdf" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-warning btn-block">Upload
+                                                    File</button>
+                                            </form>
                                             <!-- Alert for success -->
                                             @if (session('success-renstra'))
                                                 <div class="alert alert-success" id="success-alert">
@@ -171,20 +169,18 @@
                                         </div>
                                         <div class="card-body">
                                             <!-- Form Upload File IKU -->
-                                            @if ($tahun != 2024)
-                                                <form action="{{ route('upload.iku') }}" method="POST"
-                                                    enctype="multipart/form-data" class="mb-4">
-                                                    @csrf
-                                                    <div class="mb-3">
-                                                        <label for="iku_file" class="form-label">Upload File PDF Iku (Max:
-                                                            2MB)</label>
-                                                        <input type="file" class="form-control" id="iku_file"
-                                                            name="iku_file" accept=".pdf" required>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-warning btn-block">Upload
-                                                        File</button>
-                                                </form>
-                                            @endif
+                                            <form action="{{ route('upload.iku') }}" method="POST"
+                                                enctype="multipart/form-data" class="mb-4">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label for="iku_file" class="form-label">Upload File PDF Iku (Max:
+                                                        2MB)</label>
+                                                    <input type="file" class="form-control" id="iku_file"
+                                                        name="iku_file" accept=".pdf" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-warning btn-block">Upload
+                                                    File</button>
+                                            </form>
                                             <!-- Alert for success -->
                                             @if (session('success-iku'))
                                                 <div class="alert alert-success" id="success-alert">
@@ -254,20 +250,18 @@
                                         </div>
                                         <div class="card-body">
                                             <!-- Form Upload File Renja -->
-                                            @if ($tahun != 2024)
-                                                <form action="{{ route('upload.renja') }}" method="POST"
-                                                    enctype="multipart/form-data" class="mb-4">
-                                                    @csrf
-                                                    <div class="mb-3">
-                                                        <label for="renja_file" class="form-label">Upload File PDF
-                                                            Renja (Max: 2MB)</label>
-                                                        <input type="file" class="form-control" id="renja_file"
-                                                            name="renja_file" accept=".pdf" required>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-warning btn-block">Upload
-                                                        File</button>
-                                                </form>
-                                            @endif
+                                            <form action="{{ route('upload.renja') }}" method="POST"
+                                                enctype="multipart/form-data" class="mb-4">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label for="renja_file" class="form-label">Upload File PDF
+                                                        Renja (Max: 2MB)</label>
+                                                    <input type="file" class="form-control" id="renja_file"
+                                                        name="renja_file" accept=".pdf" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-warning btn-block">Upload
+                                                    File</button>
+                                            </form>
                                             <!-- Alert for success -->
                                             @if (session('success-renja'))
                                                 <div class="alert alert-success" id="success-alert">
@@ -332,20 +326,18 @@
                                         </div>
                                         <div class="card-body">
                                             <!-- Form Upload File Rkakl -->
-                                            @if ($tahun != 2024)
-                                                <form action="{{ route('upload.rkakl') }}" method="POST"
-                                                    enctype="multipart/form-data" class="mb-4">
-                                                    @csrf
-                                                    <div class="mb-3">
-                                                        <label for="rkakl_file" class="form-label">Upload File PDF
-                                                            RKAKL (Max: 2MB)</label>
-                                                        <input type="file" class="form-control" id="rkakl_file"
-                                                            name="rkakl_file" accept=".pdf" required>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-warning btn-block">Upload
-                                                        File</button>
-                                                </form>
-                                            @endif
+                                            <form action="{{ route('upload.rkakl') }}" method="POST"
+                                                enctype="multipart/form-data" class="mb-4">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label for="rkakl_file" class="form-label">Upload File PDF
+                                                        RKAKL (Max: 2MB)</label>
+                                                    <input type="file" class="form-control" id="rkakl_file"
+                                                        name="rkakl_file" accept=".pdf" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-warning btn-block">Upload
+                                                    File</button>
+                                            </form>
                                             <!-- Alert for success -->
                                             @if (session('success-rkakl'))
                                                 <div class="alert alert-success" id="success-alert">
@@ -412,47 +404,45 @@
                                         <h4 class="mb-0">UPLOAD DIPA SATKER ANDA</h4>
                                     </div>
                                     <div class="card-body">
-                                        @if ($tahun != 2024)
-                                            <form action="{{ route('upload.dipa') }}" method="POST"
-                                                enctype="multipart/form-data">
-                                                @csrf
-                                                <div class="mb-3">
-                                                    <label for="dipa_file" class="form-label">Upload File PDF DIPA (Max:
-                                                        2MB)</label>
-                                                    <input type="file" class="form-control" id="dipa_file"
-                                                        name="dipa_file" accept=".pdf" required>
-                                                    @error('dipa_file')
-                                                        <div class="text-danger">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
+                                        <form action="{{ route('upload.dipa') }}" method="POST"
+                                            enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label for="dipa_file" class="form-label">Upload File PDF DIPA (Max:
+                                                    2MB)</label>
+                                                <input type="file" class="form-control" id="dipa_file"
+                                                    name="dipa_file" accept=".pdf" required>
+                                                @error('dipa_file')
+                                                    <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
 
-                                                <div class="mb-3">
-                                                    <label for="id_pagu" class="form-label">Total Pagu</label>
-                                                    <input type="text" class="form-control format-number"
-                                                        id="id_pagu" name="id_pagu_formatted" required>
-                                                    <input type="hidden" id="id_pagu_hidden" name="id_pagu">
-                                                </div>
+                                            <div class="mb-3">
+                                                <label for="id_pagu" class="form-label">Total Pagu</label>
+                                                <input type="text" class="form-control format-number" id="id_pagu"
+                                                    name="id_pagu_formatted" required>
+                                                <input type="hidden" id="id_pagu_hidden" name="id_pagu">
+                                            </div>
 
-                                                <div class="mb-3">
-                                                    <label for="id_gakyankum" class="form-label">Program Penegakan dan
-                                                        Pelayanan Hukum</label>
-                                                    <input type="text" class="form-control format-number"
-                                                        id="id_gakyankum" name="id_gakyankum_formatted" required>
-                                                    <input type="hidden" id="id_gakyankum_hidden" name="id_gakyankum">
-                                                </div>
+                                            <div class="mb-3">
+                                                <label for="id_gakyankum" class="form-label">Program Penegakan dan
+                                                    Pelayanan Hukum</label>
+                                                <input type="text" class="form-control format-number"
+                                                    id="id_gakyankum" name="id_gakyankum_formatted" required>
+                                                <input type="hidden" id="id_gakyankum_hidden" name="id_gakyankum">
+                                            </div>
 
-                                                <div class="mb-3">
-                                                    <label for="id_dukman" class="form-label">Program Dukungan
-                                                        Manajemen</label>
-                                                    <input type="text" class="form-control format-number"
-                                                        id="id_dukman" name="id_dukman_formatted" required>
-                                                    <input type="hidden" id="id_dukman_hidden" name="id_dukman">
-                                                </div>
+                                            <div class="mb-3">
+                                                <label for="id_dukman" class="form-label">Program Dukungan
+                                                    Manajemen</label>
+                                                <input type="text" class="form-control format-number" id="id_dukman"
+                                                    name="id_dukman_formatted" required>
+                                                <input type="hidden" id="id_dukman_hidden" name="id_dukman">
+                                            </div>
 
-                                                <button type="submit" class="btn btn-warning btn-block">Upload
-                                                    File</button>
-                                            </form>
-                                        @endif
+                                            <button type="submit" class="btn btn-warning btn-block">Upload
+                                                File</button>
+                                        </form>
                                     </div>
 
                                     <!-- Tabel DIPA -->
@@ -574,20 +564,18 @@
                                         </div>
                                         <div class="card-body">
                                             <!-- Form Upload File renaksi -->
-                                            @if ($tahun != 2024)
-                                                <form action="{{ route('upload.renaksi') }}" method="POST"
-                                                    enctype="multipart/form-data" class="mb-4">
-                                                    @csrf
-                                                    <div class="mb-3">
-                                                        <label for="renaksi_file" class="form-label">Upload File PDF
-                                                            Rencana Aksi (Max: 2MB)</label>
-                                                        <input type="file" class="form-control" id="renaksi_file"
-                                                            name="renaksi_file" accept=".pdf" required>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-warning btn-block">Upload
-                                                        File</button>
-                                                </form>
-                                            @endif
+                                            <form action="{{ route('upload.renaksi') }}" method="POST"
+                                                enctype="multipart/form-data" class="mb-4">
+                                                @csrf
+                                                <div class="mb-3">
+                                                    <label for="renaksi_file" class="form-label">Upload File PDF
+                                                        Rencana Aksi (Max: 2MB)</label>
+                                                    <input type="file" class="form-control" id="renaksi_file"
+                                                        name="renaksi_file" accept=".pdf" required>
+                                                </div>
+                                                <button type="submit" class="btn btn-warning btn-block">Upload
+                                                    File</button>
+                                            </form>
                                             <!-- Alert for success -->
                                             @if (session('success-renaksi'))
                                                 <div class="alert alert-success" id="success-alert">
@@ -644,10 +632,12 @@
                             <h3><strong>Perjanjian Kinerja</strong></h3>
                             <p class="card-title p-2" style="background-color: #f1e022; color: black;">Pengisian Target
                                 Perjanjian Kinerja</p>
-
-                            <div class="card-body">
-                                <!-- Form Upload File PK -->
-                                @if ($tahun != 2024)
+                            <div class="card shadow-sm">
+                                <div class="card-header text-white" style="background-color: #e6bf3e;">
+                                    <h4 class="mb-0">UPLOAD File Perjanjian Kinerja</h4>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Form Upload File PK -->
                                     <form action="{{ route('upload.pk') }}" method="POST" enctype="multipart/form-data"
                                         class="mb-4">
                                         @csrf
@@ -659,47 +649,46 @@
                                         </div>
                                         <button type="submit" class="btn btn-warning btn-block">Upload File</button>
                                     </form>
-                                @endif
 
-                                <!-- Alert for success -->
-                                @if (session('success-pk-file'))
-                                    <div class="alert alert-success" id="success-alert">
-                                        {{ session('success-pk-file') }}
-                                    </div>
-                                @endif
+                                    <!-- Alert for success -->
+                                    @if (session('success-pk-file'))
+                                        <div class="alert alert-success" id="success-alert">
+                                            {{ session('success-pk-file') }}
+                                        </div>
+                                    @endif
 
-                                <!-- Tabel Perjanjian Kinerja -->
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
-                                        <thead class="table-warning">
-                                            <tr>
-                                                <th>No</th>
-                                                <th>File Perjanjian Kinerja</th>
-                                                <th>Versi</th>
-                                                <th>Nama File</th>
-                                                <th>Tanggal Upload</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($pk as $index => $item)
+                                    <!-- Tabel Perjanjian Kinerja -->
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped">
+                                            <thead class="table-warning">
                                                 <tr>
-                                                    <td>{{ $index + 1 }}</td>
-                                                    <td>
-                                                        <a href="{{ asset('uploads/repository/' . $item->id_satker . '/' . $item->id_filename) }}"
-                                                            target="_blank"
-                                                            style="text-decoration: none; color: inherit;">
-                                                            PK Tahun {{ $item->id_periode }}
-                                                        </a>
-                                                    </td>
-                                                    <td>{{ $item->id_perubahan }}</td>
-                                                    <td>{{ $item->id_filename }}</td>
-                                                    <td>{{ $item->id_tglupload }}</td>
+                                                    <th>No</th>
+                                                    <th>File Perjanjian Kinerja</th>
+                                                    <th>Versi</th>
+                                                    {{-- <th>Nama File</th> --}}
+                                                    <th>Tanggal Upload</th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($pk as $index => $item)
+                                                    <tr>
+                                                        <td>{{ $index + 1 }}</td>
+                                                        <td>
+                                                            <a href="{{ asset('uploads/repository/' . $item->id_satker . '/' . $item->id_filename) }}"
+                                                                target="_blank"
+                                                                style="text-decoration: none; color: inherit;">
+                                                                PK Tahun {{ $item->id_periode }}
+                                                            </a>
+                                                        </td>
+                                                        <td>{{ $item->id_perubahan }}</td>
+                                                        {{-- <td>{{ $item->id_filename }}</td> --}}
+                                                        <td>{{ $item->id_tglupload }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-
                             </div>
 
                             @php
@@ -717,7 +706,9 @@
                                 } elseif ($level == 1) {
                                     $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
                                         ->where('hide', 0)
-                                        ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
+                                        ->whereRaw("LOWER(REPLACE(bidang_nama, '_', ' ')) LIKE ?", [
+                                            '%' . strtolower(trim($kataTerakhir)),
+                                        ])
                                         ->whereNotNull('bidang_level')
                                         ->orderBy('bidang_level', 'asc')
                                         ->get();
@@ -752,60 +743,63 @@
                                             if ($level == 1) {
                                                 $query->whereIn('lingkup', [0, 1]);
                                             } elseif ($level == 2) {
-                                                $query->whereIn('lingkup', [0, 2, 5]);
+                                                $query->whereIn('lingkup', [0, 2, 5, 7]);
                                             } elseif ($level == 3) {
-                                                $query->whereIn('lingkup', [0, 3, 5, 6]);
+                                                $query->whereIn('lingkup', [0, 3, 5, 6, 7]);
                                             } elseif ($level == 4) {
-                                                $query->whereIn('lingkup', [0, 4, 6]);
+                                                $query->whereIn('lingkup', [0, 4, 6, 7]);
                                             }
                                         })
                                         ->get();
                                 @endphp
 
 
-                                <div class="card mb-2">
-                                    <div class="card-header d-flex justify-content-between align-items-center"
-                                        style="background-color: #e6bf3e; color: white;">
-                                        {{ $bidang->bidang_nama }}
-                                        <a data-bs-toggle="collapse" href="#collapseBidang{{ $index }}"
-                                            role="button" aria-expanded="false"
-                                            aria-controls="collapseBidang{{ $index }}"
-                                            class="collapse-toggle d-flex align-items-center">
-                                            <i class="bi bi-chevron-down text-white rotate-icon"></i>
-                                        </a>
-                                    </div>
+                                @if ($tahun != 2024)
+                                    <div class="card mb-2">
+                                        <div class="card-header d-flex justify-content-between align-items-center"
+                                            style="background-color: #e6bf3e; color: white;">
+                                            {{ $bidang->bidang_nama }}
+                                            <a data-bs-toggle="collapse" href="#collapseBidang{{ $index }}"
+                                                role="button" aria-expanded="false"
+                                                aria-controls="collapseBidang{{ $index }}"
+                                                class="collapse-toggle d-flex align-items-center">
+                                                <i class="bi bi-chevron-down text-white rotate-icon"></i>
+                                            </a>
+                                        </div>
 
-                                    <div class="collapse" id="collapseBidang{{ $index }}">
-                                        <div class="card-body">
-                                            @if ($indikators->isNotEmpty())
-                                                <div class="row">
-                                                    @foreach ($indikators as $key => $indikator)
-                                                        <div class="col-md-6">
-                                                            <div class="card mb-2">
-                                                                <div class="card-body">
-                                                                    <!-- Indikator Nama -->
-                                                                    <h5 class="text-center"
-                                                                        style="font-weight: bold; color: black;">
-                                                                        {{ $indikator->indikator_nama }}
-                                                                    </h5>
+                                        <div class="collapse" id="collapseBidang{{ $index }}">
+                                            <div class="card-body">
+                                                @if ($indikators->isNotEmpty())
+                                                    <div class="row">
+                                                        @foreach ($indikators as $key => $indikator)
+                                                            <div class="col-md-6">
+                                                                <div class="card mb-2">
+                                                                    <div class="card-body">
+                                                                        <!-- Indikator Nama -->
+                                                                        <h5 class="text-center"
+                                                                            style="font-weight: bold; color: black;">
+                                                                            {{ $indikator->indikator_nama }}
+                                                                        </h5>
 
-                                                                    <!-- Form Target -->
-                                                                    @if ($tahun != 2024)
-                                                                        <form method="POST"
-                                                                            action="{{ route('target.store') }}">
-                                                                            @csrf
-                                                                            <input type="hidden" name="indikator_id"
-                                                                                value="{{ $indikator->id }}">
+                                                                        <!-- Form Target -->
+                                                                        @if ($tahun != 2024)
+                                                                            <form method="POST"
+                                                                                action="{{ route('target.store') }}">
+                                                                                @csrf
+                                                                                <input type="hidden" name="indikator_id"
+                                                                                    value="{{ $indikator->id }}">
 
-                                                                            <div class="mb-2">
-                                                                                <label class="form-label">Target Pertahun
-                                                                                    (%)
-                                                                                </label>
-                                                                                <input type="number" class="form-control"
-                                                                                    name="target_tahun"
-                                                                                    value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
-                                                                            </div>
-                                                                            {{-- @if ($tahun != 2025)
+                                                                                <div class="mb-2">
+                                                                                    <label class="form-label">Target
+                                                                                        Pertahun
+                                                                                        (%)
+                                                                                    </label>
+                                                                                    <input type="number"
+                                                                                        class="form-control"
+                                                                                        name="target_tahun"
+                                                                                        value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
+                                                                                </div>
+                                                                                {{-- @if ($tahun != 2025)
                                                                         <div class="row">
                                                                             @for ($i = 1; $i <= 4; $i++)
                                                                                 <div class="col-md-6">
@@ -819,25 +813,26 @@
                                                                             @endfor
                                                                         </div>
 @endif --}}
-                                                                            <br>
-                                                                            <button type="submit"
-                                                                                class="btn btn-success w-100">Simpan</button>
-                                                                        </form>
-                                                                    @endif
+                                                                                <br>
+                                                                                <button type="submit"
+                                                                                    class="btn btn-success w-100">Simpan</button>
+                                                                            </form>
+                                                                        @endif
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        @if (($key + 1) % 2 == 0 && !$loop->last)
-                                                </div>
-                                                <div class="row">
-                                            @endif
-                            @endforeach
+                                                            @if (($key + 1) % 2 == 0 && !$loop->last)
+                                                    </div>
+                                                    <div class="row">
+                                                @endif
+                                @endforeach
                         </div>
                     @else
                         <p><i>Tidak ada indikator terkait</i></p>
                         @endif
                     </div>
+                    @endif
                 </div>
             </div>
             @endforeach

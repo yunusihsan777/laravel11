@@ -5,6 +5,39 @@
 
 @section('content')
     <div class="content" id="content">
+        {{-- <div id="loadingOverlay"
+            style="
+    position: fixed; top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(255,255,255,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+">
+            <div class="spinner"
+                style="
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #3498db;
+        border-radius: 50%;
+        width: 60px; height: 60px;
+        animation: spin 1s linear infinite;
+    ">
+            </div>
+        </div>
+
+        <style>
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style> --}}
+
         <div class="container-fluid">
             <div class="card border-light shadow-sm">
                 <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
@@ -17,25 +50,37 @@
                         $levelSakip = session('id_sakip_level', 0);
                     @endphp
                     <!-- List Pengumuman -->
-                    <div class="mb-3">
-                        <input type="text" id="searchInput" class="form-control" placeholder="Cari satker / id satker...">
-                    </div>
+                    @if ($levelSakip == 99 || $levelSakip == 0)
+                        <div class="mb-3 d-flex align-items-center">
+                            <input type="text" id="searchInput" class="form-control me-2"
+                                placeholder="Cari Nama Satker atau Keterangan">
+                            <button id="exportExcel" class="btn btn-success me-2">Export Excel</button>
+                            <button id="exportPdf" class="btn btn-danger">Export PDF</button>
+                        </div>
+                    @endif
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover text-center rounded">
+                        <table class="table table-bordered table-striped table-hover text-center rounded" id="satkerTable">
                             <thead class="table-warning">
                                 <tr>
                                     <th>No</th>
-                                    <th>ID Satker</th>
+                                    <!--<th>ID Satker</th>-->
                                     <th>Nama Satker</th>
-                                    <th>Keputusan</th>
+                                    {{-- <th>Keputusan</th> --}}
                                     <th>Renstra</th>
                                     <th>IKU</th>
                                     <th>Renja</th>
                                     <th>RKAKL</th>
                                     <th>Dipa</th>
                                     <th>Renaksi</th>
-                                    <th>LKJIP</th>
+                                    <th>PK</th>
+                                    <th>LKJIP TW1</th>
+                                    <th>LKJIP TW2</th>
+                                    <th>LKJIP TW3</th>
+                                    <th>LKJIP TW4</th>
                                     <th>Rapat Staff</th>
+                                    <th>LHE AKIP</th>
+                                    <th>TL LHE AKIP</th>
+                                    <th>Monev Renaksi</th>
                                     @if ($levelSakip == 999)
                                         <th>Perjanjian Kinerja</th>
                                         <th>Jumlah Indikator Kinerja</th>
@@ -49,7 +94,7 @@
                                     @foreach ($data as $index => $row)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $row->id_satker }}</td>
+                                            <!--<td>{{ $row->id_satker }}</td>-->
                                             <td style="text-align: left;">
                                                 @if ($row->id_kejari == 0)
                                                     <b>{{ str_replace('_', ' ', $row->satkernama) }}</b>
@@ -57,7 +102,7 @@
                                                     {{ str_replace('_', ' ', $row->satkernama) }}
                                                 @endif
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 @if (!empty($kepList[$row->id_satker]))
                                                     <a href="{{ asset('uploads/KEP/' . $row->id_satker . '.pdf') }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
@@ -66,7 +111,7 @@
                                                 @else
                                                     <span class="text-danger">-</span>
                                                 @endif
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 @if (isset($renstra[$row->id_satker]) && $renstra[$row->id_satker]->isNotEmpty())
                                                     @php
@@ -149,11 +194,11 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if (isset($lkjip[$row->id_satker]) && $lkjip[$row->id_satker]->isNotEmpty())
+                                                @if (isset($pk[$row->id_satker]) && $pk[$row->id_satker]->isNotEmpty())
                                                     @php
-                                                        $latestLkjip = $lkjip[$row->id_satker]->first();
+                                                        $latestPk = $pk[$row->id_satker]->first();
                                                     @endphp
-                                                    <a href="{{ asset('uploads/repository/' . $latestLkjip->id_satker . '/' . $latestLkjip->id_filename) }}"
+                                                    <a href="{{ asset('uploads/repository/' . $latestPk->id_satker . '/' . $latestPk->id_filename) }}"
                                                         target="_blank" class="text-success" style="text-decoration: none;">
                                                         &#10003; <!-- Tanda centang -->
                                                     </a>
@@ -161,6 +206,48 @@
                                                     <span class="text-danger">-</span>
                                                 @endif
                                             </td>
+                                            <td>
+                                                @php $filename = $sortedLkjipTW1[$row->id_satker]; @endphp
+                                                @if ($filename)
+                                                    <a href="{{ asset('uploads/repository/' . $row->id_satker . '/' . rawurlencode($filename)) }}"
+                                                        target="_blank" class="text-success">&#10003;</a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                @php $filename = $sortedLkjipTW2[$row->id_satker]; @endphp
+                                                @if ($filename)
+                                                    <a href="{{ asset('uploads/repository/' . $row->id_satker . '/' . rawurlencode($filename)) }}"
+                                                        target="_blank" class="text-success">&#10003;</a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+
+                                            <!-- sama untuk TW3 dan TW4 -->
+                                            <td>
+                                                @php $filename = $sortedLkjipTW3[$row->id_satker]; @endphp
+                                                @if ($filename)
+                                                    <a href="{{ asset('uploads/repository/' . $row->id_satker . '/' . rawurlencode($filename)) }}"
+                                                        target="_blank" class="text-success">&#10003;</a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                @php $filename = $sortedLkjipTW4[$row->id_satker]; @endphp
+                                                @if ($filename)
+                                                    <a href="{{ asset('uploads/repository/' . $row->id_satker . '/' . rawurlencode($filename)) }}"
+                                                        target="_blank" class="text-success">&#10003;</a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+
+
                                             <td>
                                                 @if (isset($rastaff[$row->id_satker]) && $rastaff[$row->id_satker]->isNotEmpty())
                                                     @php
@@ -175,8 +262,51 @@
                                                 @endif
 
                                             </td>
+                                            {{-- LHE AKIP --}}
+                                            <td>
+                                                @if (isset($lhe[$row->id_satker]) && $lhe[$row->id_satker]->isNotEmpty())
+                                                    @php
+                                                        $latestLhe = $lhe[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/repository/' . $latestLhe->id_satker . '/' . $latestLhe->id_filename) }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003; <!-- Tanda centang -->
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+                                            {{-- TL LHE AKIP --}}
+                                            <td>
+                                                @if (isset($tl_lhe_akip[$row->id_satker]) && $tl_lhe_akip[$row->id_satker]->isNotEmpty())
+                                                    @php
+                                                        $latestTlLheAkip = $tl_lhe_akip[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/repository/' . $latestTlLheAkip->id_satker . '/' . $latestTlLheAkip->id_filename) }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003;
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+
+                                            {{-- Monev Renaksi --}}
+                                            <td>
+                                                @if (isset($monev_renaksi[$row->id_satker]) && $monev_renaksi[$row->id_satker]->isNotEmpty())
+                                                    @php
+                                                        $latestMonevRenaksi = $monev_renaksi[$row->id_satker]->first();
+                                                    @endphp
+                                                    <a href="{{ asset('uploads/repository/' . $latestMonevRenaksi->id_satker . '/' . $latestMonevRenaksi->id_filename) }}"
+                                                        target="_blank" class="text-success" style="text-decoration: none;">
+                                                        &#10003;
+                                                    </a>
+                                                @else
+                                                    <span class="text-danger">-</span>
+                                                @endif
+                                            </td>
+
                                             @if ($levelSakip == 999)
-                                                <td>{{ $row->perjanjian_kinerja ?? '-' }}</td>
                                                 <td>{{ $row->jumlah_indikator_kinerja ?? '-' }}</td>
                                                 <td>{{ $row->status_pengukuran_kinerja ?? '-' }}</td>
                                             @endif
@@ -195,12 +325,12 @@
                         <div class="card shadow-sm mb-4">
                             <div class="card border-light shadow-sm" style="background-color: #e3e2e2;">
                                 <center>
-                                    <h2><b>Distribusi Keputusan</b></h2>
+                                    <h2><b>Renstra</b></h2>
                                 </center>
                             </div>
 
                             <div class="row">
-                                <div class="col-md-4">
+                                {{-- <div class="col-md-4">
                                     <div class="card shadow-sm mb-4">
                                         <div class="card-body">
                                             <center>
@@ -209,13 +339,13 @@
                                             <canvas id="pieChart1"></canvas>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="col-md-4">
                                     <div class="card shadow-sm mb-4">
                                         <div class="card-body">
                                             <center>
-                                                <h5 class="card-title"><b>Keputusan Belum Terisi</b></h5>
+                                                <h5 class="card-title"><b>Renstra</b></h5>
                                             </center>
                                             <canvas id="pieChart2"></canvas>
                                         </div>
@@ -278,9 +408,33 @@
                                     <div class="card shadow-sm mb-4">
                                         <div class="card-body">
                                             <center>
-                                                <h5 class="card-title"><b>LKJIP</b></h5>
+                                                <h5 class="card-title"><b>Perjanjian Kinerja</b></h5>
                                             </center>
                                             <canvas id="pieChart8"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @foreach (['TW 1', 'TW 2', 'TW 3', 'TW 4'] as $tw)
+                                    <div class="col-md-4">
+                                        <div class="card shadow-sm mb-4">
+                                            <div class="card-body">
+                                                <center>
+                                                    <h6 class="card-title"><b>LKJIP {{ $tw }}</b></h6>
+                                                </center>
+                                                <canvas id="pieChart_{{ str_replace(' ', '_', $tw) }}"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>Rapat Staff</b></h5>
+                                            </center>
+                                            <canvas id="pieChart10"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -289,15 +443,33 @@
                                     <div class="card shadow-sm mb-4">
                                         <div class="card-body">
                                             <center>
-                                                <h5 class="card-title"><b>Rapat Staff</b></h5>
+                                                <h5 class="card-title"><b>LHE AKIP</b></h5>
                                             </center>
-                                            <canvas id="pieChart9"></canvas>
+                                            <canvas id="pieChart11"></canvas>
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>TL LHE AKIP</b></h5>
+                                            </center>
+                                            <canvas id="pieChart12"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card shadow-sm mb-4">
+                                        <div class="card-body">
+                                            <center>
+                                                <h5 class="card-title"><b>Monev Renaksi</b></h5>
+                                            </center>
+                                            <canvas id="pieChart13"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -358,41 +530,41 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // keputusan
-            const sortedKepList = @json($sortedKepList); // Mengambil data dari PHP
+            // const sortedKepList = @json($sortedKepList); // Mengambil data dari PHP
 
-            // Menghitung jumlah keputusan yang terisi dan belum terisi
-            const terisi = sortedKepList.filter(item => item).length; // Menghitung yang terisi
-            const belumTerisi = sortedKepList.length - terisi; // Menghitung yang belum terisi
+            // // Menghitung jumlah keputusan yang terisi dan belum terisi
+            // const terisi = sortedKepList.filter(item => item).length; // Menghitung yang terisi
+            // const belumTerisi = sortedKepList.length - terisi; // Menghitung yang belum terisi
 
-            const ctx = document.getElementById('pieChart1').getContext('2d');
-            const pieChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Keputusan Terisi', 'Keputusan Belum Terisi'],
-                    datasets: [{
-                        label: 'Jumlah Keputusan',
-                        data: [terisi, belumTerisi],
-                        backgroundColor: ['#4CAF50', '#E53935'],
-                        borderColor: ['#00838F', '#C62828'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    return `${tooltipItem.label}: ${tooltipItem.raw}`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
+            // const ctx = document.getElementById('pieChart1').getContext('2d');
+            // const pieChart = new Chart(ctx, {
+            //     type: 'pie',
+            //     data: {
+            //         labels: ['Keputusan Terisi', 'Keputusan Belum Terisi'],
+            //         datasets: [{
+            //             label: 'Jumlah Keputusan',
+            //             data: [terisi, belumTerisi],
+            //             backgroundColor: ['#4CAF50', '#E53935'],
+            //             borderColor: ['#00838F', '#C62828'],
+            //             borderWidth: 1
+            //         }]
+            //     },
+            //     options: {
+            //         responsive: true,
+            //         plugins: {
+            //             legend: {
+            //                 position: 'bottom',
+            //             },
+            //             tooltip: {
+            //                 callbacks: {
+            //                     label: function(tooltipItem) {
+            //                         return `${tooltipItem.label}: ${tooltipItem.raw}`;
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // });
             //renstra
             const sortedRenstraList = @json($sortedRenstraList);
             const terisiRenstra = sortedRenstraList.filter(item => item).length;
@@ -550,18 +722,18 @@
                 }
             });
 
-            //lkjip
-            const sortedLkjipList = @json($sortedLkjipList);
-            const terisiLkjip = sortedLkjipList.filter(item => item).length;
-            const belumTerisiLkjip = sortedLkjipList.length - terisiLkjip;
+            //pk
+            const sortedPkList = @json($sortedPkList);
+            const terisiPk = sortedPkList.filter(item => item).length;
+            const belumTerisiPk = sortedPkList.length - terisiPk;
 
-            const ctxLkjip = document.getElementById('pieChart8').getContext('2d');
-            new Chart(ctxLkjip, {
+            const ctxPk = document.getElementById('pieChart8').getContext('2d');
+            new Chart(ctxPk, {
                 type: 'pie',
                 data: {
                     labels: ['Terisi', 'Belum Terisi'],
                     datasets: [{
-                        data: [terisiLkjip, belumTerisiLkjip],
+                        data: [terisiPk, belumTerisiPk],
                         backgroundColor: ['#4CAF50', '#E53935'],
                         borderColor: ['#00838F', '#C62828'],
                         borderWidth: 1
@@ -576,12 +748,15 @@
                     }
                 }
             });
+
+
+
             //rastaff
             const sortedRastaffList = @json($sortedRastaffList);
             const terisiRastaff = sortedRastaffList.filter(item => item).length;
             const belumTerisiRastaff = sortedRastaffList.length - terisiRastaff;
 
-            const ctxRastaff = document.getElementById('pieChart9').getContext('2d');
+            const ctxRastaff = document.getElementById('pieChart10').getContext('2d');
             new Chart(ctxRastaff, {
                 type: 'pie',
                 data: {
@@ -603,17 +778,189 @@
                 }
             });
 
+            //lhe akip
+            const sortedLheList = @json($sortedLheList);
+            const terisiLhe = sortedLheList.filter(item => item).length;
+            const belumTerisiLhe = sortedLheList.length - terisiLhe;
+            const ctxLhe = document.getElementById('pieChart11').getContext('2d');
+            new Chart(ctxLhe, {
+                type: 'pie',
+                data: {
+                    labels: ['Terisi', 'Belum Terisi'],
+                    datasets: [{
+                        data: [terisiLhe, belumTerisiLhe],
+                        backgroundColor: ['#4CAF50', '#E53935'],
+                        borderColor: ['#00838F', '#C62828'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            //tl lhe akip
+            const sortedTlLheAkipList = @json($sortedTlLheAkipList);
+            const terisiTlLheAkip = sortedTlLheAkipList.filter(item => item).length;
+            const belumTerisiTlLheAkip = sortedTlLheAkipList.length - terisiTlLheAkip;
+            const ctxTlLheAkip = document.getElementById('pieChart12').getContext('2d');
+            new Chart(ctxTlLheAkip, {
+                type: 'pie',
+                data: {
+                    labels: ['Terisi', 'Belum Terisi'],
+                    datasets: [{
+                        data: [terisiTlLheAkip, belumTerisiTlLheAkip],
+                        backgroundColor: ['#4CAF50', '#E53935'],
+                        borderColor: ['#00838F', '#C62828'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            //monev renaksi
+            const sortedMonevRenaksiList = @json($sortedMonevRenaksiList);
+            const terisiMonevRenaksi = sortedMonevRenaksiList.filter(item => item).length;
+            const belumTerisiMonevRenaksi = sortedMonevRenaksiList.length - terisiMonevRenaksi;
+            const ctxMonevRenaksi = document.getElementById('pieChart13').getContext('2d');
+            new Chart(ctxMonevRenaksi, {
+                type: 'pie',
+                data: {
+                    labels: ['Terisi', 'Belum Terisi'],
+                    datasets: [{
+                        data: [terisiMonevRenaksi, belumTerisiMonevRenaksi],
+                        backgroundColor: ['#4CAF50', '#E53935'],
+                        borderColor: ['#00838F', '#C62828'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
         });
+        // Hilangkan loading setelah halaman selesai dimuat
+        // window.addEventListener("load", function() {
+        //     document.getElementById("loadingOverlay").style.display = "none";
+        // });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+    {{-- <script>
         $(document).ready(function() {
-            $("#searchInput").on("keyup", function() {
-                var value = $(this).val().toLowerCase();
-                $("#satkerTable tbody tr").filter(function() {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            $('#searchInput').on('keyup', function() {
+                let value = $(this).val().toLowerCase();
+
+                $('#satkerTable tbody tr').filter(function() {
+                    let col2 = $(this).find('td:nth-child(2)').text().toLowerCase();
+                    let col3 = $(this).find('td:nth-child(3)').text().toLowerCase();
+                    $(this).toggle(col2.indexOf(value) > -1 || col3.indexOf(value) > -1);
+                });
+            });
+        });
+    </script> --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const searchInput = document.getElementById("searchInput");
+            const table = document.getElementById("satkerTable");
+
+            // ðŸ”Ž Filter pencarian hanya kolom ID Satker & Nama Satker
+            searchInput.addEventListener("keyup", function() {
+                const value = this.value.toLowerCase();
+                Array.from(table.tBodies[0].rows).forEach(row => {
+                    const col2 = row.cells[1].textContent.toLowerCase(); // ID Satker
+                    const col3 = row.cells[2].textContent.toLowerCase(); // Nama Satker
+                    row.style.display = (col2.includes(value) || col3.includes(value)) ? "" :
+                        "none";
+                });
+            });
+
+            // ðŸ“Š Export Excel (hanya baris & kolom yang tampil + ID Satker tetap 00 di depan)
+            document.getElementById("exportExcel").addEventListener("click", function() {
+                let data = [];
+                let rows = table.querySelectorAll("tr");
+
+                rows.forEach((row, rowIndex) => {
+                    // âœ… cek apakah row masih tampil (tidak hidden oleh filter)
+                    if (row.style.display !== "none") {
+                        let rowData = [];
+                        row.querySelectorAll("th, td").forEach((cell, cellIndex) => {
+                            let text = cell.innerText;
+
+                            // Jika kolom ke-2 (ID Satker), simpan sebagai teks
+                            if (rowIndex > 0 && cellIndex === 1) {
+                                rowData.push("'" + text);
+                            } else {
+                                rowData.push(text);
+                            }
+                        });
+                        data.push(rowData);
+                    }
+                });
+
+                // Buat worksheet & workbook
+                let ws = XLSX.utils.aoa_to_sheet(data);
+                let wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+                // Simpan file
+                XLSX.writeFile(wb, "data_satker.xlsx");
+            });
+
+
+            // ðŸ“‘ Export PDF
+            document.addEventListener("DOMContentLoaded", function() {
+                const table = document.getElementById("satkerTable");
+
+                document.getElementById("exportPDF").addEventListener("click", function() {
+                    const {
+                        jsPDF
+                    } = window.jspdf; // ambil object jsPDF
+                    const doc = new jsPDF('l', 'pt', 'a4'); // landscape, point, A4
+
+                    doc.text("Data Satker", 40, 30);
+
+                    // gunakan plugin autotable
+                    doc.autoTable({
+                        html: '#satkerTable',
+                        startY: 50,
+                        theme: 'grid',
+                        headStyles: {
+                            fillColor: [22, 160, 133]
+                        }
+                    });
+
+                    doc.save("data_satker.pdf");
                 });
             });
         });
     </script>
+
+    <!-- Include jsPDF AutoTable plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.27/jspdf.plugin.autotable.min.js"></script>

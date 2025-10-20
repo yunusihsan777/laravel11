@@ -25,8 +25,8 @@ class PerencanaanController extends Controller
         if (!session()->has('tahun_terpilih')) {
             return redirect()->route('pilih.tahun');
         }
-$level = session('id_sakip_level');
-$satkernama = session('satkernama');
+        $level = session('id_sakip_level');
+        $satkernama = session('satkernama');
         // Ambil tahun yang dipilih dari session
         $tahun = session('tahun_terpilih');
 
@@ -63,9 +63,9 @@ $satkernama = session('satkernama');
 
         // Ambil data PK untuk satker & tahun
         $pk = Pk::where('id_satker', $id_satker)
-                ->where('id_periode', $tahun)
-                ->orderBy('id_perubahan', 'asc')
-                ->get();
+            ->where('id_periode', $tahun)
+            ->orderBy('id_perubahan', 'asc')
+            ->get();
 
         // dd ($indikator_pidum);
         // Kembalikan view beserta data yang telah difilter
@@ -100,8 +100,8 @@ $satkernama = session('satkernama');
 
         // Upload file ke folder public/uploads/repository/renstra
         $file = $request->file('renstra_file');
-        $fileName = 'renstra_' . $tahun . '_'. $id_perubahan .'.pdf'; // Buat nama file
-        $file->move(public_path('uploads/repository/'.$idSatker), $fileName); // Simpan di folder 'renstra' di public
+        $fileName = 'renstra_' . $tahun . '_' . $id_perubahan . '.pdf'; // Buat nama file
+        $file->move(public_path('uploads/repository/' . $idSatker), $fileName); // Simpan di folder 'renstra' di public
         // $file->move(base_path('uploads/repository/renstra'), $fileName);
         // Format tanggal upload ke d/m/y H:i:s
         $id_tglupload = now()->format('d/m/Y h:i A');
@@ -142,8 +142,8 @@ $satkernama = session('satkernama');
 
         // Upload file ke folder public/uploads/repository/iku
         $file = $request->file('iku_file');
-        $fileName = 'IKU_' . $tahun . '_' . $id_perubahan .'.pdf';
-        $file->move(public_path('uploads/repository/'. $idSatker), $fileName);
+        $fileName = 'IKU_' . $tahun . '_' . $id_perubahan . '.pdf';
+        $file->move(public_path('uploads/repository/' . $idSatker), $fileName);
 
         // Simpan data ke database
         Iku::create([
@@ -178,7 +178,7 @@ $satkernama = session('satkernama');
 
         // Upload file ke folder public/uploads/repository/renja
         $file = $request->file('renja_file');
-        $fileName = 'renja_' . $tahun . '_' . $id_perubahan .'.pdf';
+        $fileName = 'renja_' . $tahun . '_' . $id_perubahan . '.pdf';
         $file->move(public_path('uploads/repository/' . $idSatker), $fileName);
 
         // Simpan data ke database
@@ -214,8 +214,8 @@ $satkernama = session('satkernama');
 
         // Upload file ke folder public/uploads/repository/rkakl
         $file = $request->file('rkakl_file');
-        $fileName = 'rkakl_' . $tahun . '_'. $id_perubahan . '.pdf';
-        $file->move(public_path('uploads/repository/'.$idSatker), $fileName);
+        $fileName = 'rkakl_' . $tahun . '_' . $id_perubahan . '.pdf';
+        $file->move(public_path('uploads/repository/' . $idSatker), $fileName);
 
         // Simpan data ke database
         Rkakl::create([
@@ -231,55 +231,55 @@ $satkernama = session('satkernama');
 
     // Fungsi untuk menangani upload file Dipa
     public function uploadDipa(Request $request)
-{
-    $tahun = session('tahun_terpilih');
-    $idSatker = session('id_satker'); // Ambil id_satker dari session
+    {
+        $tahun = session('tahun_terpilih');
+        $idSatker = session('id_satker'); // Ambil id_satker dari session
 
-    // Validasi input
-    $request->validate([
-        'dipa_file' => 'required|mimes:pdf|max:2048', // Maksimum 2MB, hanya PDF
-        'id_pagu' => 'required|numeric',
-        'id_gakyankum' => 'required|numeric',
-        'id_dukman' => 'required|numeric',
-    ]);
+        // Validasi input
+        $request->validate([
+            'dipa_file' => 'required|mimes:pdf|max:2048', // Maksimum 2MB, hanya PDF
+            'id_pagu' => 'required|numeric',
+            'id_gakyankum' => 'required|numeric',
+            'id_dukman' => 'required|numeric',
+        ]);
 
-    // Ambil data perubahan terakhir dari tabel
-    $latestdipa = Dipa::where('id_satker', $idSatker)
-        ->where('id_periode', $tahun)
-        ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc')
-        ->first();
+        // Ambil data perubahan terakhir dari tabel
+        $latestdipa = Dipa::where('id_satker', $idSatker)
+            ->where('id_periode', $tahun)
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc')
+            ->first();
 
-    // Jika ada data sebelumnya, tambahkan +1 untuk id_perubahan, jika tidak mulai dari 0
-    $id_perubahan = ($latestdipa && is_numeric($latestdipa->id_perubahan)) ? $latestdipa->id_perubahan + 1 : 0;
+        // Jika ada data sebelumnya, tambahkan +1 untuk id_perubahan, jika tidak mulai dari 0
+        $id_perubahan = ($latestdipa && is_numeric($latestdipa->id_perubahan)) ? $latestdipa->id_perubahan + 1 : 0;
 
-    // Upload file ke folder public/uploads/repository/dipa
-    try {
-        $file = $request->file('dipa_file');
-        $fileName = 'dipa_' . $tahun . '_'. $id_perubahan . '.pdf';
-        $destinationPath = public_path('uploads/repository/'.$idSatker);
-        
-        // Pindahkan file ke folder tujuan
-        $file->move($destinationPath, $fileName);
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Gagal mengunggah file: ' . $e->getMessage());
+        // Upload file ke folder public/uploads/repository/dipa
+        try {
+            $file = $request->file('dipa_file');
+            $fileName = 'dipa_' . $tahun . '_' . $id_perubahan . '.pdf';
+            $destinationPath = public_path('uploads/repository/' . $idSatker);
+
+            // Pindahkan file ke folder tujuan
+            $file->move($destinationPath, $fileName);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal mengunggah file: ' . $e->getMessage());
+        }
+
+        // Simpan data ke database
+        Dipa::create([
+            'id_satker' => $idSatker,
+            'id_periode' => $tahun,
+            'id_perubahan' => $id_perubahan,
+            'id_filename' => $fileName,
+            'id_pagu' => $request->input('id_pagu'),
+            'id_gakyankum' => $request->input('id_gakyankum'),
+            'id_dukman' => $request->input('id_dukman'),
+            'id_tglupload' => now()->format('d/m/Y h:i A'),
+        ]);
+
+        return redirect()->route('perencanaan')
+            ->with('success-dipa', 'File DIPA berhasil diupload.')
+            ->with('active_tab', 'dipa');
     }
- 
-    // Simpan data ke database
-    Dipa::create([
-        'id_satker' => $idSatker,
-        'id_periode' => $tahun,
-        'id_perubahan' => $id_perubahan,
-        'id_filename' => $fileName,
-        'id_pagu' => $request->input('id_pagu'),
-        'id_gakyankum' => $request->input('id_gakyankum'),
-        'id_dukman' => $request->input('id_dukman'),
-        'id_tglupload' => now()->format('d/m/Y h:i A'),
-    ]);
-
-    return redirect()->route('perencanaan')
-        ->with('success-dipa', 'File DIPA berhasil diupload.')
-        ->with('active_tab', 'dipa');
-}
 
     // Fungsi untuk menangani upload file Dipa
     public function uploadRenaksi(Request $request)
@@ -302,8 +302,8 @@ $satkernama = session('satkernama');
 
         // Upload file ke folder public/uploads/repository/renaksi
         $file = $request->file('renaksi_file');
-        $fileName = 'renaksi_' . $tahun . '_'. $id_perubahan . '.pdf';;
-        $file->move(public_path('uploads/repository/'.$idSatker), $fileName);
+        $fileName = 'renaksi_' . $tahun . '_' . $id_perubahan . '.pdf';;
+        $file->move(public_path('uploads/repository/' . $idSatker), $fileName);
 
         // Simpan data ke database
         Renaksi::create([
@@ -327,7 +327,7 @@ $satkernama = session('satkernama');
             'target_triwulan_3' => 'numeric',
             'target_triwulan_4' => 'numeric',
         ]);
- 
+
         // Ambil session id_satker dan tahun
         $id_satker = session('id_satker');
         $tahun = session('tahun_terpilih');
@@ -336,7 +336,7 @@ $satkernama = session('satkernama');
             ->where('id_satker', $id_satker)
             ->where('tahun', $tahun)
             ->first();
-          
+
         if ($existingTarget) {
             // Jika sudah ada, update data
             $existingTarget->update([
@@ -367,40 +367,39 @@ $satkernama = session('satkernama');
         return redirect()->route('perencanaan')->with('success-pk', 'Target berhasil disimpan!')->with('active_tab', 'perjanjian-kinerja');
     }
 
-  // Fungsi untuk menangani upload file PK
-public function uploadPK(Request $request)
-{
-    $tahun = session('tahun_terpilih');
-    $request->validate([
-        'pk_file' => 'required|mimes:pdf|max:5120', // Maksimal 5MB
-    ]);
+    // Fungsi untuk menangani upload file PK
+    public function uploadPK(Request $request)
+    {
+        $tahun = session('tahun_terpilih');
+        $request->validate([
+            'pk_file' => 'required|mimes:pdf|max:5120', // Maksimal 5MB
+        ]);
 
-    $idSatker = session('id_satker'); // Ambil id_satker dari session
+        $idSatker = session('id_satker'); // Ambil id_satker dari session
 
-    // Cek id_perubahan terakhir
-    $latestPK = Pk::where('id_satker', $idSatker)
-        ->where('id_periode', $tahun)
-        ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc')
-        ->first();
+        // Cek id_perubahan terakhir
+        $latestPK = Pk::where('id_satker', $idSatker)
+            ->where('id_periode', $tahun)
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc')
+            ->first();
 
-    // Tentukan id_perubahan baru
-    $id_perubahan = $latestPK ? $latestPK->id_perubahan + 1 : 0;
+        // Tentukan id_perubahan baru
+        $id_perubahan = $latestPK ? $latestPK->id_perubahan + 1 : 0;
 
-    // Upload file ke folder public/uploads/repository/{id_satker}
-    $file = $request->file('pk_file');
-    $fileName = 'pk_' . $tahun . '_' . $id_perubahan . '.pdf';
-    $file->move(public_path('uploads/repository/' . $idSatker), $fileName);
+        // Upload file ke folder public/uploads/repository/{id_satker}
+        $file = $request->file('pk_file');
+        $fileName = 'pk_' . $tahun . '_' . $id_perubahan . '.pdf';
+        $file->move(public_path('uploads/repository/' . $idSatker), $fileName);
 
-    // Simpan ke database
-    Pk::create([
-        'id_satker'    => $idSatker,
-        'id_periode'   => $tahun,
-        'id_perubahan' => $id_perubahan,
-        'id_filename'  => $fileName,
-        'id_tglupload' => now()->format('d/m/Y h:i A'),
-    ]);
+        // Simpan ke database
+        Pk::create([
+            'id_satker'    => $idSatker,
+            'id_periode'   => $tahun,
+            'id_perubahan' => $id_perubahan,
+            'id_filename'  => $fileName,
+            'id_tglupload' => now()->format('d/m/Y h:i A'),
+        ]);
 
-     return redirect()->route('perencanaan')->with('success-pk-file','File PK berhasil diupload!')->with('active_tab', 'perjanjian-kinerja');
-}
-
+        return redirect()->route('perencanaan')->with('success-pk-file', 'File PK berhasil diupload!')->with('active_tab', 'perjanjian-kinerja');
+    }
 }

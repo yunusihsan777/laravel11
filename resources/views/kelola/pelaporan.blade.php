@@ -107,7 +107,9 @@
                                                 } elseif ($level == 1) {
                                                     $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
                                                         ->where('hide', 0)
-                                                        ->where('bidang_nama', 'LIKE', '%' . trim($kataTerakhir))
+                                                        ->whereRaw("LOWER(REPLACE(bidang_nama, '_', ' ')) LIKE ?", [
+                                                            '%' . strtolower(trim($kataTerakhir)),
+                                                        ])
                                                         ->whereNotNull('bidang_level')
                                                         ->orderBy('bidang_level', 'asc')
                                                         ->get();
@@ -141,22 +143,20 @@
                                 </div>
 
                                 <div class="col-md-9">
-                                    <div class="card">
-                                        <div class="card-header">
+                                    <div class="card" id="controls-wrapper" class="mb-3" style="display:none;">
+                                        <div class="card-header d-flex align-items-center gap-2">
                                             <span>📋 Indikator</span>
-                                            <select id="triwulan" class="form-select mb-3">
+                                            <select id="triwulan" class="form-select w-auto">
                                                 <option value="1" selected>Triwulan 1</option>
                                                 <option value="2">Triwulan 2</option>
                                                 <option value="3">Triwulan 3</option>
                                                 <option value="4">Triwulan 4</option>
                                             </select>
+                                            <button id="reloadBtn" class="btn btn-success">Pilih</button>
                                         </div>
                                         <div class="card-body" id="subindikator-wrapper">
                                             <form method="POST" action="#">
                                                 <strong>(Sub Indikator)</strong>
-                                                {{-- @csrf --}}
-
-                                                {{-- Di sinilah hasil AJAX akan dimuat --}}
                                                 <div class="subindikator-wrapper">Pilih Bidang Terlebih dahulu</div>
 
                                                 <div class="text-end mt-4">
@@ -167,6 +167,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                         {{-- @endif --}}
@@ -200,7 +201,6 @@
                             @endif
 
                             <!-- Form Upload File -->
-                            @if ($tahun != 2024)
                             <div class="card shadow-sm mb-3">
                                 <div class="card-header text-white" style="background-color: #e6bf3e;">
                                     <h6 class="mb-0">Upload Dokumen LKJiP</h6>
@@ -210,8 +210,8 @@
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="triwulan" class="form-label">Pilih Triwulan</label>
-                                            <select class="form-control" id="triwulan" name="triwulan" required>
+                                            <label for="id_triwulan" class="form-label">Pilih Triwulan</label>
+                                            <select class="form-control" id="id_triwulan" name="id_triwulan" required>
                                                 <option value="" disabled selected>Pilih Triwulan</option>
                                                 <option value="TW 1">Triwulan 1</option>
                                                 <option value="TW 2">Triwulan 2</option>
@@ -220,7 +220,8 @@
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="lkjip_file" class="form-label">Upload File PDF (Max: 4MB)</label>
+                                            <label for="lkjip_file" class="form-label">Upload File PDF (Max:
+                                                4MB)</label>
                                             <input type="file" class="form-control" id="lkjip_file" name="lkjip_file"
                                                 accept=".pdf" required>
                                         </div>
@@ -229,7 +230,6 @@
                                     </form>
                                 </div>
                             </div>
-@endif
 
                             <!-- Tabel Data LKJiP -->
                             <div class="table-responsive">
@@ -249,23 +249,52 @@
                                                 <!-- Mengubah warna isi tabel menjadi kuning muda -->
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
-                                                   @php
-    if ($tahun == 2024) {
-        // prioritas tanpa triwulan
-        $finalPath = 'uploads/repository/' . $file->id_satker . '/lkjip_' . $tahun . '_' . $file->id_perubahan . '.pdf';
+                                                    @php
+                                                        if ($tahun == 2024) {
+                                                            if (!empty($file->id_triwulan)) {
+                                                                // 2024 tapi ada triwulan
+                                                                $finalPath =
+                                                                    'uploads/repository/' .
+                                                                    $file->id_satker .
+                                                                    '/lkjip_' .
+                                                                    $tahun .
+                                                                    '_' .
+                                                                    $file->id_perubahan .
+                                                                    '_' .
+                                                                    $file->id_triwulan .
+                                                                    '.pdf';
+                                                            } else {
+                                                                // 2024 tanpa triwulan
+                                                                $finalPath =
+                                                                    'uploads/repository/' .
+                                                                    $file->id_satker .
+                                                                    '/lkjip_' .
+                                                                    $tahun .
+                                                                    '_' .
+                                                                    $file->id_perubahan .
+                                                                    '.pdf';
+                                                            }
+                                                        } else {
+                                                            // tahun selain 2024 langsung pakai triwulan
+                                                            $finalPath =
+                                                                'uploads/repository/' .
+                                                                $file->id_satker .
+                                                                '/lkjip_' .
+                                                                $tahun .
+                                                                '_' .
+                                                                $file->id_perubahan .
+                                                                '_' .
+                                                                $file->id_triwulan .
+                                                                '.pdf';
+                                                        }
+                                                    @endphp
 
-    } else {
-        // tahun selain 2024 langsung pakai triwulan
-        $finalPath = 'uploads/repository/' . $file->id_satker . '/lkjip_' . $tahun . '_' . $file->id_perubahan . '_' . $file->triwulan . '.pdf';
-    }
-@endphp
-
-<a href="{{ asset($finalPath) }}" target="_blank">
-    LKJIP ({{ $tahun }}) - Triwulan {{ $file->triwulan }}
-</a>
+                                                    <a href="{{ asset($finalPath) }}" target="_blank">
+                                                        LKJIP ({{ $tahun }}) - Triwulan {{ $file->id_triwulan }}
+                                                    </a>
 
                                                 </td>
-                                                <td>Triwulan {{ $file->triwulan }}</td>
+                                                <td>Triwulan {{ $file->id_triwulan }}</td>
                                                 <td>{{ $file->id_perubahan }}</td>
                                                 <td>{{ $file->id_tglupload }}</td>
 
@@ -291,7 +320,6 @@
                             @endif
 
                             <!-- Form Upload File -->
-                            @if ($tahun != 2024)
                             <div class="card shadow-sm mb-3">
                                 <div class="card-header text-white" style="background-color: #e6bf3e;">
                                     <h6 class="mb-0">Upload Dokumen Rapat Staff EKA</h6>
@@ -311,7 +339,8 @@
                                             </select>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="rapat_file" class="form-label">Upload File PDF (Max: 4MB)</label>
+                                            <label for="rapat_file" class="form-label">Upload File PDF (Max:
+                                                4MB)</label>
                                             <input type="file" class="form-control" id="rapat_file" name="rapat_file"
                                                 accept=".pdf" required>
                                         </div>
@@ -320,7 +349,6 @@
                                     </form>
                                 </div>
                             </div>
-@endif
 
                             <!-- Tabel Data Rapat Staff EKA -->
                             <div class="table-responsive">
@@ -455,6 +483,35 @@
                 }
                 // console.log(labelPenghitungan);
 
+                // Ketika klik bidang
+                $('.bidang-item').on('click', function() {
+                    $(".bidang-item").removeClass("active");
+                    $(this).addClass("active");
+
+                    selectedRumpun = $(this).data('rumpun');
+                    $("#controls-wrapper").show();
+                    let triwulan = $('#triwulan').val();
+                    loadSubIndikator(selectedRumpun, triwulan);
+                });
+
+                // Ketika ganti triwulan
+                $('#triwulan').on('change', function() {
+                    let triwulan = $(this).val();
+                    console.log('Triwulan ganti:', triwulan, 'Rumpun:', selectedRumpun);
+                    if (selectedRumpun) {
+                        loadSubIndikator(selectedRumpun, triwulan);
+                    }
+                });
+
+                // Klik tombol reload
+                $(document).on('click', '#reloadBtn', function() {
+                    $(this).addClass("active");
+
+                    let triwulan = $('#triwulan').val();
+                    loadSubIndikator(selectedRumpun, triwulan);
+                });
+
+
                 function loadSubIndikator(rumpun, triwulan) {
                     $('#subindikator-wrapper').html('<p>Loading...</p>');
 
@@ -466,12 +523,13 @@
                         success: function(data) {
                             let html = '';
 
-                            if (data.length === 0) {
+                            if (!data || data.length === 0) {
                                 html = '<p class="text-muted">Tidak ada indikator ditemukan.</p>';
                             }
 
-                            data.forEach((item, index) => {
-                                // Ambil label penghitungan dari item, default ke Ditangani/Diselesaikan
+                            data.forEach((item) => {
+                                if (!item.indikator_nama) return; // skip data kosong
+
                                 let labelPenghitungan = ['Ditangani', 'Diselesaikan'];
                                 if (item.indikator_penghitungan) {
                                     let labels = item.indikator_penghitungan.split(',').map(s => s
@@ -482,38 +540,41 @@
                                 }
 
                                 html += `
-            <div class="mb-4 p-3 border rounded shadow-sm">
-                <strong>${item.indikator_nama}</strong>
-                <table class="table table-bordered align-middle mt-3">
-                    <thead class="text-center bg-warning">
-                        <tr>
-                            <th>Persentase Penyelesaian</th>
-                            <th>Target PK Tahunan</th>
-                            <th>Capaian Target PK Tahunan</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center">
-                        <tr>
-                            <td>${item.persentase}%</td>
-                            <td>${item.target_pk}%</td>
-                            <td>${item.capaian_pk}%</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="mb-4 p-3 border rounded shadow-sm">
+                    <strong>${item.indikator_nama}</strong>
+                    <table class="table table-bordered align-middle mt-3">
+                        <thead class="text-center bg-warning">
+                            <tr>
+                                <th>Persentase Penyelesaian</th>
+                                <th>Target PK Tahunan</th>
+                                <th>Capaian Target PK Tahunan</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <tr>
+                                <td>${item.persentase || 0}%</td>
+                                <td>${item.target_pk || 0}%</td>
+                                <td>${item.capaian_pk || 0}%</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                <div class="mb-2">
-                    <label><strong>Faktor-Faktor yang mempengaruhi capaian kinerja tersebut:</strong></label>
-                    <textarea class="form-control faktor-input" rows="2" data-indikator-id="${item.indikator_id}">${item.faktor ?? ''}</textarea>
+                    <div class="mb-2">
+                        <label><strong>Faktor-Faktor:</strong></label>
+                        <textarea class="form-control faktor-input" rows="2"
+                            data-indikator-id="${item.indikator_id}">${item.faktor || ''}</textarea>
+                    </div>
+
+                    <div class="mb-2">
+                        <label><strong>Upaya Optimalisasi:</strong></label>
+                        <textarea class="form-control langkah-input" rows="2"
+                            data-indikator-id="${item.indikator_id}">${item.langkah || ''}</textarea>
+                    </div>
+
+                    <button class="btn btn-sm btn-primary btn-simpan-faktor"
+                        data-indikator-id="${item.indikator_id}">Simpan</button>
                 </div>
-
-                <div class="mb-2">
-                    <label><strong>Upaya optimalisasi kinerja yang akan/telah dilaksanakan:</strong></label>
-                    <textarea class="form-control langkah-input" rows="2" data-indikator-id="${item.indikator_id}">${item.langkah ?? ''}</textarea>
-                </div>
-
-                <button class="btn btn-sm btn-primary btn-simpan-faktor" data-indikator-id="${item.indikator_id}">Simpan</button>
-            </div>
-        `;
+                `;
                             });
 
                             $('#subindikator-wrapper').html(html);
@@ -525,21 +586,6 @@
                     });
                 }
 
-                // Ketika klik bidang
-                $('.bidang-item').on('click', function() {
-                    selectedRumpun = $(this).data('rumpun');
-                    let triwulan = $('#triwulan').val();
-                    loadSubIndikator(selectedRumpun, triwulan);
-                });
-
-                // Ketika ganti triwulan
-                $('#triwulan').on('change', function() {
-                    let triwulan = $(this).val();
-                     console.log('Triwulan ganti:', triwulan, 'Rumpun:', selectedRumpun);
-                    if (selectedRumpun) {
-                        loadSubIndikator(selectedRumpun, triwulan);
-                    }
-                });
 
                 $(document).on('click', '.btn-simpan-faktor', function() {
                     const indikatorId = $(this).data('indikator-id');

@@ -70,6 +70,68 @@
 @stack('scripts')
 
 @include('layouts.head')
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="three-lines-spinner">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </div>
+</div>
+
+<style>
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* Three Lines Spinner */
+.three-lines-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+}
+
+.line {
+    width: 8px;
+    height: 40px;
+    background-color: #2c3e50;
+    margin: 0 4px;
+    border-radius: 4px;
+    animation: line-move 1s ease-in-out infinite;
+}
+
+.line:nth-child(1) {
+    animation-delay: -0.2s;
+}
+
+.line:nth-child(2) {
+    animation-delay: -0.4s;
+}
+
+.line:nth-child(3) {
+    animation-delay: -0.6s;
+}
+
+@keyframes line-move {
+    0%, 100% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(0.5);
+    }
+}
+</style>
 <body class="section-with-background" style="background-image: url('{{ asset('gambar/backgrounds.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 400px;">
     
     {{-- <div class="container-fluid"> --}}
@@ -83,5 +145,10 @@
     {{-- </div> --}}
     @include('layouts.footer')
 </body>
+<script>
+    window.addEventListener("load", function() {
+            document.getElementById("loadingOverlay").style.display = "none";
+        });
+</script>
     
 {{-- @endif --}}

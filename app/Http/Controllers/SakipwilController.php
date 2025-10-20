@@ -35,16 +35,18 @@ class SakipwilController extends Controller
 
 
         // Cek apakah kode satker adalah 999999
-        if (in_array($id_satker, [999999, 'admin', 'Pengawasan', 'Panev'])) {
+        if (in_array($id_satker, [999999, 'admin', 'Pengawasan', 'Panev', 'menpanrb'])) {
             // Ambil semua satker, urutkan berdasarkan id_kejati
             $data = DB::table('sinori_login')
-                ->whereNotIn('id_satker', [888881, 888882, 'admin', 999999, 'Pengawasan', 'Panev']) // dikecualikan
+                ->whereNotIn('id_satker', [888881, 888882, 'admin', 999999, 'Pengawasan', 'Panev', 'menpanrb']) // dikecualikan
+                ->where('id_satker', 'not like', 'was%')
                 ->orderBy('id_kejati', 'asc')
                 ->get();
         } else {
             // Ambil data satkernama dan id_satker sesuai id_kejati
             $data = DB::table('sinori_login')
                 ->where('id_kejati', $id->id_kejati)
+                ->where('id_satker', 'not like', 'was%') // dikecualikan
                 // ->orderBy('id_satker', 'asc')
                 ->get();
         }
@@ -125,14 +127,74 @@ class SakipwilController extends Controller
             return $renaksiList[$id] ?? null;
         });
 
-        $lkjipList = DB::table('sinori_sakip_lakip')
+        $pklist = DB::table('pk')
             ->whereIn('id_satker', $data->pluck('id_satker'))
             ->where('id_periode', $tahun)
             ->pluck('id_filename', 'id_satker');
 
-        $sortedLkjipList = $data->pluck('id_satker')->map(function ($id) use ($lkjipList) {
-            return $lkjipList[$id] ?? null;
+        $sortedPkList = $data->pluck('id_satker')->map(function ($id) use ($pklist) {
+            return $pklist[$id] ?? null;
         });
+
+        // Ambil LKJIP per satker + per triwulan (terakhir)
+       
+$satkerIds = $data->pluck('id_satker');
+
+// TW 1
+$lkjipTW1 = DB::table('sinori_sakip_lakip')
+    ->whereIn('id_satker', $satkerIds)
+    ->where('id_periode', $tahun)
+    ->where('id_triwulan', 'TW 1')
+    ->orderByDesc('id_perubahan') // ambil perubahan terakhir
+    ->get()
+    ->unique('id_satker') // pastikan tiap satker hanya 1 record
+    ->pluck('id_filename', 'id_satker');
+
+$sortedLkjipTW1 = $satkerIds->mapWithKeys(function($id) use ($lkjipTW1) {
+    return [$id => $lkjipTW1[$id] ?? null];
+});
+
+// TW 2
+$lkjipTW2 = DB::table('sinori_sakip_lakip')
+    ->whereIn('id_satker', $satkerIds)
+    ->where('id_periode', $tahun)
+    ->where('id_triwulan', 'TW 2')
+    ->orderByDesc('id_perubahan')
+    ->get()
+    ->unique('id_satker')
+    ->pluck('id_filename', 'id_satker');
+
+$sortedLkjipTW2 = $satkerIds->mapWithKeys(function($id) use ($lkjipTW2) {
+    return [$id => $lkjipTW2[$id] ?? null];
+});
+
+// TW 3
+$lkjipTW3 = DB::table('sinori_sakip_lakip')
+    ->whereIn('id_satker', $satkerIds)
+    ->where('id_periode', $tahun)
+    ->where('id_triwulan', 'TW 3')
+    ->orderByDesc('id_perubahan')
+    ->get()
+    ->unique('id_satker')
+    ->pluck('id_filename', 'id_satker');
+
+$sortedLkjipTW3 = $satkerIds->mapWithKeys(function($id) use ($lkjipTW3) {
+    return [$id => $lkjipTW3[$id] ?? null];
+});
+
+// TW 4
+$lkjipTW4 = DB::table('sinori_sakip_lakip')
+    ->whereIn('id_satker', $satkerIds)
+    ->where('id_periode', $tahun)
+    ->where('id_triwulan', 'TW 4')
+    ->orderByDesc('id_perubahan')
+    ->get()
+    ->unique('id_satker')
+    ->pluck('id_filename', 'id_satker');
+
+$sortedLkjipTW4 = $satkerIds->mapWithKeys(function($id) use ($lkjipTW4) {
+    return [$id => $lkjipTW4[$id] ?? null];
+});
 
         $rastaffList = DB::table('sinori_sakip_rastaff')
             ->whereIn('id_satker', $data->pluck('id_satker'))
@@ -141,6 +203,34 @@ class SakipwilController extends Controller
 
         $sortedRastaffList = $data->pluck('id_satker')->map(function ($id) use ($rastaffList) {
             return $rastaffList[$id] ?? null;
+        });
+
+        // LHE AKIP, TL LHE AKIP, Monev Renaksi
+        $lhe_akip = DB::table('lhe')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedLheList = $data->pluck('id_satker')->map(function ($id) use ($lhe_akip) {
+            return $lhe_akip[$id] ?? null;
+        });
+
+        $tl_lhe_akip = DB::table('tl_lhe_akip')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedTlLheAkipList = $data->pluck('id_satker')->map(function ($id) use ($tl_lhe_akip) {
+            return $tl_lhe_akip[$id] ?? null;
+        });
+
+        $monev_renaksi = DB::table('sinori_sakip_renaksieval')
+            ->whereIn('id_satker', $data->pluck('id_satker'))
+            ->where('id_periode', $tahun)
+            ->pluck('id_filename', 'id_satker');
+
+        $sortedMonevRenaksiList = $data->pluck('id_satker')->map(function ($id) use ($monev_renaksi) {
+            return $monev_renaksi[$id] ?? null;
         });
 
         // Mengambil id_filename berdasarkan id_satker
@@ -193,13 +283,39 @@ class SakipwilController extends Controller
             ->get()
             ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
 
-        $lkjip = DB::table('sinori_sakip_lakip')
+        $pk = DB::table('pk')
             ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
             ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
             ->where('id_periode', $tahun) // Ambil data berdasarkan periode
             ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
             ->get()
-            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
+            ->groupBy('id_satker');
+
+        // Ambil data lkjip dengan perubahan terakhir per satker + id_triwulan
+    //     $lkjip = DB::table('sinori_sakip_lakip as l')
+    //         ->join(DB::raw("
+    //     (
+    //         SELECT id_satker, id_triwulan, MAX(id_perubahan) as max_perubahan
+    //         FROM sinori_sakip_lakip
+    //         WHERE id_periode = {$tahun}
+    //         GROUP BY id_satker, id_triwulan
+    //     ) m
+    // "), function ($join) {
+    //             $join->on('l.id_satker', '=', 'm.id_satker')
+    //                 ->on('l.id_triwulan', '=', 'm.id_triwulan')
+    //                 ->on('l.id_perubahan', '=', 'm.max_perubahan');
+    //         })
+    //         ->whereIn('l.id_satker', $data->pluck('id_satker'))
+    //         ->select('l.id_satker', 'l.id_triwulan', 'l.id_perubahan', 'l.id_filename')
+    //         ->orderBy('l.id_satker')
+    //         ->orderBy('l.id_triwulan')
+    //         ->get();
+
+    //     $lkjipPerTw = [];
+    //     foreach ($lkjip as $item) {
+    //         $lkjipPerTw[$item->id_triwulan][$item->id_satker] = $item;
+    //     }
+
 
         $rastaff = DB::table('sinori_sakip_rastaff')
             ->select('id_satker', 'id_perubahan', 'id_filename', 'id_triwulan') // Pilih kolom yang dibutuhkan
@@ -209,6 +325,29 @@ class SakipwilController extends Controller
             ->get()
             ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
 
+        $lhe = DB::table('lhe')
+            ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
+            ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
+            ->where('id_periode', $tahun) // Ambil data berdasarkan periode
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
+            ->get()
+            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
+
+        $tl_lhe_akip = DB::table('tl_lhe_akip')
+            ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
+            ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
+            ->where('id_periode', $tahun) // Ambil data berdasarkan periode
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
+            ->get()
+            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
+
+        $monev_renaksi = DB::table('sinori_sakip_renaksieval')
+            ->select('id_satker', 'id_perubahan', 'id_filename') // Pilih kolom yang dibutuhkan
+            ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
+            ->where('id_periode', $tahun) // Ambil data berdasarkan periode
+            ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
+            ->get()
+            ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
 
         // Kembalikan view dengan data yang diperlukan
         return view('sakipwil', [
@@ -222,8 +361,15 @@ class SakipwilController extends Controller
             'sortedRkaklList' => $sortedRkaklList,
             'sortedDipaList' => $sortedDipaList,
             'sortedRenaksiList' => $sortedRenaksiList,
-            'sortedLkjipList' => $sortedLkjipList,
+            'sortedPkList' => $sortedPkList,
+            'sortedLkjipTW1' => $sortedLkjipTW1,
+            'sortedLkjipTW2' => $sortedLkjipTW2,
+            'sortedLkjipTW3' => $sortedLkjipTW3,
+            'sortedLkjipTW4' => $sortedLkjipTW4,
             'sortedRastaffList' => $sortedRastaffList,
+            'sortedLheList' => $sortedLheList,
+            'sortedTlLheAkipList' => $sortedTlLheAkipList,
+            'sortedMonevRenaksiList' => $sortedMonevRenaksiList,
             'renstra' => $renstra,
             'iku' => $iku,
             'renja' => $renja,
@@ -231,9 +377,23 @@ class SakipwilController extends Controller
             'bidangs' => $bidangs,
             'dipa' => $dipa,
             'rkakl' => $rkakl,
-            'lkjip' => $lkjip,
+            'pk' => $pk,
             'rastaff' => $rastaff,
-            // 'pk' => $pk,
+            'lhe' => $lhe,
+            'tl_lhe_akip' => $tl_lhe_akip,
+            'monev_renaksi' => $monev_renaksi,
         ]);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('query');
+
+        $results = \DB::table('id_satker') // sesuaikan nama tabel sumber data
+            ->where('nama_satker', 'like', "%{$query}%")
+            ->orWhere('id_satker', 'like', "%{$query}%")
+            ->get();
+
+        return response()->json($results);
     }
 }

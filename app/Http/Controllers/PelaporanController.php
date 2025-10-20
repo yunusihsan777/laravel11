@@ -75,27 +75,13 @@ class PelaporanController extends Controller
         return view('kelola.pelaporan', ['tahun' => $tahun, 'bidangs' => $bidangs, 'lkjipFiles' => $lkjipFiles,  'rapatStaffEkaFiles' => $rapatStaffEkaFiles,]);
     }
 
-    public function getIndikatorByBidang($id_bidang)
-    {
-        $indikator = Indikator::where('id_bidang', $id_bidang)
-            ->select('id', 'indikator_nama', 'sub_indikator')
-            ->get();
-
-        return response()->json($indikator);
-    }
-
-    // public function getSubIndikatorByRumpun($rumpun)
+    // public function getIndikatorByBidang($id_bidang)
     // {
-    //     $indikator = Indikator::where('id_bidang', $rumpun)->get();
+    //     $indikator = Indikator::where('id_bidang', $id_bidang)
+    //         ->select('id', 'indikator_nama', 'sub_indikator')
+    //         ->get();
 
     //     return response()->json($indikator);
-    // }
-
-    // public function getSubIndikator($rumpun) //milik pengukuran
-    // {
-    //     $indikators = Indikator::where('link', $rumpun)->get();
-
-    //     return response()->json($indikators);
     // }
 
     //Indikator untuk menu pengukuran
@@ -126,6 +112,8 @@ class PelaporanController extends Controller
                     return in_array($level, [2, 3]);
                 case 6:
                     return in_array($level, [3, 4]);
+                case 7:
+                    return in_array($level, [2, 3, 4]);
                 default:
                     return false;
             }
@@ -133,7 +121,7 @@ class PelaporanController extends Controller
 
         return response()->json($filtered);
     }
-
+//Indikator untuk menu pelaporan
     public function getSubIndikator2($rumpun, Request $request)
     {
         $id_satker = session('id_satker');
@@ -143,8 +131,7 @@ class PelaporanController extends Controller
         $bulan_akhir = $bulan_awal + 2;
         $level = session('id_sakip_level');
 
-        // dd(session('level'));
-        // $indikators = Indikator::where('link', $rumpun)->get();
+        // === Ambil indikator sesuai rumpun, tahun, dan lingkup level ===
         $indikators = Indikator::where('link', $rumpun)
             ->where(function ($query) use ($tahun) {
                 $query->where('tahun', 'LIKE', "%$tahun%");
@@ -153,155 +140,119 @@ class PelaporanController extends Controller
                 if ($level == 1) {
                     $query->whereIn('lingkup', [0, 1]);
                 } elseif ($level == 2) {
-                    $query->whereIn('lingkup', [0, 2, 5]);
+                    $query->whereIn('lingkup', [0, 2, 5, 7]);
                 } elseif ($level == 3) {
-                    $query->whereIn('lingkup', [0, 3, 5, 6]);
+                    $query->whereIn('lingkup', [0, 3, 5, 6, 7]);
                 } elseif ($level == 4) {
-                    $query->whereIn('lingkup', [0, 4, 6]);
+                    $query->whereIn('lingkup', [0, 4, 6, 7]);
                 }
             })
             ->get();
 
         $data = [];
+
         foreach ($indikators as $indikator) {
-             $persentase = 0;
-
-    // Cek apakah indikator_penghitungan hanya 1 kalimat atau lebih
-    $labels = explode(',', $indikator->indikator_penghitungan ?? '');
-    $labels = array_map('trim', $labels);
-    
-            $total_ditangani = DB::table('pengukuran')
-                ->where('id_satker', $id_satker)
-                ->where('tahun', $tahun)
-                ->where('indikator_id', $indikator->id)
-                ->whereBetween('bulan', [$bulan_awal, $bulan_akhir])
-                ->sum('ditangani');
-
-            $total_diselesaikan = DB::table('pengukuran')
-                ->where('id_satker', $id_satker)
-                ->where('tahun', $tahun)
-                ->where('indikator_id', $indikator->id)
-                ->whereBetween('bulan', [$bulan_awal, $bulan_akhir])
-                ->sum('diselesaikan');
-
-            // $persentase = $total_ditangani > 0
-            //     ? round(($total_diselesaikan / $total_ditangani) * 100, 2)
-            //     : 0;
             $persentase = 0;
+
+            // === Tentukan label penghitungan (default: Ditangani, Diselesaikan) ===
+            $labels = [];
+            if (!empty($indikator->indikator_penghitungan)) {
+                $labels = array_map('trim', explode(',', strtolower($indikator->indikator_penghitungan)));
+            }
+            if (empty($labels)) {
+                $labels = ['ditangani', 'diselesaikan'];
+            }
+
+            if (count($labels) == 1) {
+                // === MODE 1 LABEL ===
+                // Ambil capaian dari bulan terakhir id_triwulan(misalnya 3,6,9,12)
+                $lastMonth = $bulan_akhir;
+
+                $persentase = DB::table('pengukuran')
+                    ->where('id_satker', $id_satker)
+                    ->where('tahun', $tahun)
+                    ->where('indikator_id', $indikator->id)
+                    ->where('bulan', $lastMonth)
+                    ->orderBy('id', 'desc')
+                    ->value('capaian') ?? 0;
+            } elseif (count($labels) > 1) {
+                // === MODE MULTI LABEL (pembilang/penyebut dari field perhitungan) ===
+                $rows = DB::table('pengukuran')
+                    ->where('id_satker', $id_satker)
+                    ->where('tahun', $tahun)
+                    ->where('indikator_id', $indikator->id)
+                    ->whereBetween('bulan', [1, $bulan_akhir]) // kumulatif s.d akhir TW
+                    ->get(['sub_indikator', 'perhitungan']);
+
+                $persentaseSub = [];
+
+                foreach ($rows->groupBy('sub_indikator') as $subIndikator => $dataRow) {
+                    $pembilang = 0;
+                    $penyebut = 0;
+
+                    foreach ($dataRow as $row) {
+                        if (!empty($row->perhitungan) && str_contains($row->perhitungan, ';')) {
+                            [$a, $b] = explode(';', $row->perhitungan);
+
+                            // Anggap format "penyebut;pembilang"
+                            $penyebut += (float) $a;
+                            $pembilang += (float) $b;
+                        }
+                    }
+
+                    if ($penyebut > 0) {
+                        $persentaseSub[] = round(($pembilang / $penyebut) * 100, 2);
+                    }
+                }
+
+                // Ambil rata-rata semua persentase sub indikator
+                $persentase = count($persentaseSub) > 0
+                    ? round(array_sum($persentaseSub) / count($persentaseSub), 2)
+                    : 0;
+            }
+
+            // === Ambil Target PK ===
             $target_pk = DB::table('target')
                 ->where('id_satker', $id_satker)
                 ->where('tahun', $tahun)
                 ->where('indikator_id', $indikator->id)
-                ->value('target_tahun'); // Mengambil nilai dari kolom target_tahunan
+                ->value('target_tahun') ?? 0;
 
-            $target_pk = $target_pk ?? 0;
-            $persentase = $persentase ?? 0;
-            // $capaian_pk = $target_pk > 0
-            //     ? round(($persentase / $target_pk) * 100, 2)
-            //     : 0;
+            // === Hitung capaian PK ===
+            $capaian_pk = $target_pk > 0
+                ? round(($persentase / $target_pk) * 100, 2)
+                : 0;
 
-            // $faktor = Pengukuran::where('bulan', $bulan_awal)->value('faktor');
-            // $langkah = Pengukuran::where('bulan', $bulan_awal)->value('langkah_optimalisasi');
+            // === Ambil faktor & langkah (dari bulan terakhir triwulan) ===
+            $first = DB::table('pengukuran')
+                ->where('id_satker', $id_satker)
+                ->where('tahun', $tahun)
+                ->where('indikator_id', $indikator->id)
+                ->where('bulan', $bulan_akhir)
+                ->where(function ($q) {
+                    $q->whereNotNull('faktor')
+                        ->orWhereNotNull('langkah_optimalisasi');
+                })
+                ->orderBy('bulan', 'desc')
+                ->orderBy('id', 'desc')
+                ->first();
 
-            // $first = DB::table('pengukuran')
-            //     ->where('id_satker', $id_satker)
-            //     ->where('tahun', $tahun)
-            //     ->where('indikator_id', $indikator->id)
-            //     ->whereBetween('bulan', [$bulan_awal, $bulan_akhir])
-            //     ->first();
 
-
-
-            // $data[] = [
-            //     'indikator_id' => $indikator->id,
-            //     'indikator_nama' => $indikator->indikator_nama,
-            //     'ditangani' => number_format($total_ditangani, 0, ',', '.'),
-            //     'indikator_penghitungan' => $indikator->indikator_penghitungan,
-            //     'diselesaikan' => number_format($total_diselesaikan, 0, ',', '.'),
-            //     'persentase' => $persentase,
-            //     'target_pk' => $target_pk,
-            //     'capaian_pk' => $capaian_pk,
-            //     'faktor' => $first->faktor ?? '',
-            //     'langkah' => $first->langkah_optimalisasi ?? '',
-            // ];
-
-            // Cek apakah indikator_penghitungan hanya 1 kalimat atau lebih
-            $labels = explode(',', $indikator->indikator_penghitungan ?? '');
-            $labels = array_map('trim', $labels);
-
-           if (count($labels) == 1) {
-    // === MODE SATU KALIMAT ===
-    // Ambil capaian dari bulan terakhir triwulan (3,6,9,12)
-    $lastMonth = $bulan_akhir;
-
-   $persentase = DB::table('pengukuran')
-    ->where('id_satker', $id_satker)
-    ->where('tahun', $tahun)
-    ->where('indikator_id', $indikator->id)
-    ->where('bulan', $lastMonth)
-    ->orderBy('id', 'desc') // atau kolom created_at kalau ada
-    ->value('capaian') ?? 0;
-
-}
- elseif (count($labels) > 1) {
-    // === MODE MULTI KALIMAT (PEMBILANG/PENYEBUT) ===
-    $rows = DB::table('pengukuran')
-        ->where('id_satker', $id_satker)
-        ->where('tahun', $tahun)
-        ->where('indikator_id', $indikator->id)
-        ->whereBetween('bulan', [1, $bulan_akhir]) // kumulatif
-        ->pluck('perhitungan');
-
-    $pembilang = 0; // angka2
-    $penyebut = 0;  // angka1
-
-    foreach ($rows as $row) {
-        if ($row && str_contains($row, ';')) {
-            [$a, $b] = explode(';', $row); 
-            // $a = angka1 (penyebut), $b = angka2 (pembilang)
-            $penyebut += (float) $a;
-            $pembilang += (float) $b;
+            $data[] = [
+                'indikator_id' => $indikator->id,
+                'indikator_nama' => $indikator->indikator_nama,
+                'indikator_penghitungan' => $indikator->indikator_penghitungan ?: 'Ditangani, Diselesaikan',
+                'persentase' => $persentase,
+                'target_pk' => $target_pk,
+                'capaian_pk' => $capaian_pk,
+                'faktor' => $first->faktor ?? '',
+                'langkah' => $first->langkah_optimalisasi ?? '',
+            ];
         }
-    }
 
-    $persentase = $penyebut > 0
-        ? round(($pembilang / $penyebut) * 100, 2)
-        : 0;
-}
-
-
-    // === AMBIL TARGET TAHUNAN ===
-    $target_pk = DB::table('target')
-        ->where('id_satker', $id_satker)
-        ->where('tahun', $tahun)
-        ->where('indikator_id', $indikator->id)
-        ->value('target_tahun') ?? 0;
-
-    $capaian_pk = $target_pk > 0
-        ? round(($persentase / $target_pk) * 100, 2)
-        : 0;
-
-    $first = DB::table('pengukuran')
-        ->where('id_satker', $id_satker)
-        ->where('tahun', $tahun)
-        ->where('indikator_id', $indikator->id)
-        ->whereBetween('bulan', [$bulan_awal, $bulan_akhir])
-        ->first();
-
-    $data[] = [
-        'indikator_id' => $indikator->id,
-        'indikator_nama' => $indikator->indikator_nama,
-        'indikator_penghitungan' => $indikator->indikator_penghitungan,
-        'persentase' => $persentase,
-        'target_pk' => $target_pk,
-        'capaian_pk' => $capaian_pk,
-        'faktor' => $first->faktor ?? '',
-        'langkah' => $first->langkah_optimalisasi ?? '',
-    ];
-            // \Log::info('Simpan Keterangan Request:', $request->all());
-        }
         return response()->json($data);
     }
+
 
 
     public function simpanKeterangan(Request $request)
@@ -332,6 +283,7 @@ class PelaporanController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Masih terdapat data indikator di Perjanjian Kerja Perencanaan atau di Pengukuran yang belum diisi.'
+
             ], 404);
         }
     }
@@ -341,16 +293,16 @@ class PelaporanController extends Controller
         $tahun = session('tahun_terpilih');
         $request->validate([
             'lkjip_file' => 'required|mimes:pdf|max:4096', // Max 4MB
-            'triwulan' => 'required|in:TW 1,TW 2,TW 3,TW 4',
+            'id_triwulan' => 'required|in:TW 1,TW 2,TW 3,TW 4',
         ]);
 
         $idSatker = session('id_satker'); // Ambil id_satker dari session
-        $triwulan = $request->input('triwulan');
+        $id_triwulan= $request->input('id_triwulan');
 
         // Cek id_perubahan yang sudah ada
         $latestLkjip = Lkjip::where('id_satker', $idSatker)
             ->where('id_periode', $tahun)
-            ->where('triwulan', $triwulan)
+            ->where('id_triwulan', $id_triwulan)
             ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc')
             ->first();
 
@@ -359,14 +311,14 @@ class PelaporanController extends Controller
 
         // Upload file ke folder public/uploads/lkjip
         $file = $request->file('lkjip_file');
-        $fileName = 'lkjip_' . $tahun . '_' . $id_perubahan . '_' . $triwulan . '.pdf';
+        $fileName = 'lkjip_' . $tahun . '_' . $id_perubahan . '_' . $id_triwulan . '.pdf';
         $file->move(public_path('uploads/repository/' . $idSatker), $fileName);
 
         // Simpan data ke database
         Lkjip::create([
             'id_satker' => $idSatker,
             'id_periode' => $tahun,
-            'triwulan' => $triwulan,
+            'id_triwulan' => $id_triwulan,
             'id_perubahan' => $id_perubahan,
             'id_filename' => $fileName,
             'id_tglupload' => now()->format('d/m/Y h:i A'),

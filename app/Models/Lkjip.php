@@ -16,7 +16,7 @@ class Lkjip extends Model
         'id_perubahan',
         'id_filename',
         'id_tglupload',
-        'triwulan',
+        'id_triwulan',
     ];
 
     public $timestamps = false; // Nonaktifkan timestamps jika tidak menggunakan `created_at` dan `updated_at`

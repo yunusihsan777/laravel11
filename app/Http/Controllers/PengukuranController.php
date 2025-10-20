@@ -71,185 +71,147 @@ class PengukuranController extends Controller
     //         return response()->json($data);
     //     }
 
-    public function store(Request $request)
-    {
-        $subIndikatorList = $request->input('sub_indikator_list');
+  public function store(Request $request)
+{
+    $subIndikatorList = $request->input('sub_indikator_list');
 
-        if (!is_array($subIndikatorList)) {
-            return redirect()->back()->withErrors('Tidak ada data yang dikirim.');
+    if (!is_array($subIndikatorList)) {
+        return redirect()->back()->withErrors('Tidak ada data yang dikirim.');
+    }
+
+    $id_satker = session('id_satker');
+    $tahun     = session('tahun_terpilih');
+
+    $bulanMap = [
+        'JANUARI' => 1, 'FEBRUARI' => 2, 'MARET' => 3, 'APRIL' => 4,
+        'MEI' => 5, 'JUNI' => 6, 'JULI' => 7, 'AGUSTUS' => 8,
+        'SEPTEMBER' => 9, 'OKTOBER' => 10, 'NOVEMBER' => 11, 'DESEMBER' => 12,
+    ];
+
+    $triwulanMap = [
+        'TW1' => [3],
+        'TW2' => [6],
+        'TW3' => [9],
+        'TW4' => [12],
+    ];
+
+    // helper lokal untuk normalisasi angka
+    $normalizeNumber = function ($val) {
+        if ($val === null || $val === '' || $val === '-') {
+            return null;
+        }
+        // hilangkan pemisah ribuan, ubah koma jadi titik (desimal)
+        $val = str_replace('.', '', $val);
+        $val = str_replace(',', '.', $val);
+        return (float) $val;
+    };
+
+    foreach ($subIndikatorList as $subIndikator) {
+        $indikatorId = $request->input("indikator_id.$subIndikator");
+        $indikator   = Indikator::find($indikatorId);
+
+        if (!$indikator) {
+            continue; // skip kalau tidak valid
         }
 
-        $id_satker = session('id_satker');
-        $tahun = session('tahun_terpilih');
+        // === Simpan Sisa Tahun Lalu (kalau ada) ===
+        $sisaTahunLalu = $normalizeNumber($request->input("sisa_tahun_lalu.$subIndikator"));
 
-        $bulanMap = [
-            'JANUARI' => 1,
-            'FEBRUARI' => 2,
-            'MARET' => 3,
-            'APRIL' => 4,
-            'MEI' => 5,
-            'JUNI' => 6,
-            'JULI' => 7,
-            'AGUSTUS' => 8,
-            'SEPTEMBER' => 9,
-            'OKTOBER' => 10,
-            'NOVEMBER' => 11,
-            'DESEMBER' => 12,
-        ];
+        $pengukuranSisa = \App\Models\Pengukuran::firstOrNew([
+            'indikator_id'  => $indikatorId,
+            'id_satker'     => $id_satker,
+            'tahun'         => $tahun,
+            'sub_indikator' => $subIndikator,
+            'bulan'         => 1, // Januari
+        ]);
+        $pengukuranSisa->sisa_tahun_lalu = $sisaTahunLalu;
+        $pengukuranSisa->save();
 
-        $triwulanMap = [
-            'TW1' => [3],
-            'TW2' => [6],
-            'TW3' => [9],
-            'TW4' => [12],
-        ];
+        // === Proses Bulanan ===
+        $labels = [];
+        if (!empty($indikator->indikator_penghitungan)) {
+            $labels = array_map('trim', explode(',', strtolower($indikator->indikator_penghitungan)));
+        }
+        if (empty($labels)) {
+            $labels = ['ditangani', 'diselesaikan'];
+        }
 
-        foreach ($subIndikatorList as $subIndikator) {
-            $indikatorId = $request->input("indikator_id.$subIndikator");
+        foreach ($bulanMap as $bulanNama => $bulanAngka) {
+            $values = [];
 
-            // === MODE BULANAN ===
-            $ditanganiArray = $request->input("ditangani.$subIndikator", []);
-            $diselesaikanArray = $request->input("diselesaikan.$subIndikator", []);
+            foreach ($labels as $label) {
+                $val = $normalizeNumber($request->input("$label.$subIndikator.$bulanNama"));
+                $values[] = $val;
+            }
 
- // === Ambil data indikator dulu ===
-    $indikator = Indikator::find($indikatorId);
+            // gabungkan dengan ;
+            $capaian = implode(';', array_map(fn($v) => $v ?? '', $values));
 
-            // === MODE TRIWULAN === (nama label dinamis, misalnya 'jumlah' atau 'realisasi')
-            // cek semua input request apakah ada selain ditangani/diselesaikan
-            $allInputs = $request->all();
-            $customLabels = array_diff(array_keys($allInputs), [
-                "_token",
-                "sub_indikator_list",
-                "indikator_id",
-                "sisa_tahun_lalu",
-                "ditangani",
-                "diselesaikan"
+            $pengukuran = \App\Models\Pengukuran::firstOrNew([
+                'indikator_id'  => $indikatorId,
+                'id_satker'     => $id_satker,
+                'tahun'         => $tahun,
+                'sub_indikator' => $subIndikator,
+                'bulan'         => $bulanAngka,
             ]);
+            $pengukuran->perhitungan = $capaian !== '' ? $capaian : null;
 
-            // === Simpan Sisa Tahun Lalu (hanya di bulan Januari) ===
-            $sisaTahunLalu = $request->input("sisa_tahun_lalu.$subIndikator");
-            $sisaTahunLalu = $sisaTahunLalu ? str_replace('.', '', str_replace(',', '.', $sisaTahunLalu)) : null;
-
-            if (!is_null($sisaTahunLalu)) {
-                $pengukuran = \App\Models\Pengukuran::firstOrNew([
-                    'indikator_id' => $indikatorId,
-                    'id_satker' => $id_satker,
-                    'tahun' => $tahun,
-                    'sub_indikator' => $subIndikator,
-                    'bulan' => 1, // Januari
-                ]);
+            if ($bulanAngka == 1) {
                 $pengukuran->sisa_tahun_lalu = $sisaTahunLalu;
-                $pengukuran->save();
             }
+            $pengukuran->save();
+        }
 
-            // === Proses Bulanan ===
-            // Ambil label dari indikator
-            $labels = [];
-            if (!empty($indikator->indikator_penghitungan)) {
-                $labels = array_map('trim', explode(',', strtolower($indikator->indikator_penghitungan)));
-            }
-            // Default kalau kosong → ['ditangani','diselesaikan']
-            if (empty($labels)) {
-                $labels = ['ditangani', 'diselesaikan'];
-            }
+        // === Proses Triwulan ===
+        foreach ($triwulanMap as $tw => $bulanList) {
+            foreach ($labels as $label) {
+                $nilai = $normalizeNumber($request->input("$label.$subIndikator.$tw"));
 
-            foreach ($bulanMap as $bulanNama => $bulanAngka) {
-                $values = [];
-
-                // ambil nilai sesuai labels
-                foreach ($labels as $label) {
-                    $val = $request->input("$label.$subIndikator.$bulanNama", null);
-
-                    // kalau string angka ribuan → normalisasi
-                    if (!is_null($val)) {
-                        $val = str_replace('.', '', str_replace(',', '.', $val));
-                    }
-                    $values[] = $val ?? '';
-                }
-
-                // kalau semua kosong → skip
-                if (count(array_filter($values, fn($v) => $v !== '')) === 0) {
-                    continue;
-                }
-
-                // gabungkan dengan ; (misal: "32;15" atau "100" kalau 1 label)
-                $capaian = implode(';', $values);
-
-                $pengukuran = \App\Models\Pengukuran::firstOrNew([
-                    'indikator_id'  => $indikatorId,
-                    'id_satker'     => $id_satker,
-                    'tahun'         => $tahun,
-                    'sub_indikator' => $subIndikator,
-                    'bulan'         => $bulanAngka,
-                ]);
-
-                $pengukuran->perhitungan = $capaian;
-
-                // khusus januari → tambahkan sisa_tahun_lalu kalau ada
-                if ($bulanAngka == 1) {
-                    $pengukuran->sisa_tahun_lalu = $request->input("sisa_tahun_lalu.$subIndikator", null);
-                }
-
-                $pengukuran->save();
-            }
-
-            // dd($request->all());
-            // === Proses Triwulan ===
-            foreach ($customLabels as $labelKey) {
-                $capaianArray = $request->input("$labelKey.$subIndikator", []);
-                foreach ($triwulanMap as $tw => $bulanList) {
-                    $nilai = $capaianArray[$tw] ?? null;
-                    if (is_null($nilai)) continue;
-
-                    $nilai = str_replace('.', '', str_replace(',', '.', $nilai));
-
-                    foreach ($bulanList as $bulanAngka) {
-                        $pengukuran = \App\Models\Pengukuran::firstOrNew([
-                            'indikator_id' => $indikatorId,
-                            'id_satker' => $id_satker,
-                            'tahun' => $tahun,
-                            'sub_indikator' => $subIndikator,
-                            'bulan' => $bulanAngka,
-                        ]);
-                        $pengukuran->capaian = $nilai; // simpan sesuai nama kolom di DB
-                        $pengukuran->save();
-                    }
+                foreach ($bulanList as $bulanAngka) {
+                    $pengukuran = \App\Models\Pengukuran::firstOrNew([
+                        'indikator_id'  => $indikatorId,
+                        'id_satker'     => $id_satker,
+                        'tahun'         => $tahun,
+                        'sub_indikator' => $subIndikator,
+                        'bulan'         => $bulanAngka,
+                    ]);
+                    $pengukuran->capaian = $nilai; // jika $nilai null → akan overwrite ke null
+                    $pengukuran->save();
                 }
             }
         }
-        // dd($request->all());
-
-
-        return redirect()->back()->with('success', 'Data pengukuran berhasil disimpan atau diperbarui.');
     }
 
+    return redirect()->back()->with('success', 'Data pengukuran berhasil disimpan atau diperbarui.');
+}
 
-    public function updateInline(Request $request)
-    {
-        $validated = $request->validate([
-            'indikator_id' => 'required|integer',
-            'sub_indikator' => 'required|string',
-            'bulan' => 'required|integer|min:1|max:12',
-            'tipe' => 'required|in:ditangani,diselesaikan',
-            'nilai' => 'nullable|string',
-        ]);
 
-        $id_satker = session('id_satker');
-        $tahun = date('Y');
+    // public function updateInline(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'indikator_id' => 'required|integer',
+    //         'sub_indikator' => 'required|string',
+    //         'bulan' => 'required|integer|min:1|max:12',
+    //         'tipe' => 'required|in:ditangani,diselesaikan',
+    //         'nilai' => 'nullable|string',
+    //     ]);
 
-        $pengukuran = Pengukuran::firstOrNew([
-            'indikator_id' => $request->indikator_id,
-            'id_satker' => $id_satker,
-            'tahun' => $tahun,
-            'sub_indikator' => $request->sub_indikator,
-            'bulan' => $request->bulan,
-        ]);
+    //     $id_satker = session('id_satker');
+    //     $tahun = date('Y');
 
-        $pengukuran->{$request->tipe} = $request->nilai;
-        $pengukuran->save();
+    //     $pengukuran = Pengukuran::firstOrNew([
+    //         'indikator_id' => $request->indikator_id,
+    //         'id_satker' => $id_satker,
+    //         'tahun' => $tahun,
+    //         'sub_indikator' => $request->sub_indikator,
+    //         'bulan' => $request->bulan,
+    //     ]);
 
-        return response()->json(['success' => true, 'message' => 'Data berhasil disimpan']);
-    }
+    //     $pengukuran->{$request->tipe} = $request->nilai;
+    //     $pengukuran->save();
+
+    //     return response()->json(['success' => true, 'message' => 'Data berhasil disimpan']);
+    // }
 
 
     public function form($id)
@@ -259,15 +221,15 @@ class PengukuranController extends Controller
     }
 
     public function getPengukuran($indikatorId)
-{
-    $idSatker = auth()->user()->id_satker;
+    {
+        $idSatker = auth()->user()->id_satker;
 
-    $pengukuran = \App\Models\Pengukuran::where('indikator_id', $indikatorId)
-        ->where('id_satker', $idSatker)
-        ->get(['sub_indikator', 'bulan', 'perhitungan', 'sisa_tahun_lalu', 'capaian']);
+        $pengukuran = \App\Models\Pengukuran::where('indikator_id', $indikatorId)
+            ->where('id_satker', $idSatker)
+            ->get(['sub_indikator', 'bulan', 'perhitungan', 'sisa_tahun_lalu', 'capaian']);
 
-    return response()->json($pengukuran);
-}
+        return response()->json($pengukuran);
+    }
 
     public function getSubindikator($rumpun)
     {
@@ -287,7 +249,7 @@ class PengukuranController extends Controller
                     $query->whereIn('lingkup', [0, 3, 5, 6, 7]);
                 } elseif ($level == 4) {
                     $query->whereIn('lingkup', [0, 4, 6]);
-                } 
+                }
             })
             ->get();
 

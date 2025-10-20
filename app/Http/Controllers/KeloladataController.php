@@ -26,13 +26,13 @@ class KeloladataController extends Controller
         $bidangs = Bidang::orderBy('bidang_lokasi')->paginate(10);
         $bidangall = Bidang::select('id', 'bidang_nama', 'rumpun')->where('hide',0)->get();
 
-        $indikators = Indikator::with('bidangById')->orderBy('tahun', 'desc')->orderBy('link', 'asc')->paginate(10);
+        $indikators = Indikator::with('bidangById', 'saspro')->orderBy('tahun', 'desc')->orderBy('link', 'asc')->paginate(10);
         $saspros = Saspro::with('bidang')->orderBy('tahun', 'desc')->orderBy('link', 'asc')->paginate(10); // atau ->get() jika tidak pakai pagination
-     
+        $saspro1 = Saspro::with('bidang')->orderBy('tahun', 'desc')->orderBy('link', 'asc') ->get();
 
         // Kirim data ke view
         // return view('keloladata', compact('bidangs'));
-        return view('keloladata', ['tahun' => $tahun, 'bidangs' => $bidangs, 'saspros' => $saspros, 'bidangall' => $bidangall, 'indikators' => $indikators]);
+        return view('keloladata', ['tahun' => $tahun, 'bidangs' => $bidangs, 'saspros' => $saspros, 'bidangall' => $bidangall, 'indikators' => $indikators, 'saspro1' => $saspro1]);
     }
 
     // public function Indikator(Request $request)
@@ -63,6 +63,7 @@ class KeloladataController extends Controller
             'bidang' => 'required|exists:sinori_sakip_bidang,id',
             // 'link' => 'required',
             'lingkup' => 'required|numeric',
+            'id_saspro' => 'required|exists:sinori_sakip_saspro,id',
             'indikator_nama' => 'required|string|max:255',
             'indikator_pembilang' => 'required|string|max:255',
             'indikator_penyebut' => 'required|string|max:255',
@@ -77,6 +78,8 @@ class KeloladataController extends Controller
             // 'id_bidang' => $request->bidang,
             'link' => $request->bidang,
             'lingkup' => $request->lingkup,
+            'id_saspro' => $request->id_saspro,
+            'id_saspro' => $request->id_saspro,
             'indikator_nama' => $request->indikator_nama,
             'indikator_pembilang' => $request->indikator_pembilang,
             'indikator_penyebut' => $request->indikator_penyebut,
@@ -95,6 +98,7 @@ class KeloladataController extends Controller
         $indikator = Indikator::findOrFail($id);
         $indikator->link = $request->bidang;
         $indikator->lingkup = $request->lingkup;
+        $indikator->id_saspro = $request->id_saspro;
         $indikator->indikator_nama = $request->indikator_nama;
         $indikator->indikator_pembilang = $request->indikator_pembilang;
         $indikator->indikator_penyebut = $request->indikator_penyebut;
