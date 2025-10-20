@@ -5,7 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DataLke extends Model
+class lke_buktidukung extends Model
 {
     use HasFactory;
+
+    protected $table = 'lke_buktidukung';
+    
+    protected $fillable = [
+        'dokumen',
+    ];
+    
 }

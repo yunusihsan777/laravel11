@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
 Schema::create('lke_subkomponen', function (Blueprint $table) {
-    $table->id();
+    $table->char('id', 10)->primary(); // atau $table->string('id', 10);
     $table->unsignedBigInteger('id_komponen'); // FK ke lke_komponen.id
     $table->string('subkomponen', 255);
     $table->float('bobot'); // cukup integer tanpa panjang

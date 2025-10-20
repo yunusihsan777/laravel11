@@ -12,7 +12,8 @@
             request()->is('perencanaan') ||
             request()->is('pengukuran') ||
             request()->is('pelaporan') ||
-            request()->is('evaluasi');
+            request()->is('evaluasi') ||
+            request()->is('dataLke');
     @endphp
     <div id="user-info">
         <img src="{{ asset('gambar/kejaksaan.png') }}" alt="Profile Picture" class="profile-pic">
@@ -51,6 +52,18 @@
                 <i class="fas fa-clipboard-check"></i> Evaluasi
             </a>
             {{-- @endif --}}
+            {{-- @if ($levelSakip == 99) --}}
+            <a href="{{ route('dataLke') }}" class="{{ request()->is('dataLke') ? 'active' : '' }}">
+                <i class="fas fa-clipboard-check"></i> Evaluasin akip
+            </a>
+            {{-- @endif --}}{{-- @if ($levelSakip == 99) --}}
+            <a href="{{ route('kriteria.create') }}" class="{{ request()->is('kriteria.create') ? 'active' : '' }}">
+                <i class="fas fa-clipboard-check"></i> input akip
+            </a>
+            {{-- @endif --}}
+            <a href="{{ route('upload_buktidukung') }}" class="{{ request()->is('upload_buktidukung') ? 'active' : '' }}">
+                <i class="fas fa-clipboard-check"></i> input file
+            </a>
         </div>
     @endif
 

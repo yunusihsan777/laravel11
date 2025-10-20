@@ -5,21 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TargetPK extends Model
+class notulensi_pm extends Model
 {
     use HasFactory;
-
-    protected $table = 'target'; // Ganti sesuai nama tabel di database
-
+    protected $table = 'notulensi_pm';
+    
     public $timestamps = false; // kalau tabelmu tidak punya created_at & updated_at
     protected $fillable = [
-        'indikator_id',
+        'no',
         'id_satker',
-        'tahun',
-        'target_tahun',
-        'target_triwulan_1',
-        'target_triwulan_2',
-        'target_triwulan_3',
-        'target_triwulan_4',
+        'id_periode',
+        'id_perubahan',
+        'id_filename',
+        'id_tglupload'
     ];
 }
