@@ -19,6 +19,7 @@ class MonitoringController extends Controller
     }
 
         $id_satker = session('id_satker');
+        $id = DB::table('sinori_login')->where('id_satker', $id_satker)->first();
         $tahun = session('tahun_terpilih');
         $level = session('id_sakip_level');
     $search = $request->get('satker');

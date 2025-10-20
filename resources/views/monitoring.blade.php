@@ -16,23 +16,9 @@
                     </center>
                 </div>
                 <div class="card-body">
-                    @php
-                        use Illuminate\Support\Str;
-                    @endphp
-
-                    @if ($levelSakip == 99 || $levelSakip == 0 || !Str::startsWith($id_satker, 'was'))
-                        <div class="card mb-4">
-                            <div class="card-header" style="background-color: #e6bf3e;">
-                                <h5>📊 Capaian Sasaran Program - {{ $tahun }}</h5>
-                            </div>
-                            <div class="card-body" id="saspro-wrapper">
-                                <div class="text-muted">Memuat data...</div>
-                            </div>
-                        </div>
-                        <br>
-                    @endif
                     <!-- Form Pencarian -->
-                    @if ($levelSakip == 99)
+                    
+                    @if ($levelSakip == 99 || $levelSakip == 0 || !Str::startsWith($id_satker, 'was'))
                     <form method="GET" action="{{ route('monitoring') }}" class="row g-2 mb-4">
                         <div class="col-md-5">
                             <select name="satker" id="satkerInput" class="form-select">
@@ -40,7 +26,7 @@
                                 @foreach ($satkers as $satker)
                                     <option value="{{ $satker->id_satker }}"
                                         {{ $search == $satker->id_satker ? 'selected' : '' }}>
-                                        {{ $satker->id_satker }} - {{ $satker->satkernama }}
+                                        {{ $satker->satkernama }}
                                     </option>
                                 @endforeach
                             </select>
@@ -49,8 +35,6 @@
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-success w-100">Cari</button>
                         </div>
-                    </form>
-
                     </form>
 
                     @if ($selectedSatker)
@@ -64,7 +48,7 @@
                                     <div class="col-md-3">
                                         <div class="card">
                                             <div class="card-header bg-warning">
-                                                <strong>📌 Daftar Bidang</strong>
+                                                <strong>ðŸ“Œ Daftar Bidang</strong>
                                             </div>
                                             <div class="card-body">
                                                 @foreach ($bidangs as $bidang)
@@ -83,7 +67,7 @@
                                         <div class="card" id="controls-wrapper" class="mb-3" style="display:none;">
 
                                             <div class="card-header d-flex align-items-center gap-2">
-                                                <span>📋 Indikator</span>
+                                                <span>ðŸ“‹ Indikator</span>
                                                 <select id="triwulan" class="form-select w-auto">
                                                     <option value="1" selected>Triwulan 1</option>
                                                     <option value="2">Triwulan 2</option>
@@ -103,6 +87,32 @@
                         </div>
                     @endif
                     @endif
+                    <br>
+                    @php
+                        use Illuminate\Support\Str;
+                    @endphp
+
+                    @if ($levelSakip == 99 || $levelSakip == 0 || !Str::startsWith($id_satker, 'was') || !Str::startsWith($id_satker, 'Pengawasan'))
+                        <div class="card mb-4">
+                            <div class="card-header" style="background-color: #e6bf3e;">
+                                <h5>Capaian Sasaran Strategis - {{ $tahun }}</h5>
+                            </div>
+
+                            <div class="card-body" id="saspro-wrapper">
+                            <!-- Tabs Saspro -->
+                            <ul class="nav nav-tabs mb-3" id="sasproTabs" role="tablist">
+                                <!-- Tab akan dimasukkan dinamis -->
+                            </ul>
+                            
+                            <!-- Content Saspro -->
+                            <div class="tab-content" id="sasproContent">
+                                <!-- Konten tabel Saspro akan dimasukkan dinamis -->
+                            </div>
+                        </div>
+                        </div>
+                        <br>
+                    @endif
+                    
                 </div>
             </div>
         </div>
@@ -213,70 +223,188 @@
             }
         });
     </script>
-    <script>
-        $(document).ready(function() {
-            // Load data capaian saspro semua kejati
-            $.ajax({
-                url: "{{ route('capaian.saspro.all') }}", // route ke controller baru
-                method: "GET",
-                success: function(res) {
-                    if (!res || res.length === 0) {
-                        $("#saspro-wrapper").html(
-                            '<div class="alert alert-warning">Tidak ada data</div>');
-                        return;
+   <script>
+$(document).ready(function () {
+    loadSaspro();
+
+    function loadSaspro() {
+        $.ajax({
+            url: "{{ route('capaian.saspro.all') }}",
+            method: "GET",
+            dataType: "json",
+            success: function (res) {
+                if (!res || res.length === 0) {
+                    $("#sasproContent").html('<div class="alert alert-danger">Tidak ada data</div>');
+                    return;
+                }
+
+                let tabsHtml = '';
+                let contentHtml = '';
+
+                $.each(res, function (i, saspro) {
+                    let activeClass = i === 0 ? 'active' : '';
+                    let showClass = i === 0 ? 'show active' : '';
+
+                    // buat tab header
+                    tabsHtml += `
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link ${activeClass}" id="tab-${saspro.id_saspro}" data-bs-toggle="tab"
+                                data-bs-target="#content-${saspro.id_saspro}" type="button" role="tab">
+                                Sasaran Strategis ${i + 1}
+                            </button>
+                        </li>
+                    `;
+
+                    // buat tabel indikator
+                    let indikatorRows = '';
+                    $.each(saspro.indikators, function (j, ind) {
+                        function showVal(v) {
+                            return (v !== null && v !== undefined) ? v + '%' : '-';
+                        }
+
+                        indikatorRows += `
+                            <tr>
+                                <td>${j+1}</td>
+                                <td>${ind.nama}</td>
+                                <td class="text-center">${ind.target_tw1 || 0}%</td>
+                                <td class="text-center">${showVal(ind.capaian_tw1)}</td>
+                                <td class="text-center">${showVal(ind.capaian_terhadap_target_tw1)}</td>
+                                <td class="text-center">${showVal(ind.capaian_tw2)}</td>
+                                <td class="text-center">${showVal(ind.capaian_terhadap_target_tw2)}</td>
+                                <td class="text-center">${showVal(ind.capaian_tw3)}</td>
+                                <td class="text-center">${showVal(ind.capaian_terhadap_target_tw3)}</td>
+                                <td class="text-center">${showVal(ind.capaian_tw4)}</td>
+                                <td class="text-center">${showVal(ind.capaian_terhadap_target_tw4)}</td>
+
+                            </tr>
+                        `;
+                    });
+
+                    // setiap saspro punya canvas chart unik
+                    let chartId = `chart-${saspro.id_saspro}`;
+
+                    contentHtml += `
+                        <div class="tab-pane fade ${showClass}" id="content-${saspro.id_saspro}" role="tabpanel">
+                            <h4 class="mt-3"><b>${saspro.nama_saspro}</b></h4>
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-warning text-center align-middle">
+                                    <tr>
+                                        <th rowspan="2">No</th>
+                                        <th rowspan="2">Nama Indikator</th>
+                                        <th rowspan="2">Target</th>
+                                        <th colspan="2">Triwulan 1</th>
+                                        <th colspan="2">Triwulan 2</th>
+                                        <th colspan="2">Triwulan 3</th>
+                                        <th colspan="2">Triwulan 4</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Capaian</th>
+                                        <th>Capaian terhadap Target</th>
+                                        <th>Capaian</th>
+                                        <th>Capaian terhadap Target</th>
+                                        <th>Capaian</th>
+                                        <th>Capaian terhadap Target</th>
+                                        <th>Capaian</th>
+                                        <th>Capaian terhadap Target</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${indikatorRows}
+                                </tbody>
+                            </table>
+                            <canvas id="${chartId}" height="100" class="mb-4"></canvas>
+                        </div>
+                    `;
+                });
+
+                // append tab & content ke DOM
+                $("#sasproTabs").html(tabsHtml);
+                $("#sasproContent").html(contentHtml);
+            function chunkArray(arr, size) {
+                const result = [];
+                for (let i = 0; i < arr.length; i += size) {
+                    result.push(arr.slice(i, i + size));
+                }
+                return result;
+            }
+                            // buat chart untuk tiap saspro
+                            res.forEach((saspro, idx) => {
+                const ctx = document.getElementById(`chart-${saspro.id_saspro}`).getContext('2d');
+                const labels = saspro.indikators.map(ind => ind.nama);
+                const tw1 = saspro.indikators.map(ind => ind.capaian_tw1 ?? 0);
+                const tw2 = saspro.indikators.map(ind => ind.capaian_tw2 ?? 0);
+                const tw3 = saspro.indikators.map(ind => ind.capaian_tw3 ?? 0);
+                const tw4 = saspro.indikators.map(ind => ind.capaian_tw4 ?? 0);
+            
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            { label: 'TW1', data: tw1, backgroundColor: 'rgba(54, 162, 235, 0.6)' },
+                            { label: 'TW2', data: tw2, backgroundColor: 'rgba(255, 206, 86, 0.6)' },
+                            { label: 'TW3', data: tw3, backgroundColor: 'rgba(75, 192, 192, 0.6)' },
+                            { label: 'TW4', data: tw4, backgroundColor: 'rgba(255, 99, 132, 0.6)' },
+                        ]
+                    },
+                    options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: true, text: `Capaian ${saspro.nama_saspro}`,  font: { size: 20, weight: 'bold' } }
+                },
+                scales: {
+                    y: { beginAtZero: false, min: 0, max: 100 },
+                    x: {
+                        ticks: {
+                callback: function(value, index, ticks) {
+                    let label = this.getLabelForValue(index);
+                    
+                    // pisahkan label jadi kata-kata
+                    let words = label.split(' '); 
+                    let lines = [];
+                    let line = '';
+            
+                    words.forEach((word) => {
+                        if ((line + ' ' + word).trim().split(' ').length <= Math.ceil(words.length / 4)) {
+                            line = (line + ' ' + word).trim();
+                        } else {
+                            lines.push(line);
+                            line = word;
+                        }
+                    });
+            
+                    if(line) lines.push(line);
+            
+                    return lines;
+                },
+                font: { size: 14 }
+            }
+            
                     }
+                }
+            }
 
-                    let html = `
-                <table class="table table-bordered table-striped">
-                    <thead class="table-warning">
-                        <tr>
-                            <th>ID Saspro</th>
-                            <th>Nama Sasaran Program</th>
-                            <th>Persentase</th>
-                            <th>Target</th>
-                            <th>Capaian</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
+    });
+});
 
-                   $.each(res, function(i, saspro) {
-    html += `
-        <tr class="table-warning">
-            <td>${saspro.id_saspro}</td>
-            <td>${saspro.nama_saspro}</td>
-            <td>${saspro.rata_persentase}%</td>
-            <td>${saspro.target}%</td>
-            <td>${saspro.capaian}%</td>
-        </tr>
-    `;
-
-    // tampilkan indikator di bawahnya
-    if (saspro.indikators && saspro.indikators.length > 0) {
-        $.each(saspro.indikators, function(j, ind) {
-            html += `
-                <tr class="table-light">
-                    <td></td>
-                    <td style="padding-left: 30px;">${ind.nama}</td>
-                    <td>${ind.persentase}%</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-            `;
+            },
+            error: function (xhr) {
+                let msg = (xhr.responseJSON && xhr.responseJSON.error)
+                    ? xhr.responseJSON.error
+                    : xhr.statusText;
+                $("#sasproContent").html('<div class="alert alert-danger">Terjadi kesalahan: ' + msg + '</div>');
+                console.error(xhr.responseText);
+            }
         });
     }
 });
-
-
-                    html += "</tbody></table>";
-                    $("#saspro-wrapper").html(html);
-                },
-                error: function(xhr) {
-                    $("#saspro-wrapper").html(
-                        '<div class="alert alert-danger">Terjadi kesalahan mengambil data</div>');
-                    console.error(xhr.responseText);
-                }
-            });
-        });
-    </script>
+</script>
+<style>
+/* wrap label sumbu X Chart.js */
+.chartjs-label-wrap {
+    white-space: normal !important;
+    font-size: 14px;
+}
+</style>
 @endpush
