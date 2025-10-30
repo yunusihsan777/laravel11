@@ -321,6 +321,7 @@ $sortedLkjipTW4 = $satkerIds->mapWithKeys(function($id) use ($lkjipTW4) {
             ->select('id_satker', 'id_perubahan', 'id_filename', 'id_triwulan') // Pilih kolom yang dibutuhkan
             ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
             ->where('id_periode', $tahun) // Ambil data berdasarkan periode
+            ->orderBy(DB::raw('CAST(REPLACE(id_triwulan, "TW ", "") AS UNSIGNED)'), 'desc')
             ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
             ->get()
             ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
@@ -346,6 +347,7 @@ $sortedLkjipTW4 = $satkerIds->mapWithKeys(function($id) use ($lkjipTW4) {
             ->whereIn('id_satker', $data->pluck('id_satker')) // Ambil berdasarkan id_satker dari data sebelumnya
             ->where('id_periode', $tahun) // Ambil data berdasarkan periode
             ->orderBy(DB::raw('CAST(id_perubahan AS UNSIGNED)'), 'desc') // Urutkan berdasarkan id_perubahan secara menurun
+            ->orderBy(DB::raw('CAST(REPLACE(id_triwulan, "TW ", "") AS UNSIGNED)'), 'desc')
             ->get()
             ->groupBy('id_satker'); // Kelompokkan berdasarkan id_satker
 
