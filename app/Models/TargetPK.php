@@ -21,5 +21,6 @@ class TargetPK extends Model
         'target_triwulan_2',
         'target_triwulan_3',
         'target_triwulan_4',
+        'khusus',
     ];
 }

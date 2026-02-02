@@ -29,7 +29,7 @@ class PerencanaanController extends Controller
         $satkernama = session('satkernama');
         // Ambil tahun yang dipilih dari session
         $tahun = session('tahun_terpilih');
-
+        $khusus = session('tw4_khusus', false) ? 1 : 0;
         // Ambil nilai id_satker dari session
         $id_satker = session('id_satker');
         if ($tahun == "2024") {
@@ -44,7 +44,7 @@ class PerencanaanController extends Controller
         $rkakl = Rkakl::getData($id_satker, $tahun);
         $dipa = Dipa::getData($id_satker, $tahun);
         $renaksi = Renaksi::getData($id_satker, $tahun);
-        $indikator = SinoriSakipIndikator::getData();
+        // $indikator = SinoriSakipIndikator::getData();
         $bidang = Bidang::where('id', $level)->where('bidang_nama', 'LIKE', '%' . $satkernama . '%')->get();
         // dd($bidang);
         // Panggil method untuk mendapatkan data target indikator 
@@ -55,6 +55,7 @@ class PerencanaanController extends Controller
         // Ambil data target berdasarkan indikator_id, id_satker, dan tahun
         $target = TargetPK::where('id_satker', $id_satker)
             ->where('tahun', $tahun)
+            ->where('khusus', $khusus)
             ->get()
             ->keyBy('indikator_id'); // Agar mudah diakses di Blade
         // dd($bidang);
@@ -69,7 +70,7 @@ class PerencanaanController extends Controller
 
         // dd ($indikator_pidum);
         // Kembalikan view beserta data yang telah difilter
-        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'indikator' => $indikator, 'target' => $target, 'bidang' => $bidang, 'pk' => $pk]);
+        return view('kelola.perencanaan', ['renstra' => $renstra, 'iku' => $iku, 'renja' => $renja, 'tahun' => $tahun, 'rkakl' => $rkakl, 'dipa' => $dipa, 'renaksi' => $renaksi, 'target' => $target, 'bidang' => $bidang, 'pk' => $pk]);
     }
 
     // Fungsi untuk menangani upload file Renstra
@@ -318,54 +319,101 @@ class PerencanaanController extends Controller
     }
 
     public function storetarget(Request $request)
-    {
-        $request->validate([
-            'indikator_id' => 'required|exists:sinori_sakip_indikator,id',
-            'target_tahun' => 'required|numeric',
-            'target_triwulan_1' => 'numeric',
-            'target_triwulan_2' => 'numeric',
-            'target_triwulan_3' => 'numeric',
-            'target_triwulan_4' => 'numeric',
-        ]);
+{
+    $request->validate([
+        'indikator_id' => 'required|array',
+        'indikator_id.*' => 'exists:sinori_sakip_indikator,id',
+        'target_tahun' => 'required|array',
+        'target_tahun.*' => 'nullable|numeric',
+    ]);
 
-        // Ambil session id_satker dan tahun
-        $id_satker = session('id_satker');
-        $tahun = session('tahun_terpilih');
-        // Cek apakah data sudah ada
-        $existingTarget = TargetPK::where('indikator_id', $request->indikator_id)
+    $id_satker = session('id_satker');
+    $tahun = session('tahun_terpilih');
+    $khusus = session('tw4_khusus');
+
+
+    foreach ($request->indikator_id as $indikator_id) {
+
+        $existingTarget = TargetPK::where('indikator_id', $indikator_id)
             ->where('id_satker', $id_satker)
             ->where('tahun', $tahun)
+            ->where('khusus', $khusus)
             ->first();
 
         if ($existingTarget) {
-            // Jika sudah ada, update data
             $existingTarget->update([
-                'target_tahun' => $request->target_tahun,
-                'target_triwulan_1' => $request->target_triwulan_1,
-                'target_triwulan_2' => $request->target_triwulan_2,
-                'target_triwulan_3' => $request->target_triwulan_3,
-                'target_triwulan_4' => $request->target_triwulan_4,
+                'target_tahun' => $request->target_tahun[$indikator_id] ?? null,
+                'khusus' => $khusus,
             ]);
-
-            // return redirect()->back()->with('success', 'Target berhasil diperbarui!');
-            return redirect()->route('perencanaan')->with('success-pk', 'Target berhasil diperbarui!')->with('active_tab', 'perjanjian-kinerja');
+        } else {
+            TargetPK::create([
+                'indikator_id' => $indikator_id,
+                'id_satker' => $id_satker,
+                'tahun' => $tahun,
+                'khusus' => $khusus,
+                'target_tahun' => $request->target_tahun[$indikator_id] ?? null,
+            ]);
         }
-
-        // Jika belum ada, buat data baru
-        TargetPK::create([
-            'indikator_id' => $request->indikator_id,
-            'id_satker' => $id_satker,
-            'tahun' => $tahun,
-            'target_tahun' => $request->target_tahun,
-            'target_triwulan_1' => $request->target_triwulan_1,
-            'target_triwulan_2' => $request->target_triwulan_2,
-            'target_triwulan_3' => $request->target_triwulan_3,
-            'target_triwulan_4' => $request->target_triwulan_4,
-        ]);
-
-        // return redirect()->back()->with('success', 'Target berhasil disimpan!');
-        return redirect()->route('perencanaan')->with('success-pk', 'Target berhasil disimpan!')->with('active_tab', 'perjanjian-kinerja');
     }
+
+    return redirect()
+        ->route('perencanaan')
+        ->with('success-pk', 'Target berhasil disimpan!')
+        ->with('active_tab', 'perjanjian-kinerja');
+}
+
+
+    // public function storetarget(Request $request)
+    // {
+    //     $request->validate([
+    //         'indikator_id' => 'required|exists:sinori_sakip_indikator,id',
+    //         'target_tahun' => 'required|numeric',
+    //         // 'target_triwulan_1' => 'numeric',
+    //         // 'target_triwulan_2' => 'numeric',
+    //         // 'target_triwulan_3' => 'numeric',
+    //         // 'target_triwulan_4' => 'numeric',
+    //     ]);
+
+    //     // Ambil session id_satker dan tahun
+    //     $id_satker = session('id_satker');
+    //     $tahun = session('tahun_terpilih');
+    //     $khusus = session('tw4_khusus');
+    //     // Cek apakah data sudah ada
+    //     $existingTarget = TargetPK::where('indikator_id', $request->indikator_id)
+    //         ->where('id_satker', $id_satker)
+    //         ->where('tahun', $tahun)
+    //         ->where('khusus', $khusus)
+    //         ->first();
+
+    //     if ($existingTarget) {
+    //         // Jika sudah ada, update data
+    //         $existingTarget->update([
+    //             'target_tahun' => $request->target_tahun,
+    //             // 'target_triwulan_1' => $request->target_triwulan_1,
+    //             // 'target_triwulan_2' => $request->target_triwulan_2,
+    //             // 'target_triwulan_3' => $request->target_triwulan_3,
+    //             // 'target_triwulan_4' => $request->target_triwulan_4,
+    //         ]);
+
+    //         // return redirect()->back()->with('success', 'Target berhasil diperbarui!');
+    //         return redirect()->route('perencanaan')->with('success-pk', 'Target berhasil diperbarui!')->with('active_tab', 'perjanjian-kinerja');
+    //     }
+
+    //     // Jika belum ada, buat data baru
+    //     TargetPK::create([
+    //         'indikator_id' => $request->indikator_id,
+    //         'id_satker' => $id_satker,
+    //         'tahun' => $tahun,
+    //         'khusus' => $khusus,
+    //         'target_tahun' => $request->target_tahun,
+    //         // 'target_triwulan_1' => $request->target_triwulan_1,
+    //         // 'target_triwulan_2' => $request->target_triwulan_2,
+    //         // 'target_triwulan_3' => $request->target_triwulan_3,
+    //         // 'target_triwulan_4' => $request->target_triwulan_4,
+    //     ]);
+    //     // return redirect()->back()->with('success', 'Target berhasil disimpan!');
+    //     return redirect()->route('perencanaan')->with('success-pk', 'Target berhasil disimpan!')->with('active_tab', 'perjanjian-kinerja');
+    // }
 
     // Fungsi untuk menangani upload file PK
     public function uploadPK(Request $request)

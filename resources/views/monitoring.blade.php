@@ -17,102 +17,106 @@
                 </div>
                 <div class="card-body">
                     <!-- Form Pencarian -->
-                    
+
                     @if ($levelSakip == 99 || $levelSakip == 0 || !Str::startsWith($id_satker, 'was'))
-                    <form method="GET" action="{{ route('monitoring') }}" class="row g-2 mb-4">
-                        <div class="col-md-5">
-                            <select name="satker" id="satkerInput" class="form-select">
-                                <option value="">-- Pilih Satker --</option>
-                                @foreach ($satkers as $satker)
-                                    <option value="{{ $satker->id_satker }}"
-                                        {{ $search == $satker->id_satker ? 'selected' : '' }}>
-                                        {{ $satker->satkernama }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-success w-100">Cari</button>
-                        </div>
-                    </form>
-
-                    @if ($selectedSatker)
-                        <div class="card mt-4">
-                            <div class="card-header" style="background-color: #e6bf3e;">
-                                <h5>Capaian Kinerja - {{ $selectedSatker->satkernama }}</h5>
+                        <form id="formCari" class="row g-2 mb-4">
+                            <div class="col-md-5">
+                                <select name="satker" id="satkerInput" class="form-select">
+                                    <option value="">-- Pilih Satker --</option>
+                                    @foreach ($satkers as $satker)
+                                        <option value="{{ $satker->id_satker }}"
+                                            {{ $search == $satker->id_satker ? 'selected' : '' }}>
+                                            {{ $satker->satkernama }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <!-- Sidebar Bidang -->
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <div class="card-header bg-warning">
-                                                <strong>ðŸ“Œ Daftar Bidang</strong>
-                                            </div>
-                                            <div class="card-body">
-                                                @foreach ($bidangs as $bidang)
-                                                    <button
-                                                        class="btn btn-outline-success text-black w-100 mb-2 bidang-item"
-                                                        data-rumpun="{{ $bidang->rumpun }}">
-                                                        {{ $bidang->bidang_nama }}
-                                                    </button>
-                                                @endforeach
+
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-success w-100">Cari</button>
+                            </div>
+                        </form>
+
+                        @if ($selectedSatker)
+                            <div class="card mt-4">
+                                <div class="card-header" style="background-color: #e6bf3e;">
+                                    <h5>Capaian Kinerja - {{ $selectedSatker->satkernama }}</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <!-- Sidebar Bidang -->
+                                        <div class="col-md-3">
+                                            <div class="card">
+                                                <div class="card-header bg-warning">
+                                                    <strong>Daftar Bidang</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                    @foreach ($bidangs as $bidang)
+                                                        <button
+                                                            class="btn btn-outline-success text-black w-100 mb-2 bidang-item"
+                                                            data-rumpun="{{ $bidang->rumpun }}">
+                                                            {{ $bidang->bidang_nama }}
+                                                        </button>
+                                                    @endforeach
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Konten Indikator -->
-                                    <div class="col-md-9">
-                                        <div class="card" id="controls-wrapper" class="mb-3" style="display:none;">
+                                        <!-- Konten Indikator -->
+                                        <div class="col-md-9">
+                                            <div class="card" id="controls-wrapper" class="mb-3" style="display:none;">
 
-                                            <div class="card-header d-flex align-items-center gap-2">
-                                                <span>ðŸ“‹ Indikator</span>
-                                                <select id="triwulan" class="form-select w-auto">
-                                                    <option value="1" selected>Triwulan 1</option>
-                                                    <option value="2">Triwulan 2</option>
-                                                    <option value="3">Triwulan 3</option>
-                                                    <option value="4">Triwulan 4</option>
-                                                </select>
-                                                <button id="reloadBtn" class="btn btn-success">Pilih</button>
-                                            </div>
+                                                <div class="card-header d-flex align-items-center gap-2">
+                                                    <span>Indikator</span>
+                                                    <select id="triwulan" class="form-select w-auto">
+                                                        <option value="1" selected>Triwulan 1</option>
+                                                        <option value="2">Triwulan 2</option>
+                                                        <option value="3">Triwulan 3</option>
+                                                        <option value="4">Triwulan 4</option>
+                                                    </select>
+                                                    <button id="reloadBtn" class="btn btn-success">Pilih</button>
+                                                </div>
 
-                                            <div class="card-body" id="subindikator-wrapper">
-                                                <div class="alert alert-info">Pilih Bidang Terlebih dahulu</div>
+                                                <div class="card-body" id="subindikator-wrapper">
+                                                    <div class="alert alert-info">Pilih Bidang Terlebih dahulu</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endif
+                        @endif
                     @endif
                     <br>
                     @php
                         use Illuminate\Support\Str;
                     @endphp
 
-                    @if ($levelSakip == 99 || $levelSakip == 0 || !Str::startsWith($id_satker, 'was') || !Str::startsWith($id_satker, 'Pengawasan'))
+                    @if (
+                        $levelSakip == 99 ||
+                            $levelSakip == 0 ||
+                            !Str::startsWith($id_satker, 'was') ||
+                            !Str::startsWith($id_satker, 'Pengawasan'))
                         <div class="card mb-4">
                             <div class="card-header" style="background-color: #e6bf3e;">
                                 <h5>Capaian Sasaran Strategis - {{ $tahun }}</h5>
                             </div>
 
                             <div class="card-body" id="saspro-wrapper">
-                            <!-- Tabs Saspro -->
-                            <ul class="nav nav-tabs mb-3" id="sasproTabs" role="tablist">
-                                <!-- Tab akan dimasukkan dinamis -->
-                            </ul>
-                            
-                            <!-- Content Saspro -->
-                            <div class="tab-content" id="sasproContent">
-                                <!-- Konten tabel Saspro akan dimasukkan dinamis -->
+                                <!-- Tabs Saspro -->
+                                <ul class="nav nav-tabs mb-3" id="sasproTabs" role="tablist">
+                                    <!-- Tab akan dimasukkan dinamis -->
+                                </ul>
+
+                                <!-- Content Saspro -->
+                                <div class="tab-content" id="sasproContent">
+                                    <!-- Konten tabel Saspro akan dimasukkan dinamis -->
+                                </div>
                             </div>
-                        </div>
                         </div>
                         <br>
                     @endif
-                    
+
                 </div>
             </div>
         </div>
@@ -204,8 +208,9 @@
                             <td>${row.persentase}%</td>
                             <td>${row.target_pk}%</td>
                             <td>${row.capaian_pk}%</td>
-                            <td>${row.faktor ?? '-'}</td>
-                            <td>${row.langkah ?? '-'}</td>
+                            <td style="white-space: pre-line;">${row.faktor ?? '-'}</td>
+<td style="white-space: pre-line;">${row.langkah ?? '-'}</td>
+
                         </tr>
                     `;
                         });
@@ -223,30 +228,39 @@
             }
         });
     </script>
-   <script>
-$(document).ready(function () {
-    loadSaspro();
+    <script>
+        const idSatker = "{{ $search ?? ($id_satker ?? '') }}";
+        const idKejati = "{{ $id_kejati ?? '' }}";
+        const tahun = "{{ $tahun ?? session('tahun_terpilih') }}";
+        const level = "{{ $levelSakip ?? session('id_sakip_level') }}";
+        $(document).ready(function() {
+            loadSaspro(idSatker, idKejati, tahun, level);
 
-    function loadSaspro() {
-        $.ajax({
-            url: "{{ route('capaian.saspro.all') }}",
-            method: "GET",
-            dataType: "json",
-            success: function (res) {
-                if (!res || res.length === 0) {
-                    $("#sasproContent").html('<div class="alert alert-danger">Tidak ada data</div>');
-                    return;
-                }
+            function loadSaspro(idSatker, idKejati, tahun, level) {
+                $.ajax({
+                    url: `/capaian/saspro/all/${idSatker}/${idKejati}/${tahun}/${level}`,
+                    method: "GET",
+                    dataType: "json",
+                    success: function(res) {
+                        if (!res || res.length === 0) {
+                            $("#sasproContent").html(
+                                '<div class="alert alert-danger">Tidak ada data</div>');
+                            return;
+                        }
 
-                let tabsHtml = '';
-                let contentHtml = '';
+                        let tabsHtml = '';
+                        let contentHtml = '';
 
-                $.each(res, function (i, saspro) {
-                    let activeClass = i === 0 ? 'active' : '';
-                    let showClass = i === 0 ? 'show active' : '';
+                        $.each(res, function(i, saspro) {
+                            if (!saspro.indikators || saspro.indikators.length === 0) {
+                                // skip saspro yang tidak punya indikator
+                                return;
+                            }
+                            let activeClass = i === 0 ? 'active' : '';
+                            let showClass = i === 0 ? 'show active' : '';
 
-                    // buat tab header
-                    tabsHtml += `
+                            // buat tab header
+                            tabsHtml += `
                         <li class="nav-item" role="presentation">
                             <button class="nav-link ${activeClass}" id="tab-${saspro.id_saspro}" data-bs-toggle="tab"
                                 data-bs-target="#content-${saspro.id_saspro}" type="button" role="tab">
@@ -255,14 +269,15 @@ $(document).ready(function () {
                         </li>
                     `;
 
-                    // buat tabel indikator
-                    let indikatorRows = '';
-                    $.each(saspro.indikators, function (j, ind) {
-                        function showVal(v) {
-                            return (v !== null && v !== undefined) ? v + '%' : '-';
-                        }
+                            // buat tabel indikator
+                            let indikatorRows = '';
+                            $.each(saspro.indikators, function(j, ind) {
+                                function showVal(v) {
+                                    return (v !== null && v !== undefined) ? v + '%' :
+                                        '-';
+                                }
 
-                        indikatorRows += `
+                                indikatorRows += `
                             <tr>
                                 <td>${j+1}</td>
                                 <td>${ind.nama}</td>
@@ -278,12 +293,12 @@ $(document).ready(function () {
 
                             </tr>
                         `;
-                    });
+                            });
 
-                    // setiap saspro punya canvas chart unik
-                    let chartId = `chart-${saspro.id_saspro}`;
+                            // setiap saspro punya canvas chart unik
+                            let chartId = `chart-${saspro.id_saspro}`;
 
-                    contentHtml += `
+                            contentHtml += `
                         <div class="tab-pane fade ${showClass}" id="content-${saspro.id_saspro}" role="tabpanel">
                             <h4 class="mt-3"><b>${saspro.nama_saspro}</b></h4>
                             <table class="table table-bordered table-striped">
@@ -315,96 +330,128 @@ $(document).ready(function () {
                             <canvas id="${chartId}" height="100" class="mb-4"></canvas>
                         </div>
                     `;
-                });
+                        });
 
-                // append tab & content ke DOM
-                $("#sasproTabs").html(tabsHtml);
-                $("#sasproContent").html(contentHtml);
-            function chunkArray(arr, size) {
-                const result = [];
-                for (let i = 0; i < arr.length; i += size) {
-                    result.push(arr.slice(i, i + size));
-                }
-                return result;
-            }
-                            // buat chart untuk tiap saspro
-                            res.forEach((saspro, idx) => {
-                const ctx = document.getElementById(`chart-${saspro.id_saspro}`).getContext('2d');
-                const labels = saspro.indikators.map(ind => ind.nama);
-                const tw1 = saspro.indikators.map(ind => ind.capaian_tw1 ?? 0);
-                const tw2 = saspro.indikators.map(ind => ind.capaian_tw2 ?? 0);
-                const tw3 = saspro.indikators.map(ind => ind.capaian_tw3 ?? 0);
-                const tw4 = saspro.indikators.map(ind => ind.capaian_tw4 ?? 0);
-            
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            { label: 'TW1', data: tw1, backgroundColor: 'rgba(54, 162, 235, 0.6)' },
-                            { label: 'TW2', data: tw2, backgroundColor: 'rgba(255, 206, 86, 0.6)' },
-                            { label: 'TW3', data: tw3, backgroundColor: 'rgba(75, 192, 192, 0.6)' },
-                            { label: 'TW4', data: tw4, backgroundColor: 'rgba(255, 99, 132, 0.6)' },
-                        ]
-                    },
-                    options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'top' },
-                    title: { display: true, text: `Capaian ${saspro.nama_saspro}`,  font: { size: 20, weight: 'bold' } }
-                },
-                scales: {
-                    y: { beginAtZero: false, min: 0, max: 100 },
-                    x: {
-                        ticks: {
-                callback: function(value, index, ticks) {
-                    let label = this.getLabelForValue(index);
-                    
-                    // pisahkan label jadi kata-kata
-                    let words = label.split(' '); 
-                    let lines = [];
-                    let line = '';
-            
-                    words.forEach((word) => {
-                        if ((line + ' ' + word).trim().split(' ').length <= Math.ceil(words.length / 4)) {
-                            line = (line + ' ' + word).trim();
-                        } else {
-                            lines.push(line);
-                            line = word;
+                        // append tab & content ke DOM
+                        $("#sasproTabs").html(tabsHtml);
+                        $("#sasproContent").html(contentHtml);
+
+                        function chunkArray(arr, size) {
+                            const result = [];
+                            for (let i = 0; i < arr.length; i += size) {
+                                result.push(arr.slice(i, i + size));
+                            }
+                            return result;
                         }
-                    });
-            
-                    if(line) lines.push(line);
-            
-                    return lines;
-                },
-                font: { size: 14 }
-            }
-            
+                        // buat chart untuk tiap saspro
+                        res.forEach((saspro, idx) => {
+                            const ctx = document.getElementById(`chart-${saspro.id_saspro}`)
+                                .getContext('2d');
+                            const labels = saspro.indikators.map(ind => ind.nama);
+                            const chartData = saspro.indikators.map(ind => ind.capaian_pk ?? 0);
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Capaian terhadap Target (%)',
+                                        data: chartData,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    plugins: {
+                                        legend: {
+                                            position: 'top'
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: `Capaian ${saspro.nama_saspro}`,
+                                            font: {
+                                                size: 20,
+                                                weight: 'bold'
+                                            }
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: false,
+                                            min: 0,
+                                            max: 150
+                                        },
+                                        x: {
+                                            ticks: {
+                                                callback: function(value, index,
+                                                    ticks) {
+                                                    let label = this
+                                                        .getLabelForValue(index);
+
+                                                    // pisahkan label jadi kata-kata
+                                                    let words = label.split(' ');
+                                                    let lines = [];
+                                                    let line = '';
+
+                                                    words.forEach((word) => {
+                                                        if ((line + ' ' +
+                                                                word).trim()
+                                                            .split(' ')
+                                                            .length <= Math
+                                                            .ceil(words
+                                                                .length / 4)
+                                                        ) {
+                                                            line = (line +
+                                                                    ' ' +
+                                                                    word)
+                                                                .trim();
+                                                        } else {
+                                                            lines.push(
+                                                                line);
+                                                            line = word;
+                                                        }
+                                                    });
+
+                                                    if (line) lines.push(line);
+
+                                                    return lines;
+                                                },
+                                                font: {
+                                                    size: 14
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                }
+
+                            });
+                        });
+
+                    },
+                    error: function(xhr) {
+                        let msg = (xhr.responseJSON && xhr.responseJSON.error) ?
+                            xhr.responseJSON.error :
+                            xhr.statusText;
+                        $("#sasproContent").html('<div class="alert alert-danger">Terjadi kesalahan: ' +
+                            msg + '</div>');
+                        console.error(xhr.responseText);
                     }
-                }
-            }
-
-    });
-});
-
-            },
-            error: function (xhr) {
-                let msg = (xhr.responseJSON && xhr.responseJSON.error)
-                    ? xhr.responseJSON.error
-                    : xhr.statusText;
-                $("#sasproContent").html('<div class="alert alert-danger">Terjadi kesalahan: ' + msg + '</div>');
-                console.error(xhr.responseText);
+                });
             }
         });
-    }
-});
-</script>
-<style>
-/* wrap label sumbu X Chart.js */
-.chartjs-label-wrap {
-    white-space: normal !important;
-    font-size: 14px;
-}
-</style>
+        $('#formCari').on('submit', function(e) {
+            e.preventDefault();
+            const idSatker = $('#satkerInput').val();
+            if (idSatker) {
+                loadSaspro(idSatker, idKejati, tahun, level);
+            }
+        });
+    </script>
+    <style>
+        /* wrap label sumbu X Chart.js */
+        .chartjs-label-wrap {
+            white-space: normal !important;
+            font-size: 14px;
+        }
+    </style>
 @endpush

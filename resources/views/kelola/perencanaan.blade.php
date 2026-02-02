@@ -690,152 +690,146 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="card shadow-sm">
+                                <div class="card-header text-white" style="background-color: #e6bf3e;">
+                                    <h4 class="mb-0">Input Target Perjanjian Kinerja</h4>
+                                </div>
+                                <div class="card-body">
+                                    @php
+                                        $level = session('id_sakip_level');
+                                        $satkernama = session('satkernama') ?? '';
+                                        $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
 
-                            @php
-                                $level = session('id_sakip_level');
-                                $satkernama = session('satkernama') ?? '';
-                                $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
+                                        if ($level == 0) {
+                                            // Admin atau superuser: ambil semua bidang
+                                            $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
+                                                ->where('hide', 0)
+                                                ->orderBy('bidang_lokasi', 'asc')
+                                                ->orderBy('bidang_level', 'asc')
+                                                ->get();
+                                        } elseif ($level == 1) {
+                                            $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                ->where('hide', 0)
+                                                ->whereRaw("LOWER(REPLACE(bidang_nama, '_', ' ')) LIKE ?", [
+                                                    '%' . strtolower(trim($kataTerakhir)),
+                                                ])
+                                                ->whereNotNull('bidang_level')
+                                                ->orderBy('bidang_level', 'asc')
+                                                ->get();
+                                        } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
+                                            $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                ->whereNotNull('bidang_level')
+                                                ->orderBy('bidang_level', 'asc')
+                                                ->get();
 
-                                if ($level == 0) {
-                                    // Admin atau superuser: ambil semua bidang
-                                    $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
-                                        ->where('hide', 0)
-                                        ->orderBy('bidang_lokasi', 'asc')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-                                } elseif ($level == 1) {
-                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->where('hide', 0)
-                                        ->whereRaw("LOWER(REPLACE(bidang_nama, '_', ' ')) LIKE ?", [
-                                            '%' . strtolower(trim($kataTerakhir)),
-                                        ])
-                                        ->whereNotNull('bidang_level')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-                                } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
-                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->whereNotNull('bidang_level')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-
-                                    if ($bidangs->isNotEmpty() && stripos($bidangs[0]->bidang_nama, 'kepala') === 0) {
-                                        $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
-                                    }
-                                } elseif ($level > 1) {
-                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                        ->whereNotNull('bidang_level')
-                                        ->orderBy('bidang_level', 'asc')
-                                        ->get();
-                                }
-
-                                //kurang rumah sakit dan atase where $level=5
-
-                            @endphp
-
-                            @foreach ($bidangs as $index => $bidang)
-                                @php
-
-                                    $indikators = \App\Models\Indikator::where('link', $bidang->rumpun)
-                                        ->where(function ($query) use ($tahun) {
-                                            $query->where('tahun', 'LIKE', "%$tahun%"); // cocokkan sebagian tahun
-                                        })
-                                        ->where(function ($query) use ($level) {
-                                            if ($level == 1) {
-                                                $query->whereIn('lingkup', [0, 1]);
-                                            } elseif ($level == 2) {
-                                                $query->whereIn('lingkup', [0, 2, 5, 7]);
-                                            } elseif ($level == 3) {
-                                                $query->whereIn('lingkup', [0, 3, 5, 6, 7]);
-                                            } elseif ($level == 4) {
-                                                $query->whereIn('lingkup', [0, 4, 6, 7]);
+                                            if (
+                                                $bidangs->isNotEmpty() &&
+                                                stripos($bidangs[0]->bidang_nama, 'kepala') === 0
+                                            ) {
+                                                $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
                                             }
-                                        })
-                                        ->get();
-                                @endphp
+                                        } elseif ($level > 1) {
+                                            $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                ->whereNotNull('bidang_level')
+                                                ->orderBy('bidang_level', 'asc')
+                                                ->get();
+                                        }
+
+                                        //kurang rumah sakit dan atase where $level=5
+
+                                    @endphp
+
+                                    @foreach ($bidangs as $index => $bidang)
+                                        @php
+                                            $khusus = session('tw4_khusus', false) ? 1 : 0;
+                                            $indikators = \App\Models\Indikator::where('link', $bidang->rumpun)
+                                                ->where(function ($query) use ($tahun) {
+                                                    $query->where('tahun', 'LIKE', "%$tahun%"); // cocokkan sebagian tahun
+                                                })
+                                                ->where('khusus', $khusus)
+                                                ->where(function ($query) use ($level) {
+                                                    if ($level == 1) {
+                                                        $query->whereIn('lingkup', [0, 1]);
+                                                    } elseif ($level == 2) {
+                                                        $query->whereIn('lingkup', [0, 2, 5, 7]);
+                                                    } elseif ($level == 3) {
+                                                        $query->whereIn('lingkup', [0, 3, 5, 6, 7]);
+                                                    } elseif ($level == 4) {
+                                                        $query->whereIn('lingkup', [0, 4, 6, 7]);
+                                                    }
+                                                })
+                                                ->get();
+                                        @endphp
 
 
-                                @if ($tahun != 2024)
-                                    <div class="card mb-2">
-                                        <div class="card-header d-flex justify-content-between align-items-center"
-                                            style="background-color: #e6bf3e; color: white;">
-                                            {{ $bidang->bidang_nama }}
-                                            <a data-bs-toggle="collapse" href="#collapseBidang{{ $index }}"
-                                                role="button" aria-expanded="false"
-                                                aria-controls="collapseBidang{{ $index }}"
-                                                class="collapse-toggle d-flex align-items-center">
-                                                <i class="bi bi-chevron-down text-white rotate-icon"></i>
-                                            </a>
-                                        </div>
+                                        @if ($tahun != 2024)
+                                            <div class="card mb-2">
+                                                <div class="card-header d-flex justify-content-between align-items-center"
+                                                    style="background-color: #e6bf3e; color: white;">
+                                                    {{ $bidang->bidang_nama }}
+                                                    <a data-bs-toggle="collapse"
+                                                        href="#collapseBidang{{ $index }}" role="button"
+                                                        aria-expanded="false"
+                                                        aria-controls="collapseBidang{{ $index }}"
+                                                        class="collapse-toggle d-flex align-items-center">
+                                                        <i class="bi bi-chevron-down text-white rotate-icon"></i>
+                                                    </a>
+                                                </div>
 
-                                        <div class="collapse" id="collapseBidang{{ $index }}">
-                                            <div class="card-body">
-                                                @if ($indikators->isNotEmpty())
-                                                    <div class="row">
-                                                        @foreach ($indikators as $key => $indikator)
-                                                            <div class="col-md-6">
-                                                                <div class="card mb-2">
-                                                                    <div class="card-body">
-                                                                        <!-- Indikator Nama -->
-                                                                        <h5 class="text-center"
-                                                                            style="font-weight: bold; color: black;">
-                                                                            {{ $indikator->indikator_nama }}
-                                                                        </h5>
+                                                <div class="collapse" id="collapseBidang{{ $index }}">
+                                                    <div class="card-body">
+                                                        @if ($indikators->isNotEmpty())
+                                                            <div class="row">
+                                                                <form method="POST" action="{{ route('target.store') }}">
+    @csrf
 
-                                                                        <!-- Form Target -->
-                                                                        @if ($tahun != 2024)
-                                                                            <form method="POST"
-                                                                                action="{{ route('target.store') }}">
-                                                                                @csrf
-                                                                                <input type="hidden" name="indikator_id"
-                                                                                    value="{{ $indikator->id }}">
+    <div class="row">
+        @foreach ($indikators as $key => $indikator)
+            <div class="col-md-6">
+                <div class="card mb-2">
+                    <div class="card-body">
 
-                                                                                <div class="mb-2">
-                                                                                    <label class="form-label">Target
-                                                                                        Pertahun
-                                                                                        (%)
-                                                                                    </label>
-                                                                                    <input type="number"
-                                                                                        class="form-control"
-                                                                                        name="target_tahun"
-                                                                                        value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
-                                                                                </div>
-                                                                                {{-- @if ($tahun != 2025)
-                                                                        <div class="row">
-                                                                            @for ($i = 1; $i <= 4; $i++)
-                                                                                <div class="col-md-6">
-                                                                                    <label class="form-label">Triwulan
-                                                                                        {{ $i }} (%)</label>
-                                                                                    <input type="number"
-                                                                                        class="form-control"
-                                                                                        name="target_triwulan_{{ $i }}"
-                                                                                        value="{{ $target[$indikator->id]->{"target_triwulan_{$i}"} ?? '' }}">
-                                                                                </div>
-                                                                            @endfor
-                                                                        </div>
-@endif --}}
-                                                                                <br>
-                                                                                <button type="submit"
-                                                                                    class="btn btn-success w-100">Simpan</button>
-                                                                            </form>
-                                                                        @endif
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                        <h5 class="text-center fw-bold">
+                            {{ $indikator->indikator_nama }}
+                        </h5>
 
-                                                            @if (($key + 1) % 2 == 0 && !$loop->last)
-                                                    </div>
-                                                    <div class="row">
-                                                @endif
-                                @endforeach
+                        {{-- kirim banyak indikator --}}
+                        <input type="hidden" name="indikator_id[]" value="{{ $indikator->id }}">
+
+                        <div class="mb-2">
+                            <label class="form-label">Target Pertahun (%)</label>
+                            <input type="number"
+                                class="form-control"
+                                name="target_tahun[{{ $indikator->id }}]"
+                                value="{{ $target[$indikator->id]->target_tahun ?? '' }}">
                         </div>
-                    @else
-                        <p><i>Tidak ada indikator terkait</i></p>
-                        @endif
+
                     </div>
-                    @endif
                 </div>
             </div>
-            @endforeach
+
+            @if (($key + 1) % 2 == 0 && !$loop->last)
+                </div><div class="row">
+            @endif
+        @endforeach
+    </div>
+
+    {{-- 🔥 tombol simpan SEKALI --}}
+    <button type="submit" class="btn btn-success w-100 mt-3">
+        Simpan Semua Target
+    </button>
+</form>
+                                </div>
+                            @else
+                                <p><i>Tidak ada indikator terkait</i></p>
+                                @endif
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </div>
     </div>

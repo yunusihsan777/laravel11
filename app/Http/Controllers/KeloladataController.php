@@ -72,8 +72,9 @@ class KeloladataController extends Controller
             // 'indikator_penghitungan' => 'nullable|string',
             'tahun' => 'nullable|string',
             'tren' => 'nullable|string',
+            'khusus' => 'required|in:0,1',
         ]);
-
+ 
         Indikator::create([
             // 'id_bidang' => $request->bidang,
             'link' => $request->bidang,
@@ -88,6 +89,7 @@ class KeloladataController extends Controller
             'tahun' => $request->tahun,
             'indikator_penghitungan' => $request->indikator_penghitungan,
             'tren' => $request->tren,
+            'khusus' => (int) $request->khusus,
         ]);
         // dd($request->all());
         return redirect()->back()->with('success', 'Data Indikator berhasil disimpan.');
@@ -107,7 +109,7 @@ class KeloladataController extends Controller
         $indikator->tahun = $request->tahun1;
         $indikator->indikator_penghitungan = $request->indikator_penghitungan;
         $indikator->tren = $request->tren;
-
+        $indikator->khusus = (int) $request->khusus;
         $indikator->save();
 
         return redirect()->back()->with('success', 'Data Indikator berhasil diperbarui.');
@@ -218,6 +220,7 @@ class KeloladataController extends Controller
             'penjelasan_saspro' => 'required|string',
             'tahun' => 'required|string',
             'hide' => 'required|integer|in:0,1',
+            'khusus' => 'required|in:0,1',
 
         ]);
 
@@ -229,6 +232,7 @@ class KeloladataController extends Controller
             'lingkup' => '0',
             'tahun' => $request->input('tahun'),
             'hide' => $request->input('hide'),
+            'khusus' => (int) $request->khusus,
         ]);
 
         // Redirect dengan pesan sukses
@@ -244,6 +248,7 @@ class KeloladataController extends Controller
             'penjelasan_saspro' => 'required|string',
             'tahun' => 'required|string',
             'hide' => 'required|integer|in:0,1',
+            'khusus' => 'required|in:0,1',
         ]);
 
         Saspro::create([
@@ -253,6 +258,7 @@ class KeloladataController extends Controller
             'lingkup' => '0',
             'tahun' => $request->input('tahun'),
             'hide' => $request->input('hide'),
+            'khusus' => (int) $request->khusus,
         ]);
 
         return redirect()->back()->with('success', 'Data Saspro berhasil disimpan!');
@@ -267,6 +273,7 @@ class KeloladataController extends Controller
             'penjelasan_saspro' => 'required|string',
             'tahun' => 'required|string',
             'hide' => 'required|integer|in:0,1',
+            'khusus' => 'required|in:0,1',
         ]);
 
         $saspro = Saspro::findOrFail($id);
@@ -276,6 +283,7 @@ class KeloladataController extends Controller
             'saspro_penjelasan' => $request->penjelasan_saspro,
             'tahun' => $request->tahun,
             'hide' => $request->hide,
+            'khusus' => (int) $request->khusus,
         ]);
 
         return redirect()->back()->with('success', 'Data Saspro berhasil diperbarui!');

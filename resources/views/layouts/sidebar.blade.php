@@ -61,13 +61,14 @@
                 <i class="fas fa-clipboard-check"></i> input akip
             </a>
             {{-- @endif --}}
-            <a href="{{ route('upload_buktidukung') }}" class="{{ request()->is('upload_buktidukung') ? 'active' : '' }}">
+            <a href="{{ route('upload_buktidukung') }}"
+                class="{{ request()->is('upload_buktidukung') ? 'active' : '' }}">
                 <i class="fas fa-clipboard-check"></i> input file
             </a>
         </div>
     @endif
 
-    @if ($levelSakip == 99 ||  $levelSakip == 0 ||  $levelSakip == 2)
+    @if ($levelSakip == 99 || $levelSakip == 0 || $levelSakip == 2)
         <a href="{{ route('sakipwil') }}" class="{{ request()->is('sakipwil') ? 'active' : '' }}">
             <i class="fas fa-globe"></i> <span class="sidebar-text">SAKIP Wilayah</span>
         </a>
@@ -136,11 +137,22 @@
 
                             <select name="tahun" id="tahun" class="form-select w-auto"
                                 onchange="document.getElementById('tahunForm').submit();">
-                                @for ($i = 2024; $i <= date('Y') + 5; $i++)
-                                    <option value="{{ $i }}" {{ $i == $tahun ? 'selected' : '' }}>
-                                        {{ $i }}</option>
+
+                                @for ($i = 2024; $i <= date('Y'); $i++)
+                                    <option value="{{ $i }}"
+                                        {{ session('tahun_ui') == (string)$i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
+
+                                    @if ($i == 2025)
+                                        <option value="20254"
+                                            {{ session('tahun_ui') == '20254' ? 'selected' : '' }}>
+                                            2025 TW IV
+                                        </option>
+                                    @endif
                                 @endfor
                             </select>
+
                         </form>
                     </span>
                 </li>

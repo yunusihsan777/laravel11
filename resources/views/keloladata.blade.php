@@ -204,9 +204,9 @@
                                             </div> --}}
                                             <!-- Bidang -->
                                             <div class="form-group">
-                                                <label for="link">Bidang</label>
+                                                <label for="link">Lingkup</label>
                                                 <select class="form-control" id="link" name="link" required>
-                                                    <option value="">Pilih Bidang</option>
+                                                    <option value="">Pilih Lingkup</option>
                                                     @foreach ($bidangall as $bidang)
                                                         <option value="{{ $bidang->id }}"
                                                             data-rumpun="{{ $bidang->rumpun }}">
@@ -232,7 +232,7 @@
 
                                             <div class="row">
                                                 <!-- Tahun -->
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="tahun">Tahun</label>
                                                         <input type="text" class="form-control" id="tahun"
@@ -241,7 +241,7 @@
                                                 </div>
 
                                                 <!-- Hide -->
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="hide">Hide</label>
                                                         <select class="form-control" id="hide" name="hide"
@@ -251,6 +251,30 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-4">
+                                                    <!-- KHUSUS (2025 TW4) -->
+                                                    <div class="form-group">
+                                                        <label>2025 TW4:</label>
+                                                        <div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="khusus" id="khusus_0" value="0" checked>
+                                                                <label class="form-check-label" for="khusus_0">
+                                                                    Tidak
+                                                                </label>
+                                                            </div>
+
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="khusus" id="khusus_1" value="1">
+                                                                <label class="form-check-label" for="khusus_1">
+                                                                    Ya
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                             <br>
                                             <!-- Submit Button -->
@@ -275,6 +299,7 @@
                                         <th>Penjelasan Saspro</th>
                                         <th>tahun</th>
                                         <th>hide</th>
+                                        <th>TW4</th>
                                         <th style="width: 150px;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -288,7 +313,9 @@
                                             <td>{{ $saspro->saspro_nama }}</td>
                                             <td>{{ $saspro->saspro_penjelasan }}</td>
                                             <td>{{ $saspro->tahun }}</td>
-                                            <td>{{ $saspro->hide }}</td>
+                                            <td>{{ (int) $saspro->hide === 1 ? 'Ya' : 'Tidak' }}</td>
+                                            <td>{{ (int) $saspro->khusus === 1 ? 'Ya' : 'Tidak' }}</td>
+
                                             <td>
                                                 <!-- Tombol Edit -->
                                                 <button class="btn btn-warning btn-sm edit-saspro-button"
@@ -296,7 +323,8 @@
                                                     data-id="{{ $saspro->id }}" data-rumpun="{{ $saspro->link }}"
                                                     data-nama="{{ $saspro->saspro_nama }}"
                                                     data-penjelasan="{{ $saspro->saspro_penjelasan }}"
-                                                    data-tahun="{{ $saspro->tahun }}" data-hide="{{ $saspro->hide }}">
+                                                    data-tahun="{{ $saspro->tahun }}" data-hide="{{ $saspro->hide }}"
+                                                    data-khusus="{{ $saspro->khusus }}">
                                                     Edit
                                                 </button>
 
@@ -429,21 +457,50 @@
                                                     satu<br>*default jika kosong: "ditangani, diselesaikan"</p>
                                             </div>
 
-                                            <!-- Tahun -->
-                                            <div class="form-group">
-                                                <label for="tahun">Tahun</label>
-                                                <input type="text" class="form-control" id="tahun" name="tahun"
-                                                    required>
-                                            </div>
+                                            <div class="row">
+                                                <!-- Tahun -->
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="tahun">Tahun</label>
+                                                        <input type="text" class="form-control" id="tahun"
+                                                            name="tahun" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <!-- Tren -->
+                                                    <div class="form-group">
+                                                        <label for="tren">Tren</label>
+                                                        <select class="form-select" id="tren" name="tren"
+                                                            required>
+                                                            <option value="">Pilih</option>
+                                                            <option value="Naik">Naik</option>
+                                                            <option value="Turun">Turun</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <!-- KHUSUS (2025 TW4) -->
+                                                    <div class="form-group">
+                                                        <label>2025 TW4:</label>
+                                                        <div>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="khusus" id="khusus_0" value="0" checked>
+                                                                <label class="form-check-label" for="khusus_0">
+                                                                    Tidak
+                                                                </label>
+                                                            </div>
 
-                                            <!-- Tren -->
-                                            <div class="form-group">
-                                                <label for="tren">Tren</label>
-                                                <select class="form-select" id="tren" name="tren" required>
-                                                    <option value="">Pilih</option>
-                                                    <option value="Naik">Naik</option>
-                                                    <option value="Turun">Turun</option>
-                                                </select>
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="khusus" id="khusus_1" value="1">
+                                                                <label class="form-check-label" for="khusus_1">
+                                                                    Ya
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <br>
                                             <!-- Submit Button -->
@@ -472,6 +529,7 @@
                                         <th>Indikator Penghitungan</th>
                                         <th>Tahun</th>
                                         <th>Tren</th>
+                                        <th>TW4</th>
                                         <th style="width: 150px;">Aksi</th>
                                     </tr>
                                 </thead>
@@ -515,6 +573,7 @@
                                             {{-- <td>{{ $indikator->bidangById->rumpun ?? '-' }}</td> --}}
                                             <td>{{ $indikator->tahun }}</td>
                                             <td>{{ $indikator->tren }}</td>
+                                            <td>{{ (int) $indikator->khusus === 1 ? 'Ya' : 'Tidak' }}</td>
                                             <td>
                                                 <button class="btn btn-warning btn-sm edit-indikator"
                                                     data-id="{{ $indikator->id }}"
@@ -527,7 +586,8 @@
                                                     data-sub-indikator="{{ $indikator->sub_indikator }}"
                                                     data-penghitungan="{{ $indikator->indikator_penghitungan }}"
                                                     data-tahun1="{{ $indikator->tahun }}"
-                                                    data-tren="{{ $indikator->tren }}">
+                                                    data-tren="{{ $indikator->tren }}"
+                                                    data-khusus="{{ $indikator->khusus }}">
                                                     Edit
                                                 </button>
                                                 <form action="{{ route('indikator.delete', $indikator->id) }}"
@@ -637,7 +697,7 @@
 
                                 <!-- Link -->
                                 <div class="form-group">
-                                    <label for="edit_link">Link</label>
+                                    <label for="edit_link">Lingkup</label>
                                     <input type="text" class="form-control" id="edit_link" name="link" required>
                                 </div>
 
@@ -665,6 +725,31 @@
                                     <label for="edit_hide">Hide</label>
                                     <input type="text" class="form-control" id="edit_hide" name="hide" required>
                                 </div>
+                                <!-- KHUSUS / 2025 TW4 -->
+                                <div class="form-group">
+                                    <label>2025 TW4:</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="khusus"
+                                                id="edit_khusus_0" value="0"
+                                                {{ isset($indikator) && $indikator->khusus == 0 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="edit_khusus_0">
+                                                Tidak
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="khusus"
+                                                id="edit_khusus_1" value="1"
+                                                {{ isset($indikator) && $indikator->khusus == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="edit_khusus_1">
+                                                Ya
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -679,131 +764,157 @@
 
             <!-- Modal Edit Indikator -->
             <div class="modal fade" id="editIndikatorModal" tabindex="-1" aria-labelledby="editIndikatorLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editIndikatorLabel">Edit Data Indikator</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editIndikatorLabel">Edit Data Indikator</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editIndikatorForm" method="POST" action="">
+                                @csrf
+                                <input type="hidden" name="_method" value="POST">
+
+                                <!-- ID Indikator (Hidden) -->
+                                <input type="hidden" id="indikator_id" name="indikator_id">
+
+                                <!-- Bidang -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_bidang">Bidang</label>
+                                    <select class="form-control" id="edit_bidang" name="bidang" required>
+                                        <option value="">Pilih Bidang</option>
+                                        @foreach ($bidangall as $bidang)
+                                            <option value="{{ $bidang->id }}" data-rumpun="{{ $bidang->rumpun }}">
+                                                {{ $bidang->bidang_nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Lingkup -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_lingkup">Lingkup</label>
+                                    <select class="form-control" id="edit_lingkup" name="lingkup" required>
+                                        <option value="">Pilih Lingkup</option>
+                                        <option value="0">Semua Satker</option>
+                                        <option value="1">Pusat</option>
+                                        <option value="2">Kejati</option>
+                                        <option value="3">Kejari</option>
+                                        <option value="4">Cabjari</option>
+                                        <option value="5">Kejati, Kejari</option>
+                                        <option value="6">Kejari, Cabjari</option>
+                                        <option value="7">Kejati, Kejari, Cabjari</option>
+                                    </select>
+                                </div>
+
+                                <!-- Sasaran Program -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_saspro">Sasaran Program</label>
+                                    <select class="form-control" id="edit_saspro" name="id_saspro" required>
+                                        <option value="">Pilih Sasaran Program</option>
+                                        @foreach ($saspro1 as $saspro)
+                                            <option value="{{ $saspro->id }}">{{ $saspro->saspro_nama }}
+                                                ({{ $saspro->tahun }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Indikator Nama -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_indikator_nama">Indikator Nama</label>
+                                    <input type="text" class="form-control" id="edit_indikator_nama"
+                                        name="indikator_nama" required>
+                                </div>
+
+                                <!-- Indikator Pembilang -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_indikator_pembilang">Indikator Pembilang</label>
+                                    <input type="text" class="form-control" id="edit_indikator_pembilang"
+                                        name="indikator_pembilang" required>
+                                </div>
+
+                                <!-- Indikator Penyebut -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_indikator_penyebut">Indikator Penyebut</label>
+                                    <input type="text" class="form-control" id="edit_indikator_penyebut"
+                                        name="indikator_penyebut" required>
+                                </div>
+
+                                <!-- Indikator Penjelasan -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_indikator_penjelasan">Indikator Penjelasan</label>
+                                    <textarea class="form-control" id="edit_indikator_penjelasan" name="indikator_penjelasan" rows="3" required></textarea>
+                                </div>
+
+                                <!-- Sub Indikator -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_sub_indikator">Sub Indikator</label>
+                                    <input type="text" class="form-control" name="sub_indikator"
+                                        id="edit_sub_indikator">
+                                    <p class="text-danger small">Pisahkan dengan koma jika lebih dari satu</p>
+                                </div>
+
+                                <!-- Indikator Penghitungan -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_indikator_penghitungan">Indikator Penghitungan</label>
+                                    <input type="text" class="form-control" name="indikator_penghitungan"
+                                        id="edit_indikator_penghitungan">
+                                    <p class="text-danger small">Pisahkan dengan koma jika lebih dari satu (maks 1 koma)
+                                    </p>
+                                </div>
+
+                                <!-- Tahun -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_tahun1">Tahun</label>
+                                    <input type="text" class="form-control" id="edit_tahun1" name="tahun1" required>
+                                </div>
+
+                                <!-- Tren -->
+                                <div class="form-group mb-2">
+                                    <label for="edit_tren">Tren</label>
+                                    <select class="form-select" id="edit_tren" name="tren" required>
+                                        <option value="">Pilih</option>
+                                        <option value="Naik">Naik</option>
+                                        <option value="Turun">Turun</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- KHUSUS / 2025 TW4 -->
+                                <div class="form-group">
+                                    <label>2025 TW4:</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="khusus"
+                                                id="edit_khusus_0" value="0"
+                                                {{ isset($indikator) && $indikator->khusus == 0 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="edit_khusus_0">
+                                                Tidak
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="khusus"
+                                                id="edit_khusus_1" value="1"
+                                                {{ isset($indikator) && $indikator->khusus == 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="edit_khusus_1">
+                                                Ya
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Submit Button -->
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <form id="editIndikatorForm" method="POST" action="">
-                    @csrf
-                    <input type="hidden" name="_method" value="POST">
-
-                    <!-- ID Indikator (Hidden) -->
-                    <input type="hidden" id="indikator_id" name="indikator_id">
-
-                    <!-- Bidang -->
-                    <div class="form-group mb-2">
-                        <label for="edit_bidang">Bidang</label>
-                        <select class="form-control" id="edit_bidang" name="bidang" required>
-                            <option value="">Pilih Bidang</option>
-                            @foreach ($bidangall as $bidang)
-                                <option value="{{ $bidang->id }}" data-rumpun="{{ $bidang->rumpun }}">
-                                    {{ $bidang->bidang_nama }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Lingkup -->
-                    <div class="form-group mb-2">
-                        <label for="edit_lingkup">Lingkup</label>
-                        <select class="form-control" id="edit_lingkup" name="lingkup" required>
-                            <option value="">Pilih Lingkup</option>
-                            <option value="0">Semua Satker</option>
-                            <option value="1">Pusat</option>
-                            <option value="2">Kejati</option>
-                            <option value="3">Kejari</option>
-                            <option value="4">Cabjari</option>
-                            <option value="5">Kejati, Kejari</option>
-                            <option value="6">Kejari, Cabjari</option>
-                            <option value="7">Kejati, Kejari, Cabjari</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Sasaran Program -->
-                    <div class="form-group mb-2">
-                        <label for="edit_saspro">Sasaran Program</label>
-                        <select class="form-control" id="edit_saspro" name="id_saspro" required>
-                            <option value="">Pilih Sasaran Program</option>
-                            @foreach ($saspro1 as $saspro)
-                                <option value="{{ $saspro->id }}">{{ $saspro->saspro_nama }}  ({{ $saspro->tahun }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Indikator Nama -->
-                    <div class="form-group mb-2">
-                        <label for="edit_indikator_nama">Indikator Nama</label>
-                        <input type="text" class="form-control" id="edit_indikator_nama"
-                            name="indikator_nama" required>
-                    </div>
-
-                    <!-- Indikator Pembilang -->
-                    <div class="form-group mb-2">
-                        <label for="edit_indikator_pembilang">Indikator Pembilang</label>
-                        <input type="text" class="form-control" id="edit_indikator_pembilang"
-                            name="indikator_pembilang" required>
-                    </div>
-
-                    <!-- Indikator Penyebut -->
-                    <div class="form-group mb-2">
-                        <label for="edit_indikator_penyebut">Indikator Penyebut</label>
-                        <input type="text" class="form-control" id="edit_indikator_penyebut"
-                            name="indikator_penyebut" required>
-                    </div>
-
-                    <!-- Indikator Penjelasan -->
-                    <div class="form-group mb-2">
-                        <label for="edit_indikator_penjelasan">Indikator Penjelasan</label>
-                        <textarea class="form-control" id="edit_indikator_penjelasan" name="indikator_penjelasan" rows="3" required></textarea>
-                    </div>
-
-                    <!-- Sub Indikator -->
-                    <div class="form-group mb-2">
-                        <label for="edit_sub_indikator">Sub Indikator</label>
-                        <input type="text" class="form-control" name="sub_indikator"
-                            id="edit_sub_indikator">
-                        <p class="text-danger small">Pisahkan dengan koma jika lebih dari satu</p>
-                    </div>
-
-                    <!-- Indikator Penghitungan -->
-                    <div class="form-group mb-2">
-                        <label for="edit_indikator_penghitungan">Indikator Penghitungan</label>
-                        <input type="text" class="form-control" name="indikator_penghitungan"
-                            id="edit_indikator_penghitungan">
-                        <p class="text-danger small">Pisahkan dengan koma jika lebih dari satu (maks 1 koma)</p>
-                    </div>
-
-                    <!-- Tahun -->
-                    <div class="form-group mb-2">
-                        <label for="edit_tahun1">Tahun</label>
-                        <input type="text" class="form-control" id="edit_tahun1" name="tahun1" required>
-                    </div>
-
-                    <!-- Tren -->
-                    <div class="form-group mb-2">
-                        <label for="edit_tren">Tren</label>
-                        <select class="form-select" id="edit_tren" name="tren" required>
-                            <option value="">Pilih</option>
-                            <option value="Naik">Naik</option>
-                            <option value="Turun">Turun</option>
-                        </select>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Simpan Perubahan</button>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 
         </div>
@@ -838,6 +949,7 @@
             if (event.target.classList.contains('edit-saspro-button')) {
                 const button = event.target;
                 let sasproId = button.dataset.id;
+                let khusus = button.dataset.khusus; // 0 / 1
 
                 document.getElementById('edit_saspro_id').value = sasproId;
                 document.getElementById('edit_link').value = button.dataset.rumpun;
@@ -845,7 +957,15 @@
                 document.getElementById('edit_penjelasan_saspro').value = button.dataset.penjelasan;
                 document.getElementById('edit_tahun').value = button.dataset.tahun;
                 document.getElementById('edit_hide').value = button.dataset.hide;
-
+                // reset dulu
+                document.getElementById('edit_khusus_0').checked = false;
+                document.getElementById('edit_khusus_1').checked = false;
+                // Set khusus berdasarkan nilai dari data-khusus
+                if (khusus == 1) {
+                    document.getElementById('edit_khusus_1').checked = true;
+                } else {
+                    document.getElementById('edit_khusus_0').checked = true;
+                }
                 // Set action form dengan metode POST
                 document.getElementById('editSasproForm').action = `/keloladata/update/${sasproId}`;
 
@@ -944,6 +1064,7 @@
                 let indikatorPenghitungan = this.getAttribute("data-penghitungan");
                 let tahun1 = this.getAttribute("data-tahun1");
                 let tren = this.getAttribute("data-tren");
+                let khusus = button.dataset.khusus; // 0 / 1
                 console.log(tahun1);
                 // Isi form modal dengan data yang diambil dari tombol edit
                 document.getElementById("indikator_id").value = indikatorId;
@@ -959,7 +1080,15 @@
                     indikatorPenghitungan;
                 document.getElementById("edit_tahun").value = tahun1;
                 document.getElementById("edit_tren").value = tren;
-
+// reset dulu
+                document.getElementById('edit_khusus_0').checked = false;
+                document.getElementById('edit_khusus_1').checked = false;
+                // Set khusus berdasarkan nilai dari data-khusus
+                if (khusus == 1) {
+                    document.getElementById('edit_khusus_1').checked = true;
+                } else {
+                    document.getElementById('edit_khusus_0').checked = true;
+                }
                 // Set dropdown bidang dengan bidang yang sesuai
                 let bidangSelect = document.getElementById("edit_bidang");
                 bidangSelect.value = bidangId;

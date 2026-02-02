@@ -100,6 +100,8 @@
             </div>
         </div>
     </div>
+    <input type="hidden" id="tahunTerpilih" value="{{ session('tahun_terpilih') }}">
+<input type="hidden" id="tw4Khusus" value="{{ session('tw4_khusus', 0) }}">
 @endsection
 
 @push('scripts')
@@ -171,7 +173,7 @@
 
                 // Lanjutkan dengan AJAX...
             });
-
+ 
             $('.bidang-item').on('click', function() {
                 var rumpun = $(this).data('rumpun');
                 $.ajax({
@@ -206,102 +208,166 @@
                                     labelPenghitungan = labels;
                                 }
                             }
-
+ 
                             subIndikators.forEach(sub => {
-                                let table = '';
-                                let indikator_penjelasan = indikator.indikator_penjelasan || '';
-                                if (labelPenghitungan.length === 1) {
-                                    // === MODE TRIWULAN ===
-                                    let triwulanList = ['TW1', 'TW2', 'TW3',
-                                        'TW4'
-                                    ];
+    let table = '';
+    let indikator_penjelasan = indikator.indikator_penjelasan || '';
 
-                                    table = `
-            <div class="table-responsive mb-4">
-                <strong>${sub}</strong>
-                <p>${indikator_penjelasan}</p>
-                <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}" />
-                <input type="hidden" name="sub_indikator_list[]" value="${sub}" />
+    if (labelPenghitungan.length === 1) {
+        // ================= MODE TRIWULAN =================
+        let triwulanList = ['TW1', 'TW2', 'TW3', 'TW4'];
 
-                <table class="table table-bordered text-center mt-2">
-                    <thead>
-                        <tr>
-                            <th>Label</th>
-                            ${triwulanList.map(tw => `<th>${tw}</th>`).join('')}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>${labelPenghitungan[0]}</td>
-                            ${triwulanList.map(tw => `
-                                            <td>
-                                                <input type="text" style="width:120px text-align:center"
-                                                    class="form-control angka-format"
-                                                    name="${labelPenghitungan[0].toLowerCase()}[${sub}][${tw}]"
-                                                    placeholder="-">
-                                            </td>
-                                        `).join('')}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        table = `
+        <div class="table-responsive mb-4">
+            <strong>${sub}</strong>
+            <p>${indikator_penjelasan}</p>
+
+            <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}">
+            <input type="hidden" name="sub_indikator_list[]" value="${sub}">
+
+            <table class="table table-bordered text-center mt-2">
+                <thead>
+                    <tr>
+                        <th>Label</th>
+                        ${triwulanList.map(tw => `<th>${tw}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>${labelPenghitungan[0]}</td>
+                        ${triwulanList.map(tw => `
+                            <td>
+                               <input type="text"
+    class="form-control angka-format input-triwulan text-center mx-auto"
+    data-tw="${tw}"
+    name="${labelPenghitungan[0].toLowerCase()}[${sub}][${tw}]"
+    placeholder="-">
+
+                            </td>
+                        `).join('')}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         `;
-                                } else {
-                                    // === MODE BULANAN ===
-                                    let bulanList = [
-                                        'JANUARI', 'FEBRUARI', 'MARET',
-                                        'APRIL', 'MEI', 'JUNI',
-                                        'JULI', 'AGUSTUS', 'SEPTEMBER',
-                                        'OKTOBER', 'NOVEMBER', 'DESEMBER'
-                                    ];
+    } else {
+        // ================= MODE BULANAN (TIDAK DIUBAH) =================
+        let bulanList = [
+            'JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI',
+            'JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'
+        ];
 
-
-                                    let sisaTahunLaluInput = `
-            <div class="mb-2 d-flex align-items-center">
-                <label class="me-2 mb-0" style="white-space: nowrap;">Sisa tahun lalu:</label>
-                <input type="text" class="form-control angka-format mb-2"
-                    name="sisa_tahun_lalu[${sub}]" style="width:200px;" />
-            </div>
+        let sisaTahunLaluInput = `
+        <div class="mb-2 d-flex align-items-center">
+            <label class="me-2 mb-0" style="white-space: nowrap;">Sisa tahun lalu:</label>
+            <input type="text"
+               class="form-control angka-format text-center mx-auto"
+                name="sisa_tahun_lalu[${sub}]"
+                style="width:200px;">
+        </div>
         `;
 
-                                    table = `
-            <div class="table-responsive mb-4">
-                <strong>${sub}</strong>
-                <p>${indikator_penjelasan}</p>
-                <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}" />
-                <input type="hidden" name="sub_indikator_list[]" value="${sub}" />
+        table = `
+        <div class="table-responsive mb-4">
+            <strong>${sub}</strong>
+            <p>${indikator_penjelasan}</p>
 
-                ${sisaTahunLaluInput}
+            <input type="hidden" name="indikator_id[${sub}]" value="${indikator.id}">
+            <input type="hidden" name="sub_indikator_list[]" value="${sub}">
 
-                <table class="table table-bordered text-center mt-2">
-                    <thead>
+            ${sisaTahunLaluInput}
+
+            <table class="table table-bordered text-center mt-2">
+                <thead>
+                    <tr>
+                        <th>Bulan</th>
+                        ${bulanList.map(b => `<th>${b}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${labelPenghitungan.map(label => `
                         <tr>
-                            <th>Bulan</th>
-                            ${bulanList.map(bulan => `<th>${bulan}</th>`).join('')}
+                            <td>${label}</td>
+                            ${bulanList.map(b => `
+                                <td>
+                                    <input type="text"
+                                        style="width:120px"
+                                        class="form-control angka-format"
+                                        name="${label.toLowerCase()}[${sub}][${b}]">
+                                </td>
+                            `).join('')}
                         </tr>
-                    </thead>
-                    <tbody>
-                        ${labelPenghitungan.map(label => `
-                                        <tr>
-                                            <td>${label}</td>
-                                            ${bulanList.map(bulan => `
-                                    <td>
-                                        <input type="text" style="width:120px"
-                                            class="form-control angka-format"
-                                            name="${label.toLowerCase()}[${sub}][${bulan}]"
-                                            placeholder="-">
-                                    </td>
-                                `).join('')}
-                                        </tr>
-                                    `).join('')}
-                    </tbody>
-                </table>
-            </div>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
         `;
-                                }
+    }
 
-                                indikatorSection.append(table);
-                            });
+    indikatorSection.append(table);
+});
+// ================= LOGIC READONLY TRIWULAN (FINAL) =================
+function aturTriwulan() {
+    let tahun  = parseInt($('#tahunTerpilih').val());
+    let khusus = parseInt($('#tw4Khusus').val()); // 1 atau 0
+
+    $('.input-triwulan').each(function () {
+        let tw = $(this).data('tw');
+
+        // default: AKTIF
+        let readonly = false;
+
+        if (tahun === 2025) {
+            if (khusus === 1) {
+                // hanya TW4 boleh
+                readonly = (tw !== 'TW4');
+            } else {
+                // TW1–TW3 boleh
+                readonly = (tw === 'TW4');
+            }
+        }
+        // tahun 2026+ => semua aktif
+
+        $(this)
+            .prop('readonly', readonly)
+            .toggleClass('bg-light', readonly);
+    });
+}
+
+// WAJIB dipanggil setelah semua table selesai dirender
+aturTriwulan();
+
+// ================= LOGIC READONLY TRIWULAN (FINAL) =================
+function aturTriwulan() {
+    let tahun  = parseInt($('#tahunTerpilih').val());
+    let khusus = parseInt($('#tw4Khusus').val()); // 1 atau 0
+
+    $('.input-triwulan').each(function () {
+        let tw = $(this).data('tw');
+
+        // default: AKTIF
+        let readonly = false;
+
+        if (tahun === 2025) {
+            if (khusus === 1) {
+                // hanya TW4 boleh
+                readonly = (tw !== 'TW4');
+            } else {
+                // TW1–TW3 boleh
+                readonly = (tw === 'TW4');
+            }
+        }
+        // tahun 2026+ => semua aktif
+
+        $(this)
+            .prop('readonly', readonly)
+            .toggleClass('tw-readonly', readonly);
+    });
+}
+
+// WAJIB dipanggil setelah semua table selesai dirender
+aturTriwulan();
+
 
                          // Ambil data pengukuran dari DB
 $.ajax({
@@ -394,4 +460,15 @@ $.ajax({
         color: black;
         border-color: #ffc107;
     }
+    .tw-readonly {
+    background-color: #d1d5db !important; /* abu-abu gelap */
+    color: #374151;              /* teks lebih gelap */
+    border-color: #9ca3af;       /* border jelas */
+    cursor: not-allowed;
+}
+
+.tw-readonly::placeholder {
+    color: #6b7280;
+}
+
 </style>

@@ -23,6 +23,14 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
+        // SET DEFAULT TAHUN SAAT LOGIN
+        session()->forget(['tahun_terpilih', 'tahun_ui', 'tw4_khusus']);
+            session([
+                'tahun_terpilih' => date('Y'),
+                'tahun_ui' => date('Y'),
+                'tw4_khusus' => 0, // false = 0
+            ]);
+
         $email = $request->input('email');
         $password = $request->input('password');
 
@@ -55,6 +63,6 @@ class LoginController extends Controller
 
         // Redirect ke halaman login
         // return redirect('https://sicana.kejaksaan.go.id/');
-         return redirect('/');
+        return redirect('/');
     }
 }

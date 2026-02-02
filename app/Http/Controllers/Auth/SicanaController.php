@@ -25,7 +25,7 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 class SicanaController extends Controller
 {
 
-    
+
     public function receiveToken(Request $request)
     {
         $tokenString = $request->query('token');
@@ -69,7 +69,7 @@ class SicanaController extends Controller
 
             $user = User::where('id_satker', $userData['satuan_kerja'])->first();
 
-            if(!$user) {
+            if (!$user) {
                 $user = User::create([
                     'id_satker' => $userData['satuan_kerja'],
                     'satkerpass' => md5($userData['satuan_kerja']),
@@ -87,8 +87,16 @@ class SicanaController extends Controller
             $request->session()->put('satkernama', str_replace('_', ' ', $user->satkernama));
             $request->session()->put('id_sakip_level', $user->id_sakip_level);
 
-            return redirect('/dashboard');
+            // SET DEFAULT TAHUN SAAT LOGIN
+            $request->session()->forget(['tahun_terpilih', 'tahun_ui', 'tw4_khusus']);
 
+            $request->session()->put([
+                'tahun_terpilih' => date('Y'),
+                'tahun_ui'       => date('Y'),
+                'tw4_khusus'     => 0, // false
+            ]);
+            
+            return redirect('/dashboard');
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Authentication failed',
@@ -96,5 +104,4 @@ class SicanaController extends Controller
             ], 401);
         }
     }
-
 }

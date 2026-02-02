@@ -23,6 +23,7 @@ class Pelaporan extends Model
         'langkah_optimalisasi',
         'bulan',
         'sisa_tahun_lalu',
+        'khusus',
     ];
     public function indikator()
     {

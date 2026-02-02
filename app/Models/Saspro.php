@@ -19,6 +19,7 @@ class Saspro extends Model
         'tahun',
         'nilai',
         'hide',
+        'khusus',
     ];
     // Jika tidak ada timestamps
     public $timestamps = false;

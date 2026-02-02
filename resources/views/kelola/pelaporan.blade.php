@@ -146,12 +146,28 @@
                                     <div class="card" id="controls-wrapper" class="mb-3" style="display:none;">
                                         <div class="card-header d-flex align-items-center gap-2">
                                             <span>📋 Indikator</span>
-                                            <select id="triwulan" class="form-select w-auto">
-                                                <option value="1" selected>Triwulan 1</option>
-                                                <option value="2">Triwulan 2</option>
-                                                <option value="3">Triwulan 3</option>
-                                                <option value="4">Triwulan 4</option>
-                                            </select>
+                                            @php
+    $tahun   = session('tahun_terpilih');
+    $khusus  = session('tw4_khusus');
+@endphp
+
+<select id="triwulan" class="form-select w-auto">
+    @if ($tahun == 2025)
+        @if ($khusus == 1)
+            <option value="4" selected>Triwulan 4</option>
+        @else
+            <option value="1" selected>Triwulan 1</option>
+            <option value="2">Triwulan 2</option>
+            <option value="3">Triwulan 3</option>
+        @endif
+    @else
+        <option value="1" selected>Triwulan 1</option>
+        <option value="2">Triwulan 2</option>
+        <option value="3">Triwulan 3</option>
+        <option value="4">Triwulan 4</option>
+    @endif
+</select>
+
                                             <button id="reloadBtn" class="btn btn-success">Pilih</button>
                                         </div>
                                         <div class="card-body" id="subindikator-wrapper">
@@ -485,6 +501,9 @@
 
                 // Ketika klik bidang
                 $('.bidang-item').on('click', function() {
+                    // pastikan value triwulan sesuai option blade
+                $('#triwulan').trigger('change');
+
                     $(".bidang-item").removeClass("active");
                     $(this).addClass("active");
 

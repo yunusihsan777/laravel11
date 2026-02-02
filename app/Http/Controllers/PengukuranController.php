@@ -7,8 +7,8 @@ use App\Models\Indikator;
 use App\Models\Pengukuran;
 
 class PengukuranController extends Controller
-{
-    public function index(Request $request)
+{ 
+   public function index(Request $request)
     {
         $id_bidang = $request->get('id_bidang');
         $tahun = session('tahun_terpilih');
@@ -45,31 +45,6 @@ class PengukuranController extends Controller
         return view('kelola.pengukuran', compact('data', 'indikators', 'tahun'));
     }
 
-    //     public function getIndikatorNama(Request $request)
-    //     {
-    //         $bidangId = $request->input('bidang_id');
-
-    //         try {
-    //             $indikators = Indikator::where('id_bidang', $bidangId)
-    //                 ->select('id', 'indikator_nama')
-    //                 ->get();
-
-    //             return response()->json($indikators);
-    //         } catch (\Exception $e) {
-    //             \Log::error('Gagal ambil indikator: ' . $e->getMessage());
-    //             return response()->json(['error' => 'Gagal mengambil data'], 500);
-    //         }
-    //     }
-    //  public function getDataByBidangAndSubIndikator($id_bidang, $subIndikator)
-    //     {
-    //         $data = Pengukuran::whereHas('indikator', function ($query) use ($id_bidang) {
-    //             $query->where('id_bidang', $id_bidang);
-    //         })->where('sub_indikator', $subIndikator)
-    //             ->select('bulan', 'ditangani', 'diselesaikan')
-    //             ->get();
-
-    //         return response()->json($data);
-    //     }
 
   public function store(Request $request)
 {
@@ -81,6 +56,7 @@ class PengukuranController extends Controller
 
     $id_satker = session('id_satker');
     $tahun     = session('tahun_terpilih');
+    $khusus = session('tw4_khusus', false) ? 1 : 0;
 
     $bulanMap = [
         'JANUARI' => 1, 'FEBRUARI' => 2, 'MARET' => 3, 'APRIL' => 4,
@@ -123,6 +99,7 @@ class PengukuranController extends Controller
             'tahun'         => $tahun,
             'sub_indikator' => $subIndikator,
             'bulan'         => 1, // Januari
+            'khusus'        => $khusus,
         ]);
         $pengukuranSisa->sisa_tahun_lalu = $sisaTahunLalu;
         $pengukuranSisa->save();
@@ -153,6 +130,7 @@ class PengukuranController extends Controller
                 'tahun'         => $tahun,
                 'sub_indikator' => $subIndikator,
                 'bulan'         => $bulanAngka,
+                'khusus'        => $khusus,
             ]);
             $pengukuran->perhitungan = $capaian !== '' ? $capaian : null;
 
@@ -174,6 +152,7 @@ class PengukuranController extends Controller
                         'tahun'         => $tahun,
                         'sub_indikator' => $subIndikator,
                         'bulan'         => $bulanAngka,
+                        'khusus'        => $khusus,
                     ]);
                     $pengukuran->capaian = $nilai; // jika $nilai null → akan overwrite ke null
                     $pengukuran->save();
@@ -184,34 +163,6 @@ class PengukuranController extends Controller
 
     return redirect()->back()->with('success', 'Data pengukuran berhasil disimpan atau diperbarui.');
 }
-
-
-    // public function updateInline(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'indikator_id' => 'required|integer',
-    //         'sub_indikator' => 'required|string',
-    //         'bulan' => 'required|integer|min:1|max:12',
-    //         'tipe' => 'required|in:ditangani,diselesaikan',
-    //         'nilai' => 'nullable|string',
-    //     ]);
-
-    //     $id_satker = session('id_satker');
-    //     $tahun = date('Y');
-
-    //     $pengukuran = Pengukuran::firstOrNew([
-    //         'indikator_id' => $request->indikator_id,
-    //         'id_satker' => $id_satker,
-    //         'tahun' => $tahun,
-    //         'sub_indikator' => $request->sub_indikator,
-    //         'bulan' => $request->bulan,
-    //     ]);
-
-    //     $pengukuran->{$request->tipe} = $request->nilai;
-    //     $pengukuran->save();
-
-    //     return response()->json(['success' => true, 'message' => 'Data berhasil disimpan']);
-    // }
 
 
     public function form($id)
@@ -231,28 +182,30 @@ class PengukuranController extends Controller
         return response()->json($pengukuran);
     }
 
-    public function getSubindikator($rumpun)
-    {
-        $tahun = date('Y');
-        $level = session('id_sakip_level');
+//Indikator untuk menu pengukuran ada di pelaporan controller
+//    public function getSubindikator($rumpun)
+//     {
+//         $tahun = date('Y');
+//         $level = session('id_sakip_level');
 
-        $indikators = Indikator::where('link', $rumpun)
-            ->where(function ($query) use ($tahun) {
-                $query->where('tahun', 'LIKE', "%$tahun%");
-            })
-            ->where(function ($query) use ($level) {
-                if ($level == 1) {
-                    $query->whereIn('lingkup', [0, 1]);
-                } elseif ($level == 2) {
-                    $query->whereIn('lingkup', [0, 2, 5, 7]);
-                } elseif ($level == 3) {
-                    $query->whereIn('lingkup', [0, 3, 5, 6, 7]);
-                } elseif ($level == 4) {
-                    $query->whereIn('lingkup', [0, 4, 6]);
-                }
-            })
-            ->get();
+//         $indikators = Indikator::where('link', $rumpun)
+//             ->where(function ($query) use ($tahun) {
+//                 $query->where('tahun', 'LIKE', "%$tahun%");
+//             })
+//             ->where(function ($query) use ($level) {
+//                 if ($level == 1) {
+//                     $query->whereIn('lingkup', [0, 1]);
+//                 } elseif ($level == 2) {
+//                     $query->whereIn('lingkup', [0, 2, 5, 7]);
+//                 } elseif ($level == 3) {
+//                     $query->whereIn('lingkup', [0, 3, 5, 6, 7]);
+//                 } elseif ($level == 4) {
+//                     $query->whereIn('lingkup', [0, 4, 6]);
+//                 }
+//             })
+//             ->get();
 
-        return response()->json($indikators);
-    }
+//         return response()->json($indikators);
+//     }
+
 }

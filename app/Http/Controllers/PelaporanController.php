@@ -22,6 +22,7 @@ class PelaporanController extends Controller
         }
         $level = session('id_sakip_level');
         $tahun = session('tahun_terpilih');
+        $khusus = session('tw4_khusus', false) ? 1 : 0;
         $idSatker = session('id_satker');
         $id_bidang = $request->get('id_bidang');
         $indikators = [];
@@ -84,15 +85,17 @@ class PelaporanController extends Controller
     //     return response()->json($indikator);
     // }
 
-    //Indikator untuk menu pengukuran
+//  //Indikator untuk menu pengukuran
     public function getSubIndikator($rumpun)
     {
         $tahun = session('tahun_terpilih');
         $level = session('id_sakip_level');
+        $khusus = session('tw4_khusus', false) ? 1 : 0;
 
         // Ambil semua indikator dengan filter rumpun dan tahun
         $indikators = Indikator::where('link', $rumpun)
             ->where('tahun', 'LIKE', "%$tahun%")
+            ->where('khusus', $khusus)
             ->get();
 
         // Filter berdasarkan lingkup & level
@@ -121,7 +124,7 @@ class PelaporanController extends Controller
 
         return response()->json($filtered);
     }
-//Indikator untuk menu pelaporan
+
     public function getSubIndikator2($rumpun, Request $request)
     {
         $id_satker = session('id_satker');
@@ -130,12 +133,14 @@ class PelaporanController extends Controller
         $bulan_awal = ($tw - 1) * 3 + 1;
         $bulan_akhir = $bulan_awal + 2;
         $level = session('id_sakip_level');
+        $khusus = session('tw4_khusus', false) ? 1 : 0;
 
         // === Ambil indikator sesuai rumpun, tahun, dan lingkup level ===
         $indikators = Indikator::where('link', $rumpun)
             ->where(function ($query) use ($tahun) {
                 $query->where('tahun', 'LIKE', "%$tahun%");
             })
+            ->where('khusus', $khusus)
             ->where(function ($query) use ($level) {
                 if ($level == 1) {
                     $query->whereIn('lingkup', [0, 1]);
@@ -173,6 +178,7 @@ class PelaporanController extends Controller
                     ->where('tahun', $tahun)
                     ->where('indikator_id', $indikator->id)
                     ->where('bulan', $lastMonth)
+                    ->where('khusus', $khusus)
                     ->orderBy('id', 'desc')
                     ->value('capaian') ?? 0;
             } elseif (count($labels) > 1) {
@@ -181,6 +187,7 @@ class PelaporanController extends Controller
                     ->where('id_satker', $id_satker)
                     ->where('tahun', $tahun)
                     ->where('indikator_id', $indikator->id)
+                    ->where('khusus', $khusus)
                     ->whereBetween('bulan', [1, $bulan_akhir]) // kumulatif s.d akhir TW
                     ->get(['sub_indikator', 'perhitungan']);
 
@@ -216,6 +223,7 @@ class PelaporanController extends Controller
                 ->where('id_satker', $id_satker)
                 ->where('tahun', $tahun)
                 ->where('indikator_id', $indikator->id)
+                ->where('khusus', $khusus)
                 ->value('target_tahun') ?? 0;
 
             // === Hitung capaian PK ===
@@ -233,6 +241,7 @@ class PelaporanController extends Controller
                     $q->whereNotNull('faktor')
                         ->orWhereNotNull('langkah_optimalisasi');
                 })
+                ->where('khusus', $khusus)
                 ->orderBy('bulan', 'desc')
                 ->orderBy('id', 'desc')
                 ->first();
@@ -257,6 +266,7 @@ class PelaporanController extends Controller
 
     public function simpanKeterangan(Request $request)
     {
+        $khusus = session('tw4_khusus', false) ? 1 : 0;
         $request->validate([
             'indikator_id' => 'required|integer',
             'faktor' => 'nullable|string',
@@ -270,6 +280,7 @@ class PelaporanController extends Controller
             ->where('tahun', session('tahun_terpilih'))
             ->where('indikator_id', $request->indikator_id)
             ->where('bulan', $bulan_akhir)
+            ->where('khusus', $khusus)
             ->first();
 
         if ($pengukuran) {
@@ -297,7 +308,7 @@ class PelaporanController extends Controller
         ]);
 
         $idSatker = session('id_satker'); // Ambil id_satker dari session
-        $id_triwulan= $request->input('id_triwulan');
+        $id_triwulan = $request->input('id_triwulan');
 
         // Cek id_perubahan yang sudah ada
         $latestLkjip = Lkjip::where('id_satker', $idSatker)

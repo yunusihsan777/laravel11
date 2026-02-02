@@ -25,6 +25,7 @@ class Indikator extends Model
         'indikator_penghitungan',
         'tahun',
         'tren',
+        'khusus',
     ];
 
     // Jika tidak ada timestamps
