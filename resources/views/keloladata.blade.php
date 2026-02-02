@@ -1080,7 +1080,7 @@
                     indikatorPenghitungan;
                 document.getElementById("edit_tahun").value = tahun1;
                 document.getElementById("edit_tren").value = tren;
-// reset dulu
+            // reset dulu
                 document.getElementById('edit_khusus_0').checked = false;
                 document.getElementById('edit_khusus_1').checked = false;
                 // Set khusus berdasarkan nilai dari data-khusus
