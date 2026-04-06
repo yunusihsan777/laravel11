@@ -24,6 +24,10 @@ use App\Http\Controllers\DataLke;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\Indikator2025Controller;
 
+Route::get('/spip', function () {
+    return view('spip'); // resources/views/spip.blade.php
+});
+
 Route::get('/', function () {
     return view('auth/login');
 });
@@ -93,7 +97,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pengukuran/update-inline', [PengukuranController::class, 'updateInline'])->name('pengukuran.updateInline');
     Route::post('/pengukuran/update-bulanan', [PengukuranController::class, 'updateBulanan'])->name('pengukuran.updateBulanan');
     Route::get('/get-subindikator-by-id/{id}', [PengukuranController::class, 'getIndikatorNama']);
-     Route::get('/get-subindikator/{rumpun}', [PelaporanController::class, 'getSubIndikator']); 
+     Route::get('/get-subindikator/{rumpun}', [PelaporanController::class, 'getSubIndikator']);
 
     // === Pelaporan ===
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
@@ -102,7 +106,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/upload/rapat-staff-eka', [PelaporanController::class, 'uploadRapatStaffEka'])->name('upload.rapat_staff_eka');
     Route::get('/pelaporan/subindikator/{rumpun}', [PelaporanController::class, 'getSubIndikator2']);
     Route::post('/pelaporan/simpan-keterangan', [PelaporanController::class, 'simpanKeterangan']);
- 
+
     // === Evaluasi ===
     Route::get('/evaluasi', [EvaluasiController::class, 'index'])->name('evaluasi');
     Route::post('/upload/lhe-akip', [EvaluasiController::class, 'uploadLheAkip'])->name('upload.lhe_akip');
