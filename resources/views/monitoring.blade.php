@@ -20,22 +20,26 @@
 
                     @if ($levelSakip == 99 || $levelSakip == 0 || !Str::startsWith($id_satker, 'was'))
                         <form id="formCari" class="row g-2 mb-4">
-                            <div class="col-md-5">
-                                <select name="satker" id="satkerInput" class="form-select">
-                                    <option value="">-- Pilih Satker --</option>
-                                    @foreach ($satkers as $satker)
-                                        <option value="{{ $satker->id_satker }}"
-                                            {{ $search == $satker->id_satker ? 'selected' : '' }}>
-                                            {{ $satker->satkernama }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+    <div class="col-md-5">
+        <select name="satker" id="satkerInput" class="form-select">
+            <option value="">-- Pilih Satker --</option>
+            @foreach ($satkers as $satker)
+                <option value="{{ $satker->id_satker }}"
+                    {{ $search == $satker->id_satker ? 'selected' : '' }}>
+                    {{ $satker->satkernama }}
+                </option>
+            @endforeach
 
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-success w-100">Cari</button>
-                            </div>
-                        </form>
+        </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-center">
+        <button type="submit" class="btn btn-primary me-2">Cari</button>
+
+        <a href="{{ route('monitoring.export') }}" class="btn btn-success" style="white-space: nowrap;">
+            <i class="fas fa-file-excel"></i> Export Excel
+        </a>
+    </div>
+</form>
 
                         @if ($selectedSatker)
                             <div class="card mt-4">

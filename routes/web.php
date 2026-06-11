@@ -54,6 +54,18 @@ Route::post('/login-auto', [LoginController::class, 'login']);
 //     return redirect()->away('https://sicana.kejaksaan.go.id');
 // });
 
+//spip routes
+use App\Http\Controllers\Spip\SpipAuthController;
+use App\Http\Controllers\Spip\SpipDashboardController;
+
+Route::get('/login-spip', [SpipAuthController::class, 'index'])->name('login.spip');
+Route::post('/login-spip', [SpipAuthController::class, 'login']);
+Route::get('/dashboard-spip', [SpipDashboardController::class, 'index']);
+Route::post('/spip/ubah-password',[App\Http\Controllers\Spip\SpipAuthController::class, 'updatePassword']);
+Route::get('/spip', function () {return view('spip.spip');});
+
+Route::post('/logout', [SpipAuthController::class, 'logout']);
+
 // Handle Logout
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
@@ -124,7 +136,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/monitoring/capaian-saspro-all', [MonitoringController::class, 'capaianSasproAll'])->name('capaian.saspro.all');
     Route::get('/monitoring/capaian-saspro-per-kejati', [MonitoringController::class, 'capaianSasproPerKejati'])->name('capaian.saspro.perkejati');
     Route::get('/capaian/saspro/all/{id_satker}/{id_kejati}/{tahun}/{level}', [MonitoringController::class, 'capaianSasproAll'])->name('capaian.saspro.all');
-
+    Route::get('/monitoring/export', [MonitoringController::class, 'exportExcel'])->name('monitoring.export');
     // === Data LKE ===
     Route::get('/evaluasi-akip', [DataLke::class, 'index'])->name('dataLke');
     Route::get('/upload/bukti-dukung', [DataLke::class, 'showUploadForm'])->name('upload_buktidukung');

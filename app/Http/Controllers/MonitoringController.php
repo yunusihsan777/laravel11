@@ -441,4 +441,83 @@ class MonitoringController extends Controller
 
         return response()->json($dataSaspro);
     }
+
+    public function exportExcel(Request $request)
+{
+    // Mengambil data dengan join ke beberapa tabel yang diperlukan
+    $data = DB::table('sinori_login as sl')
+        ->crossJoin('sinori_sakip_indikator as ssi')
+        ->leftJoin('target as t', function($join) {
+            $join->on('t.id_satker', '=', 'sl.id_satker')
+                 ->on('t.indikator_id', '=', 'ssi.id')
+                 ->where('t.tahun', '=', 2026);
+        })
+        ->leftJoin('pengukuran as p', function($join) {
+            $join->on('p.id_satker', '=', 'sl.id_satker')
+                 ->on('p.indikator_id', '=', 'ssi.id')
+                 ->where('p.tahun', '=', 2026);
+        })
+        ->where('ssi.tahun', '=', 2026)
+        ->where('ssi.indikator_penghitungan', '=', 'Capaian')
+        ->select(
+            DB::raw("REPLACE(sl.satkernama, '_', ' ') as nama_satker"),
+            'ssi.indikator_nama as nama_indikator',
+            'p.capaian',
+            't.target_triwulan_1 as target',
+            'p.faktor',
+            'p.langkah_optimalisasi as langkah'
+        )
+        ->orderBy('sl.id_satker')
+        ->get();
+
+    $fileName = 'Export_Monitoring_Satker_2026.csv';
+
+    $headers = array(
+        "Content-type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename=$fileName",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    );
+
+    // Kolom header pada file Excel
+    $columns = [
+        'Nama Satker',
+        'Nama Indikator',
+        'Capaian',
+        'Target',
+        'Capaian Terhadap Target (%)',
+        'Faktor',
+        'Langkah'
+    ];
+
+    $callback = function() use($data, $columns) {
+        $file = fopen('php://output', 'w');
+        // Tambahkan BOM untuk mendeteksi karakter UTF-8 dengan benar di Excel
+        fputs($file, $bom =(chr(0xEF) . chr(0xBB) . chr(0xBF)));
+        fputcsv($file, $columns, ';'); // Menggunakan titik koma agar otomatis menjadi kolom di Excel versi regional Indonesia
+
+        foreach ($data as $row) {
+            $capaian = floatval($row->capaian ?? 0);
+            $target = floatval($row->target ?? 0);
+
+            // Kalkulasi capaian terhadap target
+            $capaianTerhadapTarget = ($target > 0) ? round(($capaian / $target) * 100, 2) : 0;
+
+            fputcsv($file, [
+                $row->nama_satker,
+                $row->nama_indikator,
+                $capaian,
+                $target,
+                $capaianTerhadapTarget,
+                $row->faktor,
+                $row->langkah
+            ], ';');
+        }
+
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
 }
