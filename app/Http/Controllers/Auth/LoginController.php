@@ -43,6 +43,7 @@ class LoginController extends Controller
             $request->session()->put('id_satker', $user->id_satker);
             $request->session()->put('satkernama', str_replace('_', ' ', $user->satkernama));
             $request->session()->put('id_sakip_level', $user->id_sakip_level);
+            $request->session()->put('id_kejati', $user->id_kejati);
 
             // Mark the user as logged in manually
             auth()->loginUsingId($user->id_satker);

@@ -23,6 +23,8 @@ use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\DataLke;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\Indikator2025Controller;
+use App\Http\Controllers\Lke\LkeEvidenceMappingController;
+use App\Http\Controllers\Lke\LkeEvaluasiController;
 
 Route::get('/spip', function () {
     return view('spip'); // resources/views/spip.blade.php
@@ -143,6 +145,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/upload/bukti-dukung', [DataLke::class, 'upload'])->name('upload.store');
     Route::get('/upload/files/{id}', [DataLke::class, 'getUploadedFiles'])->name('upload.files');
     Route::get('/cekbdeval-lke/{kode}', [DataLke::class, 'cekBuktiDukung'])->name('cekbdeval_lke');
+
+    // === Sistem LKE Baru (Evaluasi Pengawasan & Evidence Mapping) ===
+    Route::get('/lke/evaluasi', [LkeEvaluasiController::class, 'index'])->name('lke.evaluasi.index');
+    Route::post('/lke/evaluasi/save-score', [LkeEvaluasiController::class, 'saveScore'])->name('lke.evaluasi.save_score');
+    Route::get('/lke/evidence-mapping', [LkeEvidenceMappingController::class, 'index'])->name('lke.evidence_mapping.index');
+    Route::get('/lke/evidence-mapping/detail/{kode}', [LkeEvidenceMappingController::class, 'getCriteriaDetail'])->name('lke.evidence_mapping.detail');
+    Route::post('/lke/evidence-mapping/update/{kode}', [LkeEvidenceMappingController::class, 'updateMapping'])->name('lke.evidence_mapping.update');
 
     // === Pengumuman ===
     Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman');

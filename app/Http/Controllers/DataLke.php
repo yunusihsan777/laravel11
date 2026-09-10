@@ -51,15 +51,15 @@ class DataLke extends Controller
         }
         // Ambil tahun yang dipilih dari session
         $tahun = session('tahun_terpilih');
-      $sections = [
-    'Perencanaan' => DataLke1::whereIn('subkomponen_id', [1, 2, 3])->get(),
-    'Pengukuran'  => DataLke1::whereIn('subkomponen_id', [4, 5, 6])->get(),
-    'Pelaporan'   => DataLke1::whereIn('subkomponen_id', [7, 8, 9])->get(),
-    'Evaluasi'    => DataLke1::whereIn('subkomponen_id', [10, 11, 12])->get(),
-    ];
+        $sections = [
+            'Perencanaan' => DataLke1::where('subkomponen_id', 'LIKE', '1.%')->get(),
+            'Pengukuran'  => DataLke1::where('subkomponen_id', 'LIKE', '2.%')->get(),
+            'Pelaporan'   => DataLke1::where('subkomponen_id', 'LIKE', '3.%')->get(),
+            'Evaluasi Akuntabilitas Kinerja Internal (LKE Eval AKIP)' => DataLke1::where('subkomponen_id', 'LIKE', '4.%')->get(),
+        ];
 
-       return view('kelola.components.evaluasi_lke', compact('sections', 'tahun'));
-   }
+        return view('kelola.evaluasi_akip', compact('sections', 'tahun'));
+    }
    private function getMapping()
 {
     return [

@@ -1,22 +1,20 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container"> 
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Evaluasi LKE') }}</div>
-
-                <div class="card-body">
-
-                    {{-- Tombol kontrol buka/tutup semua --}}
+{{-- Tombol kontrol buka/tutup semua --}}
                     <div class="mb-3">
                         <button id="openAll" class="btn btn-success btn-sm">Buka Semua</button>
                         <button id="closeAll" class="btn btn-danger btn-sm">Tutup Semua</button>
                     </div>
 
+                    @php
+                        $sections = $sections ?? [
+                            'Perencanaan' => \App\Models\DataLke1::where('subkomponen_id', 'LIKE', '1.%')->get(),
+                            'Pengukuran'  => \App\Models\DataLke1::where('subkomponen_id', 'LIKE', '2.%')->get(),
+                            'Pelaporan'   => \App\Models\DataLke1::where('subkomponen_id', 'LIKE', '3.%')->get(),
+                            'Evaluasi Akuntabilitas Kinerja Internal (LKE Eval AKIP)' => \App\Models\DataLke1::where('subkomponen_id', 'LIKE', '4.%')->get(),
+                        ];
+                    @endphp
+
                     <div class="accordion" id="accordionExample">
-    @foreach($sections as $title => $items)
+    @forelse($sections as $title => $items)
         @php
             $id = Str::slug($title, '_'); // bikin id unik dari judul
         @endphp
@@ -69,12 +67,9 @@
                 </div>
             </div>
         </div>
-    @endforeach
-</div>
-                </div>
-            </div>
-        </div>
-    </div>
+    @empty
+        <div class="alert alert-info">Belum ada data evaluasi LKE.</div>
+    @endforelse
 </div>
 
 @push('scripts')
@@ -110,4 +105,3 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 @endpush
-@endsection

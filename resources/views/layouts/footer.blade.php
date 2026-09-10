@@ -1,60 +1,23 @@
+<footer class="footer py-3 text-center border-top">
+    <div class="container-fluid px-3">
+        <p class="mb-0 text-muted text-sm">
+            <b>Panev BiroCana Kejaksaan RI</b> &copy; {{ date('Y') }}
+        </p>
+    </div>
+</footer>
 
-</html>
-
-
-{{-- <footer>
-    <center><p>Powered by Kejaksaan @2024</p></center>
-</footer> --}}
-<footer class="footer">
-      <p><b>Panev BiroCana Kejaksaan RI</b> @2025</p>
-    </footer>
-<!-- Bootstrap JS and Dependencies -->
+<!-- Bootstrap 5.3 Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('js/custom.js') }}"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Pilih semua elemen dengan class 'card'
+        // Smooth card fade-in animation
         const cards = document.querySelectorAll('.card');
-
-        // Tambahkan class 'show' untuk memulai animasi slide up
         cards.forEach((card, index) => {
             setTimeout(() => {
                 card.classList.add('show');
-            }, index * 100); // Animasi akan muncul satu per satu dengan delay 100ms
+            }, Math.min(index * 60, 400));
         });
     });
 </script>
-<style>
-    /* Reset dasar */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-}
-
-/* Wrapper utama */
-.wrapper {
-  min-height: 50vh; /* Tinggi minimal seluruh viewport */
-  display: flex;
-  flex-direction: column;
-}
-
-/* Konten utama akan memenuhi ruang tersisa */
-.content {
-  flex: 1;
-  padding: 7px;
-}
-
-/* Footer */
-.footer {
-  background-color: #dbdbdb;
-  color: rgb(0, 0, 0);
-  text-align: center;
-  padding: 7px 0;
-}
-
-</style>

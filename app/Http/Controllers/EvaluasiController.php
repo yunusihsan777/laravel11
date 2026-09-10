@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\LheAkip;
 use App\Models\MonevRenaksi;
 use App\Models\TlLheAkip;
+use App\Models\DataLke1;
 
 class EvaluasiController extends Controller
 {
@@ -108,7 +109,24 @@ class EvaluasiController extends Controller
 
             return $item;
         });
-        return view('kelola.evaluasi', ['tahun' => $tahun, 'lheAkipFiles' => $lheAkipFiles, 'monevRenaksiFiles' => $monevRenaksiFiles, 'tlLheAkipFiles' => $tlLheAkipFiles, 'komponen' => $komponen, 'idSatker' => $idSatker, 'buktiDukung' => $buktiDukung]);
+
+        $sections = [
+            'Perencanaan' => DataLke1::where('subkomponen_id', 'LIKE', '1.%')->get(),
+            'Pengukuran'  => DataLke1::where('subkomponen_id', 'LIKE', '2.%')->get(),
+            'Pelaporan'   => DataLke1::where('subkomponen_id', 'LIKE', '3.%')->get(),
+            'Evaluasi Akuntabilitas Kinerja Internal (LKE Eval AKIP)' => DataLke1::where('subkomponen_id', 'LIKE', '4.%')->get(),
+        ];
+
+        return view('kelola.evaluasi', [
+            'tahun' => $tahun,
+            'lheAkipFiles' => $lheAkipFiles,
+            'monevRenaksiFiles' => $monevRenaksiFiles,
+            'tlLheAkipFiles' => $tlLheAkipFiles,
+            'komponen' => $komponen,
+            'idSatker' => $idSatker,
+            'buktiDukung' => $buktiDukung,
+            'sections' => $sections,
+        ]);
     }
 
     // 📌 Upload LHE AKIP

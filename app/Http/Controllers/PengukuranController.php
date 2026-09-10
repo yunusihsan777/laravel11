@@ -8,8 +8,23 @@ use App\Models\Pengukuran;
 
 class PengukuranController extends Controller
 { 
+    /**
+     * Pastikan hanya Administrator atau Kejati yang dapat mengakses menu Pengukuran.
+     */
+    protected function checkAccess()
+    {
+        $level = session('id_sakip_level');
+        $satker = session('id_satker');
+        $allowed = in_array($satker, ['admin', '999999']) || $level == '99' || $level == '2' || $level == 99 || $level == 2;
+        if (!$allowed) {
+            abort(403, 'Akses Ditolak: Menu Pengukuran hanya dapat diakses oleh Administrator atau Kejati.');
+        }
+    }
+
    public function index(Request $request)
     {
+        $this->checkAccess();
+
         $id_bidang = $request->get('id_bidang');
         $tahun = session('tahun_terpilih');
         $id_satker = session('id_satker');
@@ -48,6 +63,8 @@ class PengukuranController extends Controller
 
   public function store(Request $request)
 {
+    $this->checkAccess();
+
     $subIndikatorList = $request->input('sub_indikator_list');
 
     if (!is_array($subIndikatorList)) {
@@ -167,12 +184,16 @@ class PengukuranController extends Controller
 
     public function form($id)
     {
+        $this->checkAccess();
+
         $indikator = Indikator::findOrFail($id);
         return view('pengukuran.form_pengukuran', compact('indikator'));
     }
 
     public function getPengukuran($indikatorId)
     {
+        $this->checkAccess();
+
         $idSatker = auth()->user()->id_satker;
 
         $pengukuran = \App\Models\Pengukuran::where('indikator_id', $indikatorId)

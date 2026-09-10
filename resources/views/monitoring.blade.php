@@ -442,13 +442,14 @@
                     }
                 });
             }
-        });
-        $('#formCari').on('submit', function(e) {
-            e.preventDefault();
-            const idSatker = $('#satkerInput').val();
-            if (idSatker) {
-                loadSaspro(idSatker, idKejati, tahun, level);
-            }
+
+            $('#formCari').on('submit', function(e) {
+                e.preventDefault();
+                const idSatker = $('#satkerInput').val();
+                if (idSatker) {
+                    loadSaspro(idSatker, idKejati, tahun, level);
+                }
+            });
         });
     </script>
     <style>

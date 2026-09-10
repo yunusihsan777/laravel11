@@ -3,744 +3,400 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <!-- Main Content -->
-    <div class="content" id="content">
-        <div class="container-fluid">
+@php
+    $satkernama = session('satkernama', 'Nama Satker');
+    $idSatker = session('id_satker', 'ID Satker');
+    $levelSakip = session('id_sakip_level', 0);
+    $tahunUi = session('tahun_ui', $tahun ?? date('Y'));
 
-            <!-- Baris Utama (Dibagi menjadi 2 kolom besar: Kiri dan Kanan) -->
-            <div class="row">
+    // Hitung persentase kepatuhan
+    $kepatuhanItems = [
+        ['nama' => 'Renstra', 'status' => $renstraTerisi, 'icon' => 'bi-file-earmark-ruled'],
+        ['nama' => 'IKU', 'status' => $ikuTerisi, 'icon' => 'bi-bullseye'],
+        ['nama' => 'Renja', 'status' => $renjaTerisi, 'icon' => 'bi-calendar2-check'],
+        ['nama' => 'RKAKL', 'status' => $rkaklTerisi, 'icon' => 'bi-calculator'],
+        ['nama' => 'DIPA', 'status' => $dipaTerisi, 'icon' => 'bi-cash-coin'],
+        ['nama' => 'Rencana Aksi', 'status' => $rencanaAksiTerisi, 'icon' => 'bi-lightning-charge'],
+    ];
 
-                <!-- ========================================== -->
-                <!-- KOLOM KIRI (Berisi Pengumuman, Kepatuhan, Aturan, Gambar) -->
-                <!-- ========================================== -->
-                <div class="col-md-6">
+    $terisiCount = collect($kepatuhanItems)->where('status', true)->count();
+    $totalCount = count($kepatuhanItems);
+    $persenKepatuhan = round(($terisiCount / $totalCount) * 100);
+@endphp
 
-                    <!-- 1. Card Pengumuman -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
-                            <center>
-                                <h3><b>Pengumuman</b></h3>
-                            </center>
+<div class="content" id="content">
+    <div class="container-fluid px-0">
+
+        <!-- ========================================== -->
+        <!-- EXECUTIVE WELCOME HERO BANNER              -->
+        <!-- ========================================== -->
+        <div class="card page-hero-card mb-4 border-0">
+            <div class="card-body p-4 p-md-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                            <span class="badge bg-warning text-dark px-2 py-1 fw-bold text-xs">
+                                <i class="bi bi-shield-check me-1"></i>Sistem Akuntabilitas Kinerja
+                            </span>
+                            <span class="badge bg-white bg-opacity-25 text-white px-2 py-1 text-xs">
+                                Tahun Anggaran: {{ $tahunUi }}
+                            </span>
                         </div>
-                        <div class="card-body">
-                            @foreach ($pengumuman as $item)
-                                <div class="card shadow-sm mb-4">
-                                    <div class="card-body">
-                                        <p class="card-text" style="color: red;">
-                                            <b>{{ $item->judul }}</b>
-                                        </p>
-                                        <p>{{ $item->isi }}</p>
-                                    </div>
-                                </div>
-                            @endforeach
+                        <h2 class="fw-bold mb-2 text-white">
+                            Selamat Datang di PROSAKIP Kejaksaan RI
+                        </h2>
+                        <p class="text-white-50 mb-3 text-sm" style="max-width: 620px;">
+                            Satuan Kerja: <strong class="text-white">{{ $satkernama }}</strong> (ID: {{ $idSatker }}). Kelola perencanaan, pelaporan, dan evaluasi akuntabilitas kinerja secara terpadu.
+                        </p>
+                        <div class="d-flex flex-wrap gap-2 pt-1">
+                            <a href="{{ route('perencanaan') }}" class="btn-cta-gold">
+                                <i class="bi bi-calendar2-range me-1"></i> Mulai Perencanaan
+                            </a>
+                            <a href="{{ route('upload_buktidukung') }}" class="btn-cta-secondary">
+                                <i class="bi bi-cloud-arrow-up me-1"></i> Unggah Bukti Dukung
+                            </a>
                         </div>
                     </div>
-
-                    <!-- 2. Card Kepatuhan -->
-                    @php
-                        $satkernama = session('satkernama', 'Nama Satker');
-                        $idSatker = session('id_satker', 'ID Satker');
-                        $levelSakip = session('id_sakip_level', 0);
-                    @endphp
-
-                    @if ($levelSakip != 0)
-                        <div class="card shadow-sm mb-4">
-                            <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
-                                <center>
-                                    <h3><b>Kepatuhan</b></h3>
-                                </center>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <!-- Renstra -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $renstraTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian Renstra</b></h5>
-                                                <p class="card-text">
-                                                    {{ $renstraTerisi ? 'Pengisian Renstra sudah dilakukan' : 'Pengisian Renstra belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- IKU -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $ikuTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian IKU</b></h5>
-                                                <p class="card-text">
-                                                    {{ $ikuTerisi ? 'Pengisian IKU sudah dilakukan' : 'Pengisian IKU belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Renja -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $renjaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian Renja</b></h5>
-                                                <p class="card-text">
-                                                    {{ $renjaTerisi ? 'Pengisian Renja sudah dilakukan' : 'Pengisian Renja belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- RKAKL -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $rkaklTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian RKAKL</b></h5>
-                                                <p class="card-text">
-                                                    {{ $rkaklTerisi ? 'Pengisian RKAKL sudah dilakukan' : 'Pengisian RKAKL belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- DIPA -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $dipaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian DIPA</b></h5>
-                                                <p class="card-text">
-                                                    {{ $dipaTerisi ? 'Pengisian DIPA sudah dilakukan' : 'Pengisian DIPA belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Rencana Aksi -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $rencanaAksiTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian Rencana Aksi</b></h5>
-                                                <p class="card-text">
-                                                    {{ $rencanaAksiTerisi ? 'Pengisian Rencana Aksi sudah dilakukan' : 'Pengisian Rencana Aksi belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- 3. Card Sumber Aturan & FAQ (Disusun Bersebelahan) -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card shadow-sm mb-4">
-                                <div class="card-body">
-                                    <h5 class="card-title"><b>Sumber Aturan</b></h5>
-                                    <p class="card-text">Lihat sumber aturan dan referensi hukum yang relevan.</p>
-                                    <a href="{{ route('aturan') }}" class="btn btn-yellow">Lihat Sumber Aturan</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card shadow-sm mb-4">
-                                <div class="card-body">
-                                    <h5 class="card-title"><b>FAQ</b></h5>
-                                    <p class="card-text">Lihat pertanyaan yang sering diajukan tentang sistem ini.</p>
-                                    <a href="{{ route('faq') }}" class="btn btn-yellow">Lihat FAQ</a>
-                                </div>
+                    <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                        <div class="d-inline-block kepatuhan-stat-box p-3 text-center text-white">
+                            <div class="small text-white-50 text-uppercase fw-semibold mb-1 text-xs">Kepatuhan Input</div>
+                            <h2 class="fw-bold mb-0 text-warning">{{ $persenKepatuhan }}%</h2>
+                            <div class="small text-white-50 mt-1 text-xs">{{ $terisiCount }} dari {{ $totalCount }} Terisi</div>
+                            <div class="progress mt-2" style="height: 6px; background-color: rgba(255,255,255,0.2);">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $persenKepatuhan }}%;" aria-valuenow="{{ $persenKepatuhan }}" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- 4. Card Gambaran Alur SAKIP -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
-                            <center>
-                                <h3><b>Gambaran Alur SAKIP</b></h3>
-                            </center>
-                        </div>
-                        <div class="card-body text-center">
-                            <img src="{{ asset('gambar/sakip.png') }}" class="img-fluid" alt="sakip"
-                                style="cursor: pointer; transition: transform 0.2s;" data-bs-toggle="modal"
-                                data-bs-target="#imageModal" onmouseover="this.style.transform='scale(1.02)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                        </div>
-                    </div>
-
-                </div>
-                <!-- AKHIR KOLOM KIRI -->
-
-
-                <!-- ========================================== -->
-                <!-- KOLOM KANAN (Khusus untuk Dokumen SAKIP / Linktree) -->
-                <!-- ========================================== -->
-                <!-- ========================================== -->
-                <!-- KOLOM KANAN (Khusus untuk Dokumen SAKIP) -->
-                <!-- ========================================== -->
-                <div class="col-md-6">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
-                            <center>
-                                <h3><b>Dokumen SAKIP</b></h3>
-                            </center>
-                        </div>
-
-                        <div class="card-body">
-
-                            <div class="mb-4">
-                                <a href="https://drive.google.com/file/d/1Hm8d_Cvk_h9aA8rIYb1XyJO6C1WTwjAs/view"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Pedoman JA Nomor 4 Tahun 2025 tentang Evaluasi Akuntabilitas Kinerja Instansi Pemerintah
-                                    di Lingkungan Kejaksaan Republik Indonesia.pdf
-                                </a>
-                                <a href="https://drive.google.com/file/d/1mNb9htgVw1ClP_0eHWAwBjYp6ygIG9-m/view?usp=drive_link"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PEDOMAN JA NOMOR 4 TAHUN 2024_PENYELENGGARAAN SAKIP
-                                </a>
-                                <a href="https://drive.google.com/drive/u/0/folders/1lRlkVrXcECSfNdzoGpPpsftYrWHN2ddn"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Peraturan SAKIP
-                                </a>
-                            </div>
-
-                            <h5 class="text-center mb-3" style="font-weight: 600; color: #333;">Template Dokumen SAKIP Tahun
-                                2026</h5>
-                            <div class="mb-4">
-                                <a href="https://drive.google.com/drive/folders/16jJkdH1mW-h4CSKQn2Jgg4suwG86ocvg?usp=drive_link"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    FORMAT RENCANA AKSI KINERJA DAN LAPORAN MONEV RENAKSI KINERJA ES I TW I 2026
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1e-f1ElSCYFGOPQvvxti3Je0q_vnpCFY8?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    LKJ TW I Tahun 2026 - KEJATI, KEJARI DAN CABJARI
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1gldPqRO1rTIbeNY8P5eEarnhl1b_PypE?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Rencana Aksi Kinerja Tahun 2026
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1lzttjDxiYNoAKSS0ZNCFbLZIpQ-SuA89?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Monev Renaksi Kinerja TW I Tahun 2026
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1I6UQ5UizAHDwAL8UPcq9Oqo9SHo7rUtX?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    RASTAFF EKA Tahun 2026
-                                </a>
-                            </div>
-
-                            <h5 class="text-center mb-3" style="font-weight: 600; color: #333;">Template Dokumen SAKIP
-                                Tahun 2025</h5>
-                            <div>
-                                <a href="https://drive.google.com/drive/folders/1bAzTx5kaIJvP8jnAA5RZqGGA5hWxbevR?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template LKjIP Satuan Kerja Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1_9_N5Ax5eIhLIUTYG3_4L6pZgqm9uKR_?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Cover LKjIP Satuan Kerja Tahun 2025
-                                </a>
-                                <a href="https://docs.google.com/document/d/14HkvvEJmGyPo0QfhPElCxwVhC5Ri6q2s/edit?usp=sharing&ouid=109556050232324402632&rtpof=true&sd=true"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template LKJ Triwulan III Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1WdulmYbNpOzFCCathQhJ1W_7IVwdFOHi?usp=drive_link"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Pohon Kinerja Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1Do5DZKQI-mNWfpT9jpMs0Tp8zOx7BD3d?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Format Rencana Aksi Kinerja Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1uHlIHeS44wRVsPBWiY0sOG7Ha5TFerP1?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Format Laporan Monev Rencana Aksi Kinerja Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1KlMJCKb8mmDlvPiYkjkuWNXyrRsQtfMB?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    IKU / Penetapan Target Kinerja 2025
-                                </a>
-                                <a href="https://drive.google.com/file/d/1xxiHanwuk8Cpqn2i9noXKGiCO3iSSKMy/view?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Rencana Kerja Kejaksaan RI Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1_9fQmMKStFHbmFHQ9wQSrJu_1hIk04YL?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    FORMAT RANWAL RENSTRA (SATKER DAERAH) - Google Drive
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1Vvw2zC17nN3Q7KqWiHy4WrxSatIm68_O?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PK 2025 RANWAL ESELON III KEJATI - Google Drive
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1fFETnMV0DSH0Bpo8sv1A8HMfoJ8evO9i?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PK 2025 RANWAL ESELON IV KEJARI - Google Drive
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1UuRUanPDHpQu-rcfiwS7lWSVyuvT4lhW?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PK 2025 RANWAL ESELON V CABJARI - Google Drive
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1AlxsuXxMVW9FDCJWhUjrovXsHoMQ3eFP?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PK 2025 RANWAL ESELON PEJABAT STRUKTURAL LAINNYA - Google Drive
-                                </a>
-                                <a href="https://docs.google.com/document/d/15oy4mfmFbGb81Bnwz5PPpXs1zN_anokd/edit?usp=sharing&ouid=109556050232324402632&rtpof=true&sd=true"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template LKJ Triwulan II Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/u/0/folders/1JAD4l9KZA7d4ANKmexS3rrID3DrPekD1"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template LKJ Triwulan I Tahun 2025
-                                </a>
-                                <a href="https://docs.google.com/document/d/12waQaX6lK8NjGzHBCk5fOaetXSzEcwxe/edit?usp=sharing&ouid=109556050232324402632&rtpof=true&sd=true"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template RAPAT STAFF EKA Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1sDIeMaE1gnVn3pkyI5qBcOaEv_qg8h1f?usp=drive_link"
-                                    target="_blank" class="btn shadow-sm w-100 btn-linktree">
-                                    Template PK Ranwal_Kasatker Tahun 2025
-                                </a>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <!-- AKHIR KOLOM KANAN -->
-                <!-- AKHIR KOLOM KANAN -->
-
-            </div> <!-- Akhir Baris Utama -->
-
-        </div>
-    </div>
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #e6bf3e;">
-                    <h5 class="modal-title" id="imageModalLabel"><b>Gambaran Alur SAKIP</b></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center" style="padding: 0;">
-                    <img src="{{ asset('gambar/sakip.png') }}" class="img-fluid w-100" alt="sakip_besar"
-                        style="border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
                 </div>
             </div>
         </div>
-    </div>
-@endsection
 
-<style>
-    /* Awal card berada di bawah dan tersembunyi */
-    .card {
-        opacity: 0;
-        transform: translateY(50px);
-        transition: all 0.6s ease-out;
-    }
+        <!-- Baris Utama (Kiri: Pengumuman & Kepatuhan; Kanan: Dokumen SAKIP) -->
+        <div class="row g-4">
 
-    /* Setelah halaman dimuat, card akan muncul ke posisi semula */
-    .card.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
+            <!-- ========================================== -->
+            <!-- KOLOM KIRI                                 -->
+            <!-- ========================================== -->
+            <div class="col-lg-6">
 
-    /* Class untuk tombol ala Linktree */
-    .btn-linktree {
-        background-color: #ffffff;
-        color: #000000;
-        border-radius: 12px;
-        white-space: normal;
-        text-align: center;
-        padding: 15px;
-        font-weight: 500;
-        word-wrap: break-word;
-        hyphens: none;
-        /* Aturan agar kata tidak terpotong strip */
-        border: 1px solid transparent;
-        transition: background-color 0.3s ease;
-    }
-
-    /* Efek hover dengan !important agar warna tidak tertimpa Bootstrap */
-    .btn-linktree:hover {
-        background-color: #e9ecef !important;
-        color: #000000 !important;
-    }
-</style>
-
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    @endpush@extends('layouts.app')
-
-    @section('title', 'Dashboard')
-
-@section('content')
-    <!-- Main Content -->
-    <div class="content" id="content">
-        <div class="container-fluid">
-
-            <!-- Baris Utama (Dibagi menjadi 2 kolom besar: Kiri dan Kanan) -->
-            <div class="row">
-
-                <!-- ========================================== -->
-                <!-- KOLOM KIRI (Berisi Pengumuman, Kepatuhan, Aturan, Gambar) -->
-                <!-- ========================================== -->
-                <div class="col-md-6">
-
-                    <!-- 1. Card Pengumuman -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
-                            <center>
-                                <h3><b>Pengumuman</b></h3>
-                            </center>
-                        </div>
-                        <div class="card-body">
-                            @foreach ($pengumuman as $item)
-                                <div class="card shadow-sm mb-4">
-                                    <div class="card-body">
-                                        <p class="card-text" style="color: red;">
-                                            <b>{{ $item->judul }}</b>
-                                        </p>
-                                        <p>{{ $item->isi }}</p>
-                                    </div>
+                <!-- 1. Kepatuhan Dokumen SAKIP -->
+                @if ($levelSakip != 0)
+                    <div class="card mb-4">
+                        <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="rounded-3 p-2 text-white bg-emerald">
+                                    <i class="bi bi-check2-circle fs-5"></i>
                                 </div>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- 2. Card Kepatuhan -->
-                    @php
-                        $satkernama = session('satkernama', 'Nama Satker');
-                        $idSatker = session('id_satker', 'ID Satker');
-                        $levelSakip = session('id_sakip_level', 0);
-                    @endphp
-
-                    @if ($levelSakip != 0)
-                        <div class="card shadow-sm mb-4">
-                            <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
-                                <center>
-                                    <h3><b>Kepatuhan</b></h3>
-                                </center>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <!-- Renstra -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $renstraTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian Renstra</b></h5>
-                                                <p class="card-text">
-                                                    {{ $renstraTerisi ? 'Pengisian Renstra sudah dilakukan' : 'Pengisian Renstra belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- IKU -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $ikuTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian IKU</b></h5>
-                                                <p class="card-text">
-                                                    {{ $ikuTerisi ? 'Pengisian IKU sudah dilakukan' : 'Pengisian IKU belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Renja -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $renjaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian Renja</b></h5>
-                                                <p class="card-text">
-                                                    {{ $renjaTerisi ? 'Pengisian Renja sudah dilakukan' : 'Pengisian Renja belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- RKAKL -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $rkaklTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian RKAKL</b></h5>
-                                                <p class="card-text">
-                                                    {{ $rkaklTerisi ? 'Pengisian RKAKL sudah dilakukan' : 'Pengisian RKAKL belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- DIPA -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $dipaTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian DIPA</b></h5>
-                                                <p class="card-text">
-                                                    {{ $dipaTerisi ? 'Pengisian DIPA sudah dilakukan' : 'Pengisian DIPA belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Rencana Aksi -->
-                                    <div class="col-md-6">
-                                        <div class="card shadow-sm mb-4"
-                                            style="background-color: {{ $rencanaAksiTerisi ? '#28a745' : '#dc3545' }}; color: white;">
-                                            <div class="card-body">
-                                                <h5 class="card-title"><b>Pengisian Rencana Aksi</b></h5>
-                                                <p class="card-text">
-                                                    {{ $rencanaAksiTerisi ? 'Pengisian Rencana Aksi sudah dilakukan' : 'Pengisian Rencana Aksi belum dilakukan' }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div>
+                                    <h5 class="mb-0 fw-bold text-dark text-md">Status Kepatuhan Dokumen</h5>
+                                    <small class="text-muted text-xs">Kelengkapan pengisian dokumen perencanaan satker</small>
                                 </div>
                             </div>
+                            <span class="badge {{ $persenKepatuhan == 100 ? 'bg-success' : 'bg-warning text-dark' }} rounded-pill px-3 py-1_5 fw-bold text-xs">
+                                {{ $persenKepatuhan == 100 ? 'Lengkap' : $terisiCount . '/' . $totalCount . ' Terisi' }}
+                            </span>
                         </div>
-                    @endif
-
-                    <!-- 3. Card Sumber Aturan & FAQ (Disusun Bersebelahan) -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card shadow-sm mb-4">
-                                <div class="card-body">
-                                    <h5 class="card-title"><b>Sumber Aturan</b></h5>
-                                    <p class="card-text">Lihat sumber aturan dan referensi hukum yang relevan.</p>
-                                    <a href="{{ route('aturan') }}" class="btn btn-yellow">Lihat Sumber Aturan</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card shadow-sm mb-4">
-                                <div class="card-body">
-                                    <h5 class="card-title"><b>FAQ</b></h5>
-                                    <p class="card-text">Lihat pertanyaan yang sering diajukan tentang sistem ini.</p>
-                                    <a href="{{ route('faq') }}" class="btn btn-yellow">Lihat FAQ</a>
-                                </div>
+                        <div class="card-body p-3">
+                            <div class="row g-3">
+                                @foreach ($kepatuhanItems as $item)
+                                    <div class="col-sm-6">
+                                        <div class="kpi-card {{ $item['status'] ? 'status-done' : 'status-pending' }} h-100">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="kpi-icon-circle">
+                                                    <i class="bi {{ $item['status'] ? 'bi-check-lg' : 'bi-exclamation-triangle-fill' }}"></i>
+                                                </div>
+                                                <div class="overflow-hidden flex-grow-1">
+                                                    <div class="fw-bold text-dark text-truncate text-sm">
+                                                        Pengisian {{ $item['nama'] }}
+                                                    </div>
+                                                    <small class="d-block text-truncate {{ $item['status'] ? 'text-success' : 'text-danger' }} fw-semibold text-xs">
+                                                        {{ $item['status'] ? 'Sudah Dilakukan' : 'Belum Dilakukan' }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
+                @endif
 
-                    <!-- 4. Card Gambaran Alur SAKIP -->
-                    <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
-                            <center>
-                                <h3><b>Gambaran Alur SAKIP</b></h3>
-                            </center>
-                        </div>
-                        <div class="card-body text-center">
-                            <img src="{{ asset('gambar/sakip.png') }}" class="img-fluid" alt="sakip"
-                                style="cursor: pointer; transition: transform 0.2s;" data-bs-toggle="modal"
-                                data-bs-target="#imageModal" onmouseover="this.style.transform='scale(1.02)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                        </div>
-                    </div>
-
-                </div>
-                <!-- AKHIR KOLOM KIRI -->
-
-
-                <!-- ========================================== -->
-                <!-- KOLOM KANAN (Khusus untuk Dokumen SAKIP / Linktree) -->
-                <!-- ========================================== -->
-                <!-- ========================================== -->
-                <!-- KOLOM KANAN (Khusus untuk Dokumen SAKIP) -->
-                <!-- ========================================== -->
-                <div class="col-md-6">
-                    <div class="card shadow-sm mb-4">
-                        <div class="card border-light shadow-sm" style="background-color: #e6bf3e;">
-                            <center>
-                                <h3><b>Dokumen SAKIP</b></h3>
-                            </center>
-                        </div>
-
-                        <div class="card-body">
-
-                            <div class="mb-4">
-                                <a href="https://drive.google.com/file/d/1Hm8d_Cvk_h9aA8rIYb1XyJO6C1WTwjAs/view"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Pedoman JA Nomor 4 Tahun 2025 tentang Evaluasi Akuntabilitas Kinerja Instansi Pemerintah
-                                    di Lingkungan Kejaksaan Republik Indonesia.pdf
-                                </a>
-                                <a href="https://drive.google.com/file/d/1mNb9htgVw1ClP_0eHWAwBjYp6ygIG9-m/view?usp=drive_link"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PEDOMAN JA NOMOR 4 TAHUN 2024_PENYELENGGARAAN SAKIP
-                                </a>
-                                <a href="https://drive.google.com/drive/u/0/folders/1lRlkVrXcECSfNdzoGpPpsftYrWHN2ddn"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Peraturan SAKIP
-                                </a>
+                <!-- 2. Pengumuman Resmi -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rounded-3 p-2 text-white bg-gold-dark">
+                                <i class="bi bi-megaphone-fill fs-5"></i>
                             </div>
-
-                            <h5 class="text-center mb-3" style="font-weight: 600; color: #333;">Template Dokumen SAKIP
-                                Tahun 2026</h5>
-                            <div class="mb-4">
-                                <a href="https://drive.google.com/drive/folders/16jJkdH1mW-h4CSKQn2Jgg4suwG86ocvg?usp=drive_link"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    FORMAT RENCANA AKSI KINERJA DAN LAPORAN MONEV RENAKSI KINERJA ES I TW I 2026
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1e-f1ElSCYFGOPQvvxti3Je0q_vnpCFY8?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    LKJ TW I Tahun 2026 - KEJATI, KEJARI DAN CABJARI
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1gldPqRO1rTIbeNY8P5eEarnhl1b_PypE?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Rencana Aksi Kinerja Tahun 2026
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1lzttjDxiYNoAKSS0ZNCFbLZIpQ-SuA89?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Monev Renaksi Kinerja TW I Tahun 2026
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1I6UQ5UizAHDwAL8UPcq9Oqo9SHo7rUtX?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    RASTAFF EKA Tahun 2026
-                                </a>
-                            </div>
-
-                            <h5 class="text-center mb-3" style="font-weight: 600; color: #333;">Template Dokumen SAKIP
-                                Tahun 2025</h5>
                             <div>
-                                <a href="https://drive.google.com/drive/folders/1bAzTx5kaIJvP8jnAA5RZqGGA5hWxbevR?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template LKjIP Satuan Kerja Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1_9_N5Ax5eIhLIUTYG3_4L6pZgqm9uKR_?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Cover LKjIP Satuan Kerja Tahun 2025
-                                </a>
-                                <a href="https://docs.google.com/document/d/14HkvvEJmGyPo0QfhPElCxwVhC5Ri6q2s/edit?usp=sharing&ouid=109556050232324402632&rtpof=true&sd=true"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template LKJ Triwulan III Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1WdulmYbNpOzFCCathQhJ1W_7IVwdFOHi?usp=drive_link"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Pohon Kinerja Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1Do5DZKQI-mNWfpT9jpMs0Tp8zOx7BD3d?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Format Rencana Aksi Kinerja Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1uHlIHeS44wRVsPBWiY0sOG7Ha5TFerP1?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Format Laporan Monev Rencana Aksi Kinerja Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1KlMJCKb8mmDlvPiYkjkuWNXyrRsQtfMB?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    IKU / Penetapan Target Kinerja 2025
-                                </a>
-                                <a href="https://drive.google.com/file/d/1xxiHanwuk8Cpqn2i9noXKGiCO3iSSKMy/view?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Rencana Kerja Kejaksaan RI Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1_9fQmMKStFHbmFHQ9wQSrJu_1hIk04YL?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    FORMAT RANWAL RENSTRA (SATKER DAERAH) - Google Drive
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1Vvw2zC17nN3Q7KqWiHy4WrxSatIm68_O?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PK 2025 RANWAL ESELON III KEJATI - Google Drive
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1fFETnMV0DSH0Bpo8sv1A8HMfoJ8evO9i?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PK 2025 RANWAL ESELON IV KEJARI - Google Drive
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1UuRUanPDHpQu-rcfiwS7lWSVyuvT4lhW?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PK 2025 RANWAL ESELON V CABJARI - Google Drive
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1AlxsuXxMVW9FDCJWhUjrovXsHoMQ3eFP?usp=sharing"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    PK 2025 RANWAL ESELON PEJABAT STRUKTURAL LAINNYA - Google Drive
-                                </a>
-                                <a href="https://docs.google.com/document/d/15oy4mfmFbGb81Bnwz5PPpXs1zN_anokd/edit?usp=sharing&ouid=109556050232324402632&rtpof=true&sd=true"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template LKJ Triwulan II Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/u/0/folders/1JAD4l9KZA7d4ANKmexS3rrID3DrPekD1"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template LKJ Triwulan I Tahun 2025
-                                </a>
-                                <a href="https://docs.google.com/document/d/12waQaX6lK8NjGzHBCk5fOaetXSzEcwxe/edit?usp=sharing&ouid=109556050232324402632&rtpof=true&sd=true"
-                                    target="_blank" class="btn shadow-sm mb-3 w-100 btn-linktree">
-                                    Template RAPAT STAFF EKA Tahun 2025
-                                </a>
-                                <a href="https://drive.google.com/drive/folders/1sDIeMaE1gnVn3pkyI5qBcOaEv_qg8h1f?usp=drive_link"
-                                    target="_blank" class="btn shadow-sm w-100 btn-linktree">
-                                    Template PK Ranwal_Kasatker Tahun 2025
+                                <h5 class="mb-0 fw-bold text-dark text-md">Pengumuman & Pemberitahuan</h5>
+                                <small class="text-muted text-xs">Informasi terbaru dari Biro Perencanaan Kejaksaan RI</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-light text-dark border px-2 py-1 text-xs">
+                            {{ count($pengumuman) }} Pengumuman
+                        </span>
+                    </div>
+                    <div class="card-body p-3">
+                        @forelse ($pengumuman as $item)
+                            <div class="announcement-item">
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <h6 class="mb-0 fw-bold text-danger d-flex align-items-center gap-1 text-sm">
+                                        <i class="bi bi-pin-angle-fill text-warning"></i> {{ $item->judul }}
+                                    </h6>
+                                </div>
+                                <p class="text-muted mb-0 text-sm" style="line-height: 1.5;">
+                                    {{ $item->isi }}
+                                </p>
+                            </div>
+                        @empty
+                            <div class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+                                Belum ada pengumuman saat ini.
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+
+                <!-- 3. Akses Cepat: Sumber Aturan & FAQ -->
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-6">
+                        <div class="card h-100 border-0 shadow-sm quick-action-card-gold">
+                            <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="rounded-3 p-2 bg-warning bg-opacity-25 text-warning-emphasis">
+                                            <i class="bi bi-book-half fs-5"></i>
+                                        </div>
+                                        <h6 class="mb-0 fw-bold text-dark">Sumber Aturan</h6>
+                                    </div>
+                                    <p class="text-muted small mb-3">Kumpulan dasar hukum, juklak, dan regulasi SAKIP Kejaksaan RI.</p>
+                                </div>
+                                <a href="{{ route('aturan') }}" class="btn btn-yellow btn-sm w-100">
+                                    <i class="bi bi-folder2-open me-1"></i> Buka Regulasi
                                 </a>
                             </div>
-
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="card h-100 border-0 shadow-sm quick-action-card-emerald">
+                            <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                <div>
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <div class="rounded-3 p-2 bg-success bg-opacity-25 text-success">
+                                            <i class="bi bi-question-circle-fill fs-5"></i>
+                                        </div>
+                                        <h6 class="mb-0 fw-bold text-dark">Pusat FAQ</h6>
+                                    </div>
+                                    <p class="text-muted small mb-3">Tanya-jawab kendala dan panduan teknis pengisian SAKIP.</p>
+                                </div>
+                                <a href="{{ route('faq') }}" class="btn btn-emerald btn-sm w-100">
+                                    <i class="bi bi-info-circle me-1"></i> Buka FAQ
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- AKHIR KOLOM KANAN -->
-                <!-- AKHIR KOLOM KANAN -->
 
-            </div> <!-- Akhir Baris Utama -->
+                <!-- 4. Gambaran Alur SAKIP -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rounded-3 p-2 text-white bg-emerald">
+                                <i class="bi bi-diagram-3-fill fs-5"></i>
+                            </div>
+                            <h5 class="mb-0 fw-bold text-dark text-md">Gambaran Alur SAKIP</h5>
+                        </div>
+                        <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#imageModal">
+                            <i class="bi bi-arrows-fullscreen me-1"></i> Perbesar
+                        </button>
+                    </div>
+                    <div class="card-body text-center p-3">
+                        <div class="position-relative overflow-hidden rounded-3 border bg-light cursor-pointer" role="button" data-bs-toggle="modal" data-bs-target="#imageModal">
+                            <img src="{{ asset('gambar/sakip.png') }}" class="img-fluid zoom-on-hover" alt="Alur SAKIP Kejaksaan RI" style="max-height: 280px; object-fit: contain;">
+                            <div class="position-absolute bottom-0 start-0 end-0 bg-dark bg-opacity-50 text-white py-1 small">
+                                <i class="bi bi-zoom-in me-1"></i> Klik gambar untuk melihat ukuran penuh
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        </div>
+            </div>
+            <!-- AKHIR KOLOM KIRI -->
+
+            <!-- ========================================== -->
+            <!-- KOLOM KANAN: DOKUMEN & TEMPLATE SAKIP      -->
+            <!-- ========================================== -->
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rounded-3 p-2 text-white bg-gold-dark">
+                                <i class="bi bi-collection-fill fs-5"></i>
+                            </div>
+                            <div>
+                                <h5 class="mb-0 fw-bold text-dark text-md">Dokumen & Pedoman SAKIP</h5>
+                                <small class="text-muted text-xs">Format resmi, pedoman JA, dan template dokumen kinerja</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-3">
+
+                        <!-- Pedoman & Aturan Pokok -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-secondary text-uppercase small mb-2 d-flex align-items-center gap-2">
+                                <i class="bi bi-file-earmark-pdf-fill text-danger"></i> Pedoman & Ketentuan
+                            </h6>
+                            <div class="d-flex flex-column gap-2">
+                                <a href="https://drive.google.com/file/d/1Hm8d_Cvk_h9aA8rIYb1XyJO6C1WTwjAs/view" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-file-earmark-pdf-fill text-danger"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">Pedoman JA Nomor 4 Tahun 2025</div>
+                                        <small class="text-muted text-truncate d-block">Evaluasi AKIP di Lingkungan Kejaksaan RI</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+
+                                <a href="https://drive.google.com/file/d/1mNb9htgVw1ClP_0eHWAwBjYp6ygIG9-m/view?usp=drive_link" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-file-earmark-pdf-fill text-danger"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">Pedoman JA Nomor 4 Tahun 2024</div>
+                                        <small class="text-muted text-truncate d-block">Penyelenggaraan SAKIP Kejaksaan RI</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+
+                                <a href="https://drive.google.com/drive/u/0/folders/1lRlkVrXcECSfNdzoGpPpsftYrWHN2ddn" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-folder-fill text-warning"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">Folder Peraturan SAKIP Terpadu</div>
+                                        <small class="text-muted text-truncate d-block">Arsip Google Drive Regulasi SAKIP</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Template 2026 -->
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <h6 class="fw-bold text-secondary text-uppercase small mb-0 d-flex align-items-center gap-2">
+                                    <i class="bi bi-folder-check text-success"></i> Template Dokumen SAKIP Tahun 2026
+                                </h6>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-0">Tahun Aktif</span>
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                                <a href="https://drive.google.com/drive/folders/16jJkdH1mW-h4CSKQn2Jgg4suwG86ocvg?usp=drive_link" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-file-earmark-text-fill text-primary"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">Format Rencana Aksi & Monev Renaksi ES I TW I 2026</div>
+                                        <small class="text-muted text-truncate d-block">Template Resmi Eselon I</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+
+                                <a href="https://drive.google.com/drive/folders/1e-f1ElSCYFGOPQvvxti3Je0q_vnpCFY8?usp=sharing" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-file-earmark-bar-graph text-info"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">LKJ TW I Tahun 2026 - Kejati, Kejari, Cabjari</div>
+                                        <small class="text-muted text-truncate d-block">Laporan Kinerja Triwulan I Satker Daerah</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+
+                                <a href="https://drive.google.com/drive/folders/1gldPqRO1rTIbeNY8P5eEarnhl1b_PypE?usp=sharing" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-calendar-event text-warning"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">Rencana Aksi Kinerja Tahun 2026</div>
+                                        <small class="text-muted text-truncate d-block">Dokumen Penetapan Renaksi 2026</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+
+                                <a href="https://drive.google.com/drive/folders/1lzttjDxiYNoAKSS0ZNCFbLZIpQ-SuA89?usp=sharing" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-clipboard2-data text-success"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">Monev Renaksi Kinerja TW I Tahun 2026</div>
+                                        <small class="text-muted text-truncate d-block">Monitoring dan Evaluasi Capaian Triwulan</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+
+                                <a href="https://drive.google.com/drive/folders/1I6UQ5UizAHDwAL8UPcq9Oqo9SHo7rUtX?usp=sharing" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-people-fill text-secondary"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">RASTAFF EKA Tahun 2026</div>
+                                        <small class="text-muted text-truncate d-block">Rapat Staf Evaluasi Kinerja Anggaran</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Template 2025 -->
+                        <div>
+                            <h6 class="fw-bold text-secondary text-uppercase small mb-2 d-flex align-items-center gap-2">
+                                <i class="bi bi-archive-fill text-muted"></i> Arsip Template Dokumen SAKIP Tahun 2025
+                            </h6>
+                            <div class="d-flex flex-column gap-2">
+                                <a href="https://drive.google.com/drive/folders/1bAzTx5kaIJvP8jnAA5RZqGGA5hWxbevR?usp=sharing" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-file-earmark-word text-primary"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">Template LKjIP Satuan Kerja Tahun 2025</div>
+                                        <small class="text-muted text-truncate d-block">Format Laporan Kinerja Instansi Pemerintah</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+
+                                <a href="https://drive.google.com/drive/folders/1WdulmYbNpOzFCCathQhJ1W_7IVwdFOHi?usp=drive_link" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-diagram-2 text-success"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">Pohon Kinerja Tahun 2025</div>
+                                        <small class="text-muted text-truncate d-block">Cascading & Alignment Sasaran Kinerja</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+
+                                <a href="https://drive.google.com/drive/folders/1KlMJCKb8mmDlvPiYkjkuWNXyrRsQtfMB?usp=sharing" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi bi-bullseye text-danger"></i></div>
+                                    <div class="overflow-hidden flex-grow-1">
+                                        <div class="fw-bold text-truncate">IKU / Penetapan Target Kinerja 2025</div>
+                                        <small class="text-muted text-truncate d-block">Format Indikator Kinerja Utama</small>
+                                    </div>
+                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- AKHIR KOLOM KANAN -->
+
+        </div> <!-- Akhir Baris Utama -->
+
     </div>
+</div>
 
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header" style="background-color: #e6bf3e;">
-                    <h5 class="modal-title" id="imageModalLabel"><b>Gambaran Alur SAKIP</b></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center" style="padding: 0;">
-                    <img src="{{ asset('gambar/sakip.png') }}" class="img-fluid w-100" alt="sakip_besar"
-                        style="border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
-                </div>
+<!-- Modal Zoom Alur SAKIP -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 overflow-hidden shadow-lg">
+            <div class="modal-header text-white card-header-emerald">
+                <h5 class="modal-title fw-bold" id="imageModalLabel">
+                    <i class="bi bi-diagram-3-fill me-2 text-warning"></i>Gambaran Alur Penyelenggaraan SAKIP Kejaksaan RI
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-3 bg-light">
+                <img src="{{ asset('gambar/sakip.png') }}" class="img-fluid rounded-3 shadow-sm" alt="Alur SAKIP Ukuran Penuh">
+            </div>
+            <div class="modal-footer bg-light py-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>
+</div>
 @endsection
-
-<style>
-    /* Awal card berada di bawah dan tersembunyi */
-    .card {
-        opacity: 0;
-        transform: translateY(50px);
-        transition: all 0.6s ease-out;
-    }
-
-    /* Setelah halaman dimuat, card akan muncul ke posisi semula */
-    .card.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    /* Class untuk tombol ala Linktree */
-    .btn-linktree {
-        background-color: #ffffff;
-        color: #000000;
-        border-radius: 12px;
-        white-space: normal;
-        text-align: center;
-        padding: 15px;
-        font-weight: 500;
-        word-wrap: break-word;
-        hyphens: none;
-        /* Aturan agar kata tidak terpotong strip */
-        border: 1px solid transparent;
-        transition: background-color 0.3s ease;
-    }
-
-    /* Efek hover dengan !important agar warna tidak tertimpa Bootstrap */
-    .btn-linktree:hover {
-        background-color: #e9ecef !important;
-        color: #000000 !important;
-    }
-</style>
-
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-@endpush

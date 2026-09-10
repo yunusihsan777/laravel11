@@ -1,305 +1,677 @@
-<!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-    <br>
+<!-- Sidebar Backdrop for Mobile/Tablet -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+<!-- Sidebar Component -->
+<aside class="sidebar" id="sidebar">
     @php
         $satkernama = session('satkernama', 'Nama Satker');
         $idSatker = session('id_satker', 'ID Satker');
         $levelSakip = session('id_sakip_level', 0);
+        $tahun = session('tahun_ui', date('Y'));
 
         // Cek apakah submenu harus dibuka
         $submenuActive =
             request()->is('kep') ||
-            request()->is('perencanaan') ||
-            request()->is('pengukuran') ||
-            request()->is('pelaporan') ||
-            request()->is('evaluasi') ||
-            request()->is('dataLke');
+            request()->is('perencanaan*') ||
+            request()->is('pengukuran*') ||
+            request()->is('pelaporan*') ||
+            request()->is('evaluasi*') ||
+            request()->is('dataLke*') ||
+            request()->is('lke/*') ||
+            request()->is('upload*') ||
+            request()->is('kriteria*');
     @endphp
-    <div id="user-info">
-        <img src="{{ asset('gambar/kejaksaan.png') }}" alt="Profile Picture" class="profile-pic">
-        <h5 class="text-center text-dark">Selamat Datang<br>{{ $satkernama }}<br>ID Satker: {{ $idSatker }}</h5>
+
+    <!-- Sidebar Brand Header -->
+    <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-3 border-bottom" style="background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);">
+        <div class="d-flex align-items-center gap-2 overflow-hidden">
+            <div class="brand-logo-wrapper p-1 rounded-3 bg-white shadow-sm border" style="border-color: #e2e8f0 !important;">
+                <img src="{{ asset('gambar/kejaksaan.png') }}" alt="Logo Kejaksaan" class="sidebar-logo" style="width: 34px; height: 34px; object-fit: contain;">
+            </div>
+            <div class="sidebar-brand-text overflow-hidden">
+                <div class="d-flex align-items-center gap-1">
+                    <span class="fw-bold text-dark text-truncate" style="font-size: 0.98rem; letter-spacing: 0.5px;">PROSAKIP</span>
+                    <span class="badge bg-warning text-dark px-1 py-0" style="font-size: 0.65rem; font-weight: 700;">RI</span>
+                </div>
+                <small class="text-muted d-block text-truncate" style="font-size: 0.72rem; margin-top: -2px;">Kejaksaan Agung RI</small>
+            </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-close d-lg-none" id="sidebarCloseBtn" aria-label="Tutup Menu"></button>
     </div>
 
-    <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
-        <i class="fas fa-home"></i> <span class="sidebar-text">Beranda</span>
-    </a>
-
-    @if ($levelSakip == 99 || $levelSakip == 1 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 4)
-        <a href="#" id="toggle-submenu" class="toggle-btn {{ $submenuActive ? 'active' : '' }}">
-            <i class="fas fa-tasks"></i> <span class="sidebar-text">Tata Kelola AKIP</span>
-            <i class="fas fa-chevron-right arrow-icon"></i>
-        </a>
-
-        <div class="submenu" id="submenu" style="display: {{ $submenuActive ? 'block' : 'none' }};">
-
-            <a href="{{ route('perencanaan') }}" class="{{ request()->is('perencanaan') ? 'active' : '' }}">
-                <i class="fas fa-file-alt"></i> Perencanaan
-            </a>
-            {{-- @if ($levelSakip == 99) --}}
-            @if ($tahun != 2024)
-                <a href="{{ route('pengukuran') }}" class="{{ request()->is('pengukuran') ? 'active' : '' }}">
-                    <i class="fas fa-chart-line"></i> Pengukuran
-                </a>
-            @endif
-            {{-- @endif --}}
-            @if ($levelSakip == 99 || $levelSakip == 1 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 4)
-                <a href="{{ route('pelaporan') }}" class="{{ request()->is('pelaporan') ? 'active' : '' }}">
-                    <i class="fas fa-file-upload"></i> Pelaporan
-                </a>
-            @endif
-            {{-- @if ($levelSakip == 99) --}}
-            <a href="{{ route('evaluasi') }}" class="{{ request()->is('evaluasi') ? 'active' : '' }}">
-                <i class="fas fa-clipboard-check"></i> Evaluasi
-            </a>
-            {{-- @endif --}}
-            {{-- @if ($levelSakip == 99) --}}
-            <a href="{{ route('dataLke') }}" class="{{ request()->is('dataLke') ? 'active' : '' }}">
-                <i class="fas fa-clipboard-check"></i> Evaluasin akip
-            </a>
-            {{-- @endif --}}{{-- @if ($levelSakip == 99) --}}
-            <a href="{{ route('kriteria.create') }}" class="{{ request()->is('kriteria.create') ? 'active' : '' }}">
-                <i class="fas fa-clipboard-check"></i> input akip
-            </a>
-            {{-- @endif --}}
-            <a href="{{ route('upload_buktidukung') }}"
-                class="{{ request()->is('upload_buktidukung') ? 'active' : '' }}">
-                <i class="fas fa-clipboard-check"></i> input file
-            </a>
+    <!-- User Information Card -->
+    <div id="user-info" class="user-info-box px-3 py-3 text-center border-bottom" style="background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);">
+        <div class="position-relative d-inline-block">
+            <img src="{{ asset('gambar/kejaksaan.png') }}" alt="Profile Picture" class="profile-pic">
+            <span class="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle p-1" title="Online" style="width: 12px; height: 12px;"></span>
         </div>
-    @endif
+        <div class="user-title mt-1">
+            <div class="fw-bold text-dark text-truncate-2" title="{{ $satkernama }}" style="font-size: 0.85rem; line-height: 1.35;">
+                {{ $satkernama }}
+            </div>
+            <span class="badge bg-light text-secondary border mt-1" style="font-size: 0.72rem; font-weight: 600;">
+                <i class="bi bi-shield-check text-success me-1"></i>ID: {{ $idSatker }}
+            </span>
+        </div>
+    </div>
 
-    @if ($levelSakip == 99 || $levelSakip == 0 || $levelSakip == 2)
-        <a href="{{ route('sakipwil') }}" class="{{ request()->is('sakipwil') ? 'active' : '' }}">
-            <i class="fas fa-globe"></i> <span class="sidebar-text">SAKIP Wilayah</span>
+    <!-- Navigation Menu Items -->
+    <div class="sidebar-nav-wrapper py-2">
+        <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}" title="Beranda">
+            <i class="bi bi-grid-fill"></i> <span class="sidebar-text">Beranda</span>
         </a>
-        <a href="{{ route('monitoring') }}" class="{{ request()->is('monitoring') ? 'active' : '' }}">
-            <i class="fas fa-globe"></i> <span class="sidebar-text">Monitoring</span>
-        </a>
-    @endif
 
-    @if ($levelSakip == 99)
-        <a href="{{ route('kep') }}" class="{{ request()->is('kep') ? 'active' : '' }}">
-            <i class="fas fa-users"></i> Kep Tim SAKIP
-        </a>
-        <a href="{{ route('sakipvalidasi') }}" class="{{ request()->is('sakipvalidasi') ? 'active' : '' }}">
-            <i class="fas fa-check-circle"></i> <span class="sidebar-text">SAKIP Validasi</span>
-        </a>
-        {{-- <a href="{{ route('kepatuhan') }}" class="{{ request()->is('kepatuhan') ? 'active' : '' }}">
-            <i class="fas fa-shield-alt"></i> <span class="sidebar-text">Kepatuhan AKIP</span>
-        </a> --}}
-        <a href="{{ route('chatsupport') }}" class="{{ request()->is('chatsupport') ? 'active' : '' }}">
-            <i class="fas fa-comments"></i> <span class="sidebar-text">Chat Support</span>
-        </a>
-        <a href="{{ route('pengumuman') }}" class="{{ request()->is('pengumuman') ? 'active' : '' }}">
-            <i class="fas fa-envelope"></i> <span class="sidebar-text">Pengumuman</span>
-        </a>
-        <a href="{{ route('keloladata') }}" class="{{ request()->is('keloladata') ? 'active' : '' }}">
-            <i class="fas fa-envelope"></i> <span class="sidebar-text">Kelola Data</span>
-        </a>
-        <a href="{{ route('ubahpassword') }}" class="{{ request()->is('ubahpassword') ? 'active' : '' }}">
-            <i class="fas fa-key"></i> <span class="sidebar-text">Ubah Password</span>
-        </a>
-    @endif
+        @if (auth()->check() || in_array($levelSakip, [99, 1, 2, 3, 4, 0]))
+            <a href="#" id="toggle-submenu" class="toggle-btn {{ $submenuActive ? 'active' : '' }}" title="Tata Kelola AKIP">
+                <i class="bi bi-kanban-fill"></i> <span class="sidebar-text">Tata Kelola AKIP</span>
+                <i class="fas {{ $submenuActive ? 'fa-chevron-down' : 'fa-chevron-right' }} arrow-icon ms-auto"></i>
+            </a>
 
-    @if ($levelSakip == 99 || $levelSakip == 1 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 4)
-        <a href="{{ route('aturan') }}" class="{{ request()->is('aturan') ? 'active' : '' }}">
-            <i class="fas fa-gavel"></i> <span class="sidebar-text">Sumber Aturan</span>
-        </a>
-        <a href="{{ route('faq') }}" class="{{ request()->is('faq') ? 'active' : '' }}">
-            <i class="fas fa-question-circle"></i> <span class="sidebar-text">FAQ</span>
-        </a>
-    @endif
+            <div class="submenu" id="submenu" style="display: {{ $submenuActive ? 'block' : 'none' }};">
+                <a href="{{ route('perencanaan') }}" class="{{ request()->is('perencanaan*') ? 'active' : '' }}" title="Perencanaan">
+                    <i class="bi bi-calendar2-range-fill"></i> <span class="sidebar-text">Perencanaan</span>
+                </a>
 
-</div>
+                {{-- Pengukuran hanya untuk Admin atau Kejati --}}
+                @if ($tahun != 2024 && ($levelSakip == 99 || $levelSakip == 2 || in_array($idSatker, ['admin', '999999'])))
+                    <a href="{{ route('pengukuran') }}" class="{{ request()->is('pengukuran*') ? 'active' : '' }}" title="Pengukuran">
+                        <i class="bi bi-graph-up-arrow"></i> <span class="sidebar-text">Pengukuran</span>
+                    </a>
+                @endif
 
+                @if ($levelSakip == 99 || $levelSakip == 1 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 4)
+                    <a href="{{ route('pelaporan') }}" class="{{ request()->is('pelaporan*') ? 'active' : '' }}" title="Pelaporan">
+                        <i class="bi bi-file-earmark-bar-graph-fill"></i> <span class="sidebar-text">Pelaporan</span>
+                    </a>
+                @endif
 
-<!-- Sidebar Toggler Button -->
-{{-- <button class="btn btn-yellow toggler-btn" id="toggler-btn">
+                <a href="{{ route('evaluasi') }}" class="{{ request()->is('evaluasi') ? 'active' : '' }}" title="Evaluasi">
+                    <i class="bi bi-clipboard2-check-fill"></i> <span class="sidebar-text">Evaluasi</span>
+                </a>
+
+                <a href="{{ route('dataLke') }}" class="{{ request()->is('evaluasi-akip') ? 'active' : '' }}" title="Evaluasi AKIP">
+                    <i class="bi bi-journal-text"></i> <span class="sidebar-text">Evaluasi AKIP</span>
+                </a>
+
+                <a href="{{ route('kriteria.create') }}" class="{{ request()->is('input-kriteria') ? 'active' : '' }}" title="Input AKIP">
+                    <i class="bi bi-pencil-square"></i> <span class="sidebar-text">Input AKIP</span>
+                </a>
+
+                <a href="{{ route('upload_buktidukung') }}" class="{{ request()->is('upload/bukti-dukung*') ? 'active' : '' }}" title="Input File">
+                    <i class="bi bi-cloud-arrow-up-fill"></i> <span class="sidebar-text">Input File</span>
+                </a>
+
+                <!-- Menu LKE Evaluasi (Hanya untuk Admin, Kejagung, Kejati, atau WAS) -->
+                @php
+                    $canEvaluateLke = in_array($idSatker, ['admin', '999999', '888881', '888882', 'Pengawasan', 'Panev'])
+                        || in_array($levelSakip, [99, 1, 2])
+                        || str_starts_with(strtolower((string)$idSatker), 'was')
+                        || str_contains(strtolower((string)$idSatker), 'was')
+                        || str_contains(strtolower($satkernama), 'pengawasan')
+                        || str_contains(strtolower($satkernama), 'kejati');
+                @endphp
+                @if ($canEvaluateLke)
+                    <a href="{{ route('lke.evaluasi.index') }}" class="{{ request()->is('lke/evaluasi*') ? 'active' : '' }}" title="Penilaian LKE">
+                        <i class="bi bi-check2-all text-warning"></i> <span class="sidebar-text">Penilaian LKE</span>
+                    </a>
+                @endif
+
+                @if ($levelSakip == 99 || in_array($idSatker, ['admin', '999999']))
+                    <a href="{{ route('lke.evidence_mapping.index') }}" class="{{ request()->is('lke/evidence-mapping*') ? 'active' : '' }}" title="Mapping Bukti LKE (Admin)">
+                        <i class="bi bi-diagram-3-fill text-info"></i> <span class="sidebar-text">Mapping Bukti (Admin)</span>
+                    </a>
+                @endif
+            </div>
+        @endif
+
+        @if ($levelSakip == 99 || $levelSakip == 0 || $levelSakip == 2)
+            <a href="{{ route('sakipwil') }}" class="{{ request()->is('sakipwil') ? 'active' : '' }}" title="SAKIP Wilayah">
+                <i class="bi bi-globe2"></i> <span class="sidebar-text">SAKIP Wilayah</span>
+            </a>
+            <a href="{{ route('monitoring') }}" class="{{ request()->is('monitoring') ? 'active' : '' }}" title="Monitoring">
+                <i class="bi bi-display-fill"></i> <span class="sidebar-text">Monitoring</span>
+            </a>
+        @endif
+
+        @if ($levelSakip == 99)
+            <a href="{{ route('kep') }}" class="{{ request()->is('kep') ? 'active' : '' }}" title="Kep Tim SAKIP">
+                <i class="bi bi-people-fill"></i> <span class="sidebar-text">Kep Tim SAKIP</span>
+            </a>
+            <a href="{{ route('sakipvalidasi') }}" class="{{ request()->is('sakipvalidasi') ? 'active' : '' }}" title="SAKIP Validasi">
+                <i class="bi bi-patch-check-fill"></i> <span class="sidebar-text">SAKIP Validasi</span>
+            </a>
+            <a href="{{ route('chatsupport') }}" class="{{ request()->is('chatsupport') ? 'active' : '' }}" title="Chat Support">
+                <i class="bi bi-chat-dots-fill"></i> <span class="sidebar-text">Chat Support</span>
+            </a>
+            <a href="{{ route('pengumuman') }}" class="{{ request()->is('pengumuman*') ? 'active' : '' }}" title="Pengumuman">
+                <i class="bi bi-megaphone-fill"></i> <span class="sidebar-text">Pengumuman</span>
+            </a>
+            <a href="{{ route('keloladata') }}" class="{{ request()->is('keloladata*') ? 'active' : '' }}" title="Kelola Data">
+                <i class="bi bi-database-fill-gear"></i> <span class="sidebar-text">Kelola Data</span>
+            </a>
+            <a href="{{ route('ubahpassword') }}" class="{{ request()->is('ubahpassword') ? 'active' : '' }}" title="Ubah Password">
+                <i class="bi bi-key-fill"></i> <span class="sidebar-text">Ubah Password</span>
+            </a>
+        @endif
+
+        @if ($levelSakip == 99 || $levelSakip == 1 || $levelSakip == 2 || $levelSakip == 3 || $levelSakip == 4)
+            <a href="{{ route('aturan') }}" class="{{ request()->is('aturan*') ? 'active' : '' }}" title="Sumber Aturan">
+                <i class="bi bi-book-half"></i> <span class="sidebar-text">Sumber Aturan</span>
+            </a>
+            <a href="{{ route('faq') }}" class="{{ request()->is('faq') ? 'active' : '' }}" title="FAQ">
+                <i class="bi bi-question-circle-fill"></i> <span class="sidebar-text">FAQ</span>
+            </a>
+        @endif
+    </div>
+</aside>
+
+<!-- Sidebar Toggler Floating Button (Desktop Only) -->
+<button class="btn btn-yellow toggler-btn shadow-sm d-none d-lg-flex align-items-center justify-content-center" id="toggler-btn" type="button" title="Kecilkan / Perbesar Sidebar">
     <i class="fas fa-chevron-left"></i>
-</button> --}}
+</button>
 
 <!-- Top Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light" id="navbar"
-    style="background-color: #ffffff; border-bottom: 1px solid #e0e0e0;">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <span class="nav-link text-dark">
-                        <form action="{{ route('pilih.tahun') }}" method="POST" id="tahunForm"
-                            class="d-flex align-items-center">
-                            @csrf
-                            <label for="tahun" class="me-2 mb-0">{{ $satkernama }} Tahun: </label>
+<nav class="navbar navbar-light bg-white border-bottom sticky-top" id="navbar" style="box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+    <div class="container-fluid px-3 d-flex align-items-center justify-content-between">
+        
+        <!-- Left: Hamburger Toggle & Satker Name Pill -->
+        <div class="d-flex align-items-center gap-2 overflow-hidden flex-grow-1 me-2">
+            <button class="btn btn-light border d-inline-flex align-items-center justify-content-center flex-shrink-0" 
+                    id="navbarToggleBtn" 
+                    type="button" 
+                    title="Buka / Tutup Menu"
+                    style="width: 38px; height: 38px; border-radius: 9px;">
+                <i class="bi bi-list fs-5 text-dark"></i>
+            </button>
 
-                            <select name="tahun" id="tahun" class="form-select w-auto"
-                                onchange="document.getElementById('tahunForm').submit();">
+            <div class="satker-info-pill d-flex align-items-center overflow-hidden">
+                <span class="badge bg-light text-dark border px-2 py-1_5 text-truncate" 
+                      style="font-size: 0.82rem; font-weight: 600; max-width: 380px; border-radius: 8px;" 
+                      title="{{ $satkernama }}">
+                    <i class="bi bi-building-fill text-warning me-1"></i>
+                    <span class="satker-label-text">{{ $satkernama }}</span>
+                </span>
+            </div>
+        </div>
 
-                                @for ($i = 2024; $i <= date('Y'); $i++)
-                                    <option value="{{ $i }}"
-                                        {{ session('tahun_ui') == (string)$i ? 'selected' : '' }}>
-                                        {{ $i }}
-                                    </option>
-
-                                    @if ($i == 2025)
-                                        <option value="20254"
-                                            {{ session('tahun_ui') == '20254' ? 'selected' : '' }}>
-                                            2025 TW IV
-                                        </option>
-                                    @endif
-                                @endfor
-                            </select>
-
-                        </form>
+        <!-- Right: Year Selector & Logout Button -->
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+            <!-- Year Selector Form -->
+            <form action="{{ route('pilih.tahun') }}" method="POST" id="tahunForm" class="d-flex align-items-center m-0">
+                @csrf
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-light text-muted border-end-0 d-none d-sm-flex py-1 px-2" style="font-size: 0.82rem;">
+                        <i class="bi bi-calendar3"></i>
                     </span>
-                </li>
-                <li class="nav-item">
-                    <span class="nav-link text-dark">
-                        <form action="{{ url('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-danger">Logout</button>
-                        </form>
-                    </span>
-                </li>
-            </ul>
+                    <select name="tahun" id="tahun" class="form-select form-select-sm" 
+                            style="font-size: 0.82rem; font-weight: 600; min-width: 95px; border-radius: 0.375rem;" 
+                            onchange="document.getElementById('tahunForm').submit();"
+                            title="Pilih Tahun Anggaran">
+                        @for ($i = 2024; $i <= date('Y'); $i++)
+                            <option value="{{ $i }}" {{ session('tahun_ui') == (string)$i ? 'selected' : '' }}>
+                                Tahun {{ $i }}
+                            </option>
+                            @if ($i == 2025)
+                                <option value="20254" {{ session('tahun_ui') == '20254' ? 'selected' : '' }}>
+                                    2025 TW IV
+                                </option>
+                            @endif
+                        @endfor
+                    </select>
+                </div>
+            </form>
+
+            <!-- Logout Button -->
+            <form action="{{ url('logout') }}" method="POST" class="m-0">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1 px-2 px-sm-3" 
+                        title="Keluar dari Aplikasi" 
+                        style="height: 33px; border-radius: 8px; font-weight: 600;">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span class="d-none d-sm-inline">Logout</span>
+                </button>
+            </form>
         </div>
     </div>
 </nav>
 
 <script>
+    (function() {
+        // Immediate check to prevent desktop flicker
+        try {
+            if (window.innerWidth >= 992 && localStorage.getItem('sidebar_collapsed') === '1') {
+                document.documentElement.classList.add('sidebar-is-collapsed');
+            }
+        } catch(e) {}
+    })();
+
     $(document).ready(function() {
+        const $sidebar = $('#sidebar');
+        const $backdrop = $('#sidebarBackdrop');
+        const $navbar = $('#navbar');
+        const $content = $('.content, #content');
+        const $footer = $('.footer, footer');
+        const $togglerBtn = $('#toggler-btn');
+        const $togglerIcon = $togglerBtn.find('i');
+
+        // Helper to update desktop collapse state
+        function setDesktopCollapsed(isCollapsed) {
+            if (isCollapsed) {
+                $sidebar.addClass('collapsed');
+                $navbar.addClass('collapsed');
+                $content.addClass('collapsed');
+                $footer.addClass('collapsed');
+                $togglerBtn.addClass('collapsed');
+                $togglerIcon.removeClass('fa-chevron-left').addClass('fa-chevron-right');
+                localStorage.setItem('sidebar_collapsed', '1');
+            } else {
+                $sidebar.removeClass('collapsed');
+                $navbar.removeClass('collapsed');
+                $content.removeClass('collapsed');
+                $footer.removeClass('collapsed');
+                $togglerBtn.removeClass('collapsed');
+                $togglerIcon.removeClass('fa-chevron-right').addClass('fa-chevron-left');
+                localStorage.setItem('sidebar_collapsed', '0');
+            }
+        }
+
+        // Initialize desktop state
+        if (window.innerWidth >= 992) {
+            if (localStorage.getItem('sidebar_collapsed') === '1') {
+                setDesktopCollapsed(true);
+            }
+        }
+
+        // Mobile drawer handlers
+        function openMobileDrawer() {
+            $sidebar.addClass('mobile-open');
+            $backdrop.addClass('show');
+            $('body').css('overflow', 'hidden');
+        }
+
+        function closeMobileDrawer() {
+            $sidebar.removeClass('mobile-open');
+            $backdrop.removeClass('show');
+            $('body').css('overflow', '');
+        }
+
+        // Navbar Hamburger Click
+        $('#navbarToggleBtn').on('click', function(e) {
+            e.preventDefault();
+            if (window.innerWidth < 992) {
+                if ($sidebar.hasClass('mobile-open')) {
+                    closeMobileDrawer();
+                } else {
+                    openMobileDrawer();
+                }
+            } else {
+                // Desktop toggle
+                const isCollapsed = $sidebar.hasClass('collapsed');
+                setDesktopCollapsed(!isCollapsed);
+            }
+        });
+
+        // Desktop Floating Toggler Click
+        $togglerBtn.on('click', function(e) {
+            e.preventDefault();
+            const isCollapsed = $sidebar.hasClass('collapsed');
+            setDesktopCollapsed(!isCollapsed);
+        });
+
+        // Close button inside mobile sidebar
+        $('#sidebarCloseBtn').on('click', function(e) {
+            e.preventDefault();
+            closeMobileDrawer();
+        });
+
+        // Backdrop click closes mobile drawer
+        $backdrop.on('click', function() {
+            closeMobileDrawer();
+        });
+
+        // Submenu accordion toggle
         $('#toggle-submenu').on('click', function(e) {
             e.preventDefault();
-            $('#submenu').slideToggle();
+            // If desktop and currently collapsed, expand first
+            if (window.innerWidth >= 992 && $sidebar.hasClass('collapsed')) {
+                setDesktopCollapsed(false);
+            }
+            $('#submenu').slideToggle(200);
             $(this).find('.arrow-icon').toggleClass('fa-chevron-right fa-chevron-down');
         });
 
-        $('#toggler-btn').on('click', function() {
-            $('.sidebar').toggleClass('collapsed');
-            $('.navbar').toggleClass('collapsed');
-            $('#user-info').toggle();
+        // Auto close mobile drawer on window resize to desktop
+        $(window).on('resize', function() {
+            if (window.innerWidth >= 992) {
+                closeMobileDrawer();
+                if (localStorage.getItem('sidebar_collapsed') === '1') {
+                    setDesktopCollapsed(true);
+                } else {
+                    setDesktopCollapsed(false);
+                }
+            }
         });
     });
 </script>
 
 <style>
-    /* Sidebar Style */
-    .sidebar {
-        background-color: #ffffff;
-        color: #343a40;
-        height: 100vh;
-        padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        transition: width 0.3s ease;
-        width: 250px;
-        /* Lebar sidebar normal */
-        position: fixed;
-        /* Sidebar tetap di sisi kiri */
-        z-index: 1000;
-        /* Pastikan di atas konten lain */
-        overflow-y: auto;
-        /* Scroll jika konten lebih dari tinggi */
+    /* ============================================================
+       SIDEBAR CORE STYLES & DESIGN TOKENS
+       ============================================================ */
+    :root {
+        --sidebar-width: 260px;
+        --sidebar-collapsed-width: 72px;
+        --sidebar-bg: #ffffff;
+        --sidebar-color: #2c3e50;
     }
 
+    /* Backdrop for Mobile */
+    .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        z-index: 1045;
+        opacity: 0;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sidebar-backdrop.show {
+        display: block;
+        opacity: 1;
+    }
+
+    /* Base Sidebar */
+    .sidebar {
+        background-color: var(--sidebar-bg);
+        color: var(--sidebar-color);
+        height: 100vh;
+        width: var(--sidebar-width);
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 1040;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-right: 1px solid var(--kj-border);
+    }
+
+    /* Smooth scrollbar for sidebar */
+    .sidebar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 4px;
+    }
+
+    .sidebar-nav-wrapper {
+        flex: 1;
+        overflow-y: auto;
+        padding: 6px 10px;
+    }
+
+    /* Sidebar Navigation Links */
     .sidebar a {
         display: flex;
         align-items: center;
-        padding: 10px;
-        color: #343a40;
+        padding: 9px 12px;
+        color: #475569;
         text-decoration: none;
-        border-radius: 5px;
-        transition: background-color 0.3s;
+        border-radius: 9px;
+        margin-bottom: 3px;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .sidebar a i {
+        font-size: 1.05rem;
+        width: 22px;
+        text-align: center;
+        margin-right: 12px;
+        flex-shrink: 0;
+        color: #94a3b8;
+        transition: color 0.2s ease;
     }
 
     .sidebar a:hover {
-        background-color: #e2df8b;
-        /* Warna lebih terang saat hover */
+        background-color: #f8fafc;
+        color: var(--kj-emerald);
+    }
+
+    .sidebar a:hover i {
+        color: var(--kj-gold-dark);
     }
 
     .sidebar a.active {
-        background-color: #e6bf3e;
-        /* Warna untuk link aktif */
-        color: #ffffff;
-        /* Teks putih untuk link aktif */
+        background: var(--kj-gold-gradient);
+        color: #ffffff !important;
+        font-weight: 600;
+        box-shadow: 0 3px 10px rgba(212, 165, 23, 0.25);
     }
 
+    .sidebar a.active i {
+        color: #ffffff !important;
+    }
+
+    /* Submenu */
     .submenu {
-        transition: max-height 0.3s ease, opacity 0.3s ease;
-        overflow: hidden;
+        padding-left: 8px;
+        margin-top: 2px;
+        margin-bottom: 6px;
     }
 
     .submenu a {
-        padding-left: 30px;
-        background-color: #f8f9fa;
-        /* Warna submenu */
+        padding: 7px 12px;
+        font-size: 0.84rem;
+        background-color: #f8fafc;
+        border-left: 3px solid #e2e8f0;
+        border-radius: 0 7px 7px 0;
+        margin-bottom: 2px;
     }
 
     .submenu a:hover {
-        background-color: #e2df8b;
-        /* Warna lebih terang saat hover pada submenu */
+        border-left-color: var(--kj-gold);
+        background-color: #fffbeb;
+        color: #1e293b;
+    }
+
+    .submenu a.active {
+        background: var(--kj-gold-gradient) !important;
+        border-left-color: var(--kj-gold-dark) !important;
+        color: #ffffff !important;
     }
 
     .arrow-icon {
-        margin-left: auto;
-        transition: transform 0.3s;
+        font-size: 0.75rem;
+        transition: transform 0.2s ease;
     }
 
-    /* Media Queries untuk Responsivitas */
-    @media (max-width: 768px) {
-        .sidebar {
-            width: 100%;
-            position: relative;
-            /* Ubah posisi sidebar di perangkat kecil */
-            height: auto;
-            /* Tinggi otomatis */
-        }
-
-        .sidebar a {
-            justify-content: space-between;
-            /* Sesuaikan tampilan link */
-        }
-
-        .navbar {
-            margin-left: 0;
-            /* Menghilangkan margin di navbar */
-        }
-
-        .toggle-btn {
-            display: block;
-            /* Tampilkan tombol toggle di perangkat kecil */
-        }
+    /* Profile Pic with Gold Ring */
+    .profile-pic {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+        display: block;
+        transition: all 0.3s ease;
+        border: 2.5px solid var(--kj-gold);
+        padding: 2px;
+        background: #fff;
+        box-shadow: 0 0 10px rgba(230, 191, 62, 0.25);
     }
 
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Desktop Floating Toggler Button */
     .toggler-btn {
         position: fixed;
-        left: 250px;
-        /* Posisi di samping sidebar */
-        top: 10px;
-        z-index: 1100;
-        transition: left 0.3s ease;
+        left: calc(var(--sidebar-width) - 14px);
+        top: 14px;
+        z-index: 1048;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border-radius: 50%;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease;
+        border: 1px solid #d4a517;
+        font-size: 0.75rem;
     }
 
-    /* Styling untuk tombol toggler */
-    .btn-yellow {
-        background-color: #ffc107;
-        /* Sesuaikan dengan warna tema */
-        color: #ffffff;
+    .toggler-btn:hover {
+        transform: scale(1.1);
     }
 
-    /* Mengatur navbar di samping sidebar */
+    /* Navbar Alignment */
     .navbar {
-        margin-left: 250px;
-        transition: margin-left 0.3s ease;
+        margin-left: var(--sidebar-width);
+        transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: 56px;
+        z-index: 1030;
     }
 
-    .collapsed+.navbar {
-        margin-left: 80px;
+    /* Content & Footer Alignment */
+    .content, #content {
+        margin-left: var(--sidebar-width);
+        padding: 24px 24px;
+        transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        min-height: calc(100vh - 116px);
     }
 
-    .footer {
-        margin-top: 20px;
+    .footer, footer {
+        margin-left: var(--sidebar-width);
+        transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+       DESKTOP COLLAPSED (MINI) MODE (>= 992px)
+       ============================================================ */
+    @media (min-width: 992px) {
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width) !important;
+        }
+
+        .sidebar.collapsed .sidebar-brand-text,
+        .sidebar.collapsed .user-title,
+        .sidebar.collapsed .sidebar-text,
+        .sidebar.collapsed .arrow-icon,
+        .sidebar.collapsed .submenu {
+            display: none !important;
+        }
+
+        .sidebar.collapsed #user-info {
+            padding: 10px 4px !important;
+        }
+
+        .sidebar.collapsed .profile-pic {
+            width: 36px;
+            height: 36px;
+            margin: 0 auto;
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            justify-content: center !important;
+            padding: 12px 4px !important;
+        }
+
+        .sidebar.collapsed a {
+            justify-content: center !important;
+            padding: 11px 0 !important;
+            margin-bottom: 5px;
+        }
+
+        .sidebar.collapsed a i {
+            margin-right: 0 !important;
+            font-size: 1.15rem;
+        }
+
+        .navbar.collapsed {
+            margin-left: var(--sidebar-collapsed-width) !important;
+        }
+
+        .content.collapsed, #content.collapsed {
+            margin-left: var(--sidebar-collapsed-width) !important;
+        }
+
+        .footer.collapsed, footer.collapsed {
+            margin-left: var(--sidebar-collapsed-width) !important;
+        }
+
+        .toggler-btn.collapsed {
+            left: calc(var(--sidebar-collapsed-width) - 14px) !important;
+        }
+    }
+
+    /* ============================================================
+       TABLET & MOBILE OFF-CANVAS MODE (< 992px)
+       ============================================================ */
+    @media (max-width: 991.98px) {
+        .sidebar {
+            width: 280px !important;
+            max-width: 85vw;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            transform: translateX(-100%);
+            z-index: 1055;
+            box-shadow: none;
+        }
+
+        .sidebar.mobile-open {
+            transform: translateX(0) !important;
+            box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .sidebar .sidebar-text,
+        .sidebar .user-title,
+        .sidebar .arrow-icon {
+            display: inline-block !important;
+        }
+        .sidebar .user-title {
+            display: block !important;
+        }
+        .sidebar a {
+            justify-content: flex-start !important;
+            padding: 10px 14px !important;
+        }
+        .sidebar a i {
+            margin-right: 12px !important;
+        }
+
+        .navbar,
+        .navbar.collapsed,
+        .content,
+        #content,
+        .content.collapsed,
+        #content.collapsed,
+        .footer,
+        footer,
+        .footer.collapsed,
+        footer.collapsed {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        .content, #content {
+            padding: 16px 14px !important;
+        }
+
+        .toggler-btn {
+            display: none !important;
+        }
     }
 </style>
