@@ -164,6 +164,9 @@
                 <i class="bi bi-database-fill-gear"></i> <span class="sidebar-text">Kelola Data</span>
             </a>
             @if (in_array($idSatker, ['admin', '999999']) || $levelSakip == 99)
+                <a href="{{ route('dokumen-sakip.index') }}" class="{{ request()->is('keloladata/dokumen-sakip*') ? 'active' : '' }}" title="Dokumen SAKIP">
+                    <i class="bi bi-file-earmark-text-fill text-info"></i> <span class="sidebar-text text-info fw-semibold">Dokumen SAKIP</span>
+                </a>
                 <a href="{{ Route::has('hapustahun.index') ? route('hapustahun.index') : url('/keloladata/hapus-tahun') }}" class="{{ request()->is('keloladata/hapus-tahun*') ? 'active' : '' }}" title="Hapus Data Tahun">
                     <i class="bi bi-trash3-fill text-danger"></i> <span class="sidebar-text text-danger fw-semibold">Hapus Data Tahun</span>
                 </a>

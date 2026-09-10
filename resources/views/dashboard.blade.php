@@ -245,130 +245,86 @@
                     <div class="card-body p-3">
 
                         <!-- Pedoman & Aturan Pokok -->
+                        @php $pedoman = $dokumenSakip->where('kategori', 'pedoman_ketentuan'); @endphp
+                        @if($pedoman->count() > 0)
                         <div class="mb-4">
                             <h6 class="fw-bold text-secondary text-uppercase small mb-2 d-flex align-items-center gap-2">
                                 <i class="bi bi-file-earmark-pdf-fill text-danger"></i> Pedoman & Ketentuan
                             </h6>
                             <div class="d-flex flex-column gap-2">
-                                <a href="https://drive.google.com/file/d/1Hm8d_Cvk_h9aA8rIYb1XyJO6C1WTwjAs/view" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-file-earmark-pdf-fill text-danger"></i></div>
+                                @foreach($pedoman as $item)
+                                <a href="{{ $item->url }}" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi {{ $item->icon }}"></i></div>
                                     <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">Pedoman JA Nomor 4 Tahun 2025</div>
-                                        <small class="text-muted text-truncate d-block">Evaluasi AKIP di Lingkungan Kejaksaan RI</small>
+                                        <div class="fw-bold text-truncate">{{ $item->judul }}</div>
+                                        @if($item->deskripsi)
+                                        <small class="text-muted text-truncate d-block">{{ $item->deskripsi }}</small>
+                                        @endif
                                     </div>
                                     <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
                                 </a>
-
-                                <a href="https://drive.google.com/file/d/1mNb9htgVw1ClP_0eHWAwBjYp6ygIG9-m/view?usp=drive_link" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-file-earmark-pdf-fill text-danger"></i></div>
-                                    <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">Pedoman JA Nomor 4 Tahun 2024</div>
-                                        <small class="text-muted text-truncate d-block">Penyelenggaraan SAKIP Kejaksaan RI</small>
-                                    </div>
-                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
-                                </a>
-
-                                <a href="https://drive.google.com/drive/u/0/folders/1lRlkVrXcECSfNdzoGpPpsftYrWHN2ddn" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-folder-fill text-warning"></i></div>
-                                    <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">Folder Peraturan SAKIP Terpadu</div>
-                                        <small class="text-muted text-truncate d-block">Arsip Google Drive Regulasi SAKIP</small>
-                                    </div>
-                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
-                                </a>
+                                @endforeach
                             </div>
                         </div>
+                        @endif
 
-                        <!-- Template 2026 -->
+                        <!-- Template Tahun Berjalan -->
+                        @php $template = $dokumenSakip->where('kategori', 'template_tahun_berjalan'); @endphp
+                        @if($template->count() > 0)
                         <div class="mb-4">
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <h6 class="fw-bold text-secondary text-uppercase small mb-0 d-flex align-items-center gap-2">
-                                    <i class="bi bi-folder-check text-success"></i> Template Dokumen SAKIP Tahun 2026
+                                    <i class="bi bi-folder-check text-success"></i> Template Dokumen SAKIP Tahun Aktif
                                 </h6>
                                 <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-0">Tahun Aktif</span>
                             </div>
                             <div class="d-flex flex-column gap-2">
-                                <a href="https://drive.google.com/drive/folders/16jJkdH1mW-h4CSKQn2Jgg4suwG86ocvg?usp=drive_link" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-file-earmark-text-fill text-primary"></i></div>
+                                @foreach($template as $item)
+                                <a href="{{ $item->url }}" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi {{ $item->icon }}"></i></div>
                                     <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">Format Rencana Aksi & Monev Renaksi ES I TW I 2026</div>
-                                        <small class="text-muted text-truncate d-block">Template Resmi Eselon I</small>
+                                        <div class="fw-bold text-truncate">{{ $item->judul }}</div>
+                                        @if($item->deskripsi)
+                                        <small class="text-muted text-truncate d-block">{{ $item->deskripsi }}</small>
+                                        @endif
                                     </div>
                                     <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
                                 </a>
-
-                                <a href="https://drive.google.com/drive/folders/1e-f1ElSCYFGOPQvvxti3Je0q_vnpCFY8?usp=sharing" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-file-earmark-bar-graph text-info"></i></div>
-                                    <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">LKJ TW I Tahun 2026 - Kejati, Kejari, Cabjari</div>
-                                        <small class="text-muted text-truncate d-block">Laporan Kinerja Triwulan I Satker Daerah</small>
-                                    </div>
-                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
-                                </a>
-
-                                <a href="https://drive.google.com/drive/folders/1gldPqRO1rTIbeNY8P5eEarnhl1b_PypE?usp=sharing" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-calendar-event text-warning"></i></div>
-                                    <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">Rencana Aksi Kinerja Tahun 2026</div>
-                                        <small class="text-muted text-truncate d-block">Dokumen Penetapan Renaksi 2026</small>
-                                    </div>
-                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
-                                </a>
-
-                                <a href="https://drive.google.com/drive/folders/1lzttjDxiYNoAKSS0ZNCFbLZIpQ-SuA89?usp=sharing" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-clipboard2-data text-success"></i></div>
-                                    <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">Monev Renaksi Kinerja TW I Tahun 2026</div>
-                                        <small class="text-muted text-truncate d-block">Monitoring dan Evaluasi Capaian Triwulan</small>
-                                    </div>
-                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
-                                </a>
-
-                                <a href="https://drive.google.com/drive/folders/1I6UQ5UizAHDwAL8UPcq9Oqo9SHo7rUtX?usp=sharing" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-people-fill text-secondary"></i></div>
-                                    <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">RASTAFF EKA Tahun 2026</div>
-                                        <small class="text-muted text-truncate d-block">Rapat Staf Evaluasi Kinerja Anggaran</small>
-                                    </div>
-                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
-                                </a>
+                                @endforeach
                             </div>
                         </div>
+                        @endif
 
-                        <!-- Template 2025 -->
+                        <!-- Arsip Template -->
+                        @php $arsip = $dokumenSakip->where('kategori', 'arsip_template'); @endphp
+                        @if($arsip->count() > 0)
                         <div>
                             <h6 class="fw-bold text-secondary text-uppercase small mb-2 d-flex align-items-center gap-2">
-                                <i class="bi bi-archive-fill text-muted"></i> Arsip Template Dokumen SAKIP Tahun 2025
+                                <i class="bi bi-archive-fill text-muted"></i> Arsip Template Dokumen SAKIP
                             </h6>
                             <div class="d-flex flex-column gap-2">
-                                <a href="https://drive.google.com/drive/folders/1bAzTx5kaIJvP8jnAA5RZqGGA5hWxbevR?usp=sharing" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-file-earmark-word text-primary"></i></div>
+                                @foreach($arsip as $item)
+                                <a href="{{ $item->url }}" target="_blank" class="btn-linktree">
+                                    <div class="doc-icon"><i class="bi {{ $item->icon }}"></i></div>
                                     <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">Template LKjIP Satuan Kerja Tahun 2025</div>
-                                        <small class="text-muted text-truncate d-block">Format Laporan Kinerja Instansi Pemerintah</small>
+                                        <div class="fw-bold text-truncate">{{ $item->judul }}</div>
+                                        @if($item->deskripsi)
+                                        <small class="text-muted text-truncate d-block">{{ $item->deskripsi }}</small>
+                                        @endif
                                     </div>
                                     <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
                                 </a>
-
-                                <a href="https://drive.google.com/drive/folders/1WdulmYbNpOzFCCathQhJ1W_7IVwdFOHi?usp=drive_link" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-diagram-2 text-success"></i></div>
-                                    <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">Pohon Kinerja Tahun 2025</div>
-                                        <small class="text-muted text-truncate d-block">Cascading & Alignment Sasaran Kinerja</small>
-                                    </div>
-                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
-                                </a>
-
-                                <a href="https://drive.google.com/drive/folders/1KlMJCKb8mmDlvPiYkjkuWNXyrRsQtfMB?usp=sharing" target="_blank" class="btn-linktree">
-                                    <div class="doc-icon"><i class="bi bi-bullseye text-danger"></i></div>
-                                    <div class="overflow-hidden flex-grow-1">
-                                        <div class="fw-bold text-truncate">IKU / Penetapan Target Kinerja 2025</div>
-                                        <small class="text-muted text-truncate d-block">Format Indikator Kinerja Utama</small>
-                                    </div>
-                                    <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
-                                </a>
+                                @endforeach
                             </div>
                         </div>
+                        @endif
+
+                        @if($dokumenSakip->count() == 0)
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-inbox fs-2 d-block mb-2 text-secondary"></i>
+                            Belum ada dokumen yang tersedia.
+                        </div>
+                        @endif
 
                     </div>
                 </div>

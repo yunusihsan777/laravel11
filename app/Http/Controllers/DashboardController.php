@@ -10,6 +10,7 @@ use App\Models\Rkakl;
 use App\Models\Dipa;
 use App\Models\Renaksi;
 use App\Models\Kep;
+use App\Models\DokumenSakip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -76,6 +77,8 @@ class DashboardController extends Controller
         }
     // pastikan kolom bernama `keputusan`, sesuaikan jika beda
 
+        $dokumenSakip = DokumenSakip::where('is_active', true)->orderBy('kategori')->orderBy('urutan')->get();
+
         // Kirim data ke view
         // return view('dashboard', compact('pengumuman', 'jumlahAturan', 'data', ['tahun' => $tahun]));
         return view('dashboard', [
@@ -91,6 +94,7 @@ class DashboardController extends Controller
             'rencanaAksiTerisi' => $rencanaAksiTerisi,
             'keputusanTimSakipTerisi' => $keputusanTimSakipTerisi,
             'sortedKepList' => $sortedKepList,
+            'dokumenSakip' => $dokumenSakip,
 
         ]);
     }

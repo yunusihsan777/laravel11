@@ -18,6 +18,7 @@ use App\Http\Controllers\AturanController;
 use App\Http\Controllers\LiterasiController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\KeloladataController;
+use App\Http\Controllers\DokumenSakipController;
 use App\Http\Controllers\UbahpasswordController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\DataLke;
@@ -178,6 +179,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/indikator/store', [KeloladataController::class, 'storeIndikator'])->name('indikator.store');
     Route::post('/indikator/delete/{id}', [KeloladataController::class, 'deleteIndikator'])->name('indikator.delete');
     Route::post('/indikator/update/{id}', [KeloladataController::class, 'updateIndikator'])->name('indikator.update');
+    
+    // === Dokumen SAKIP ===
+    Route::get('/keloladata/dokumen-sakip', [DokumenSakipController::class, 'index'])->name('dokumen-sakip.index');
+    Route::post('/keloladata/dokumen-sakip', [DokumenSakipController::class, 'store'])->name('dokumen-sakip.store');
+    Route::put('/keloladata/dokumen-sakip/{id}', [DokumenSakipController::class, 'update'])->name('dokumen-sakip.update');
+    Route::delete('/keloladata/dokumen-sakip/{id}', [DokumenSakipController::class, 'destroy'])->name('dokumen-sakip.destroy');
 
     // === Hapus File & Data Berdasarkan Tahun (Admin Only) ===
     Route::get('/keloladata/hapus-tahun', [HapusFileController::class, 'index'])->name('hapustahun.index');
