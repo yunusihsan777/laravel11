@@ -9,6 +9,20 @@
         $levelSakip = session('id_sakip_level', 0);
         $tahun = session('tahun_ui', date('Y'));
 
+        // Format satkernama for Kejati/Kejari bidang users in sidebar
+        $sidebarSatkerNama = $satkernama;
+        $upperSatker = strtoupper(trim($satkernama));
+        if (str_starts_with($upperSatker, 'ASISTEN ')) {
+            $bidang = trim(substr($satkernama, 8));
+            $sidebarSatkerNama = 'Bidang ' . ucwords(strtolower($bidang));
+        } elseif (str_starts_with($upperSatker, 'KEPALA SEKSI ')) {
+            $bidang = trim(substr($satkernama, 13));
+            $sidebarSatkerNama = 'Bidang ' . ucwords(strtolower($bidang));
+        } elseif (str_starts_with($upperSatker, 'KASI ')) {
+            $bidang = trim(substr($satkernama, 5));
+            $sidebarSatkerNama = 'Bidang ' . ucwords(strtolower($bidang));
+        }
+
         // Cek apakah submenu harus dibuka
         $submenuActive =
             request()->is('kep') ||
@@ -46,8 +60,8 @@
             <span class="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle p-1" title="Online" style="width: 12px; height: 12px;"></span>
         </div>
         <div class="user-title mt-1">
-            <div class="fw-bold text-dark text-truncate-2" title="{{ $satkernama }}" style="font-size: 0.85rem; line-height: 1.35;">
-                {{ $satkernama }}
+            <div class="fw-bold text-dark text-truncate-2" title="{{ $sidebarSatkerNama }}" style="font-size: 0.85rem; line-height: 1.35;">
+                {{ $sidebarSatkerNama }}
             </div>
             <span class="badge bg-light text-secondary border mt-1" style="font-size: 0.72rem; font-weight: 600;">
                 <i class="bi bi-shield-check text-success me-1"></i>ID: {{ $idSatker }}
@@ -146,9 +160,20 @@
             <a href="{{ route('pengumuman') }}" class="{{ request()->is('pengumuman*') ? 'active' : '' }}" title="Pengumuman">
                 <i class="bi bi-megaphone-fill"></i> <span class="sidebar-text">Pengumuman</span>
             </a>
-            <a href="{{ route('keloladata') }}" class="{{ request()->is('keloladata*') ? 'active' : '' }}" title="Kelola Data">
+            <a href="{{ route('keloladata') }}" class="{{ request()->is('keloladata') ? 'active' : '' }}" title="Kelola Data">
                 <i class="bi bi-database-fill-gear"></i> <span class="sidebar-text">Kelola Data</span>
             </a>
+            @if (in_array($idSatker, ['admin', '999999']) || $levelSakip == 99)
+                <a href="{{ Route::has('hapustahun.index') ? route('hapustahun.index') : url('/keloladata/hapus-tahun') }}" class="{{ request()->is('keloladata/hapus-tahun*') ? 'active' : '' }}" title="Hapus Data Tahun">
+                    <i class="bi bi-trash3-fill text-danger"></i> <span class="sidebar-text text-danger fw-semibold">Hapus Data Tahun</span>
+                </a>
+                <a href="{{ Route::has('restoretahun.index') ? route('restoretahun.index') : url('/keloladata/restore-tahun') }}" class="{{ request()->is('keloladata/restore-tahun*') ? 'active' : '' }}" title="Restore File Tahun">
+                    <i class="bi bi-cloud-arrow-up-fill text-success"></i> <span class="sidebar-text text-success fw-semibold">Restore File Tahun</span>
+                </a>
+                <a href="{{ Route::has('backuptahun.index') ? route('backuptahun.index') : url('/keloladata/backup-tahun') }}" class="{{ request()->is('keloladata/backup-tahun*') ? 'active' : '' }}" title="Backup File Tahun">
+                    <i class="bi bi-cloud-arrow-down-fill text-primary"></i> <span class="sidebar-text text-primary fw-semibold">Backup File Tahun</span>
+                </a>
+            @endif
             <a href="{{ route('ubahpassword') }}" class="{{ request()->is('ubahpassword') ? 'active' : '' }}" title="Ubah Password">
                 <i class="bi bi-key-fill"></i> <span class="sidebar-text">Ubah Password</span>
             </a>

@@ -35,7 +35,11 @@ class SicanaController extends Controller
         }
 
         $signer = new Sha256();
-        $key = InMemory::plainText("Wmt1ZGprM2xmczBnSUpHZHlqNzdTcGZtQXpVZ0hPb2Zabw==");
+        $secretKey = config('services.sicana.secret');
+        if (!$secretKey) {
+            throw new \Exception('JWT Secret Key not configured');
+        }
+        $key = InMemory::plainText($secretKey);
 
         $config = Configuration::forSymmetricSigner($signer, $key);
 

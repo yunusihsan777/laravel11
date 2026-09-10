@@ -25,6 +25,9 @@ use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\Indikator2025Controller;
 use App\Http\Controllers\Lke\LkeEvidenceMappingController;
 use App\Http\Controllers\Lke\LkeEvaluasiController;
+use App\Http\Controllers\HapusFileController;
+use App\Http\Controllers\RestoreFileController;
+use App\Http\Controllers\BackupFileController;
 
 Route::get('/spip', function () {
     return view('spip'); // resources/views/spip.blade.php
@@ -137,7 +140,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/monitoring/subindikator2/{rumpun}', [MonitoringController::class, 'getSubIndikator2']);
     Route::get('/monitoring/capaian-saspro-all', [MonitoringController::class, 'capaianSasproAll'])->name('capaian.saspro.all');
     Route::get('/monitoring/capaian-saspro-per-kejati', [MonitoringController::class, 'capaianSasproPerKejati'])->name('capaian.saspro.perkejati');
-    Route::get('/capaian/saspro/all/{id_satker}/{id_kejati}/{tahun}/{level}', [MonitoringController::class, 'capaianSasproAll'])->name('capaian.saspro.all');
+    Route::get('/capaian/saspro/all/{id_satker}/{id_kejati}/{tahun}/{level}', [MonitoringController::class, 'capaianSasproAll'])->name('capaian.saspro.all.params');
     Route::get('/monitoring/export', [MonitoringController::class, 'exportExcel'])->name('monitoring.export');
     // === Data LKE ===
     Route::get('/evaluasi-akip', [DataLke::class, 'index'])->name('dataLke');
@@ -165,7 +168,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/aturan', [AturanController::class, 'index'])->name('aturan');
     // === Kelola Data ===
     Route::get('/keloladata', [KeloladataController::class, 'index'])->name('keloladata');
-    Route::post('/keloladata/indikator', [KeloladataController::class, 'indikator'])->name('indikator.store');
     Route::post('/keloladata/bidang', [KeloladataController::class, 'bidang'])->name('bidang.store');
     Route::post('/keloladata/saspro', [KeloladataController::class, 'saspro'])->name('saspro.store');
     Route::post('/keloladata/storeOrUpdateBidang', [KeloladataController::class, 'storeOrUpdateBidang'])->name('bidang.storeOrUpdateBidang');
@@ -176,6 +178,31 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/indikator/store', [KeloladataController::class, 'storeIndikator'])->name('indikator.store');
     Route::post('/indikator/delete/{id}', [KeloladataController::class, 'deleteIndikator'])->name('indikator.delete');
     Route::post('/indikator/update/{id}', [KeloladataController::class, 'updateIndikator'])->name('indikator.update');
+
+    // === Hapus File & Data Berdasarkan Tahun (Admin Only) ===
+    Route::get('/keloladata/hapus-tahun', [HapusFileController::class, 'index'])->name('hapustahun.index');
+    Route::post('/keloladata/hapus-tahun/preview', [HapusFileController::class, 'previewData'])->name('hapustahun.preview');
+    Route::post('/keloladata/hapus-tahun/destroy', [HapusFileController::class, 'destroyByTahun'])->name('hapustahun.destroy');
+    Route::post('/keloladata/hapus-tahun/get-satker-batches', [HapusFileController::class, 'getSatkerBatches'])->name('hapustahun.batches');
+    Route::post('/keloladata/hapus-tahun/process-batch', [HapusFileController::class, 'processBatch'])->name('hapustahun.processBatch');
+
+    // === Restore / Upload Backup File Berdasarkan Tahun (Admin Only) ===
+    Route::get('/keloladata/restore-tahun', [RestoreFileController::class, 'index'])->name('restoretahun.index');
+    Route::post('/keloladata/restore-tahun/check-missing', [RestoreFileController::class, 'checkMissingFiles'])->name('restoretahun.check');
+    Route::post('/keloladata/restore-tahun/upload-zip', [RestoreFileController::class, 'uploadZip'])->name('restoretahun.uploadZip');
+    Route::post('/keloladata/restore-tahun/upload-batch', [RestoreFileController::class, 'uploadBatch'])->name('restoretahun.uploadBatch');
+    Route::post('/keloladata/restore-tahun/get-sync-batches', [RestoreFileController::class, 'getSyncBatches'])->name('restoretahun.syncBatches');
+    Route::post('/keloladata/restore-tahun/process-sync-batch', [RestoreFileController::class, 'processSyncBatch'])->name('restoretahun.processSyncBatch');
+
+    // === Backup File Berdasarkan Kejati & Tahun (Admin Only) ===
+    Route::get('/keloladata/backup-tahun', [BackupFileController::class, 'index'])->name('backuptahun.index');
+    Route::post('/keloladata/backup-tahun/preview', [BackupFileController::class, 'previewData'])->name('backuptahun.preview');
+    Route::post('/keloladata/backup-tahun/get-batches', [BackupFileController::class, 'getBackupBatches'])->name('backuptahun.batches');
+    Route::post('/keloladata/backup-tahun/process-batch', [BackupFileController::class, 'processBackupBatch'])->name('backuptahun.processBatch');
+    Route::post('/keloladata/backup-tahun/init-zip', [BackupFileController::class, 'initZipBatch'])->name('backuptahun.initZip');
+    Route::post('/keloladata/backup-tahun/add-zip-batch', [BackupFileController::class, 'addBatchToZip'])->name('backuptahun.addZipBatch');
+    Route::get('/keloladata/backup-tahun/download-zip-ready', [BackupFileController::class, 'downloadZipReady'])->name('backuptahun.downloadZipReady');
+    Route::get('/keloladata/backup-tahun/download-zip', [BackupFileController::class, 'downloadZip'])->name('backuptahun.downloadZip');
 
     // === Fitur Lain ===
     Route::get('/sakipwil', [SakipwilController::class, 'index'])->name('sakipwil');

@@ -27,6 +27,21 @@
                             <a class="nav-link" id="data-indikator-tab" data-bs-toggle="tab" href="#data-indikator"
                                 role="tab" aria-controls="data-indikator" aria-selected="false">Data Indikator</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger fw-bold" href="{{ Route::has('hapustahun.index') ? route('hapustahun.index') : url('/keloladata/hapus-tahun') }}">
+                                <i class="fas fa-trash-alt me-1"></i> Hapus File & Data Tahun
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-success fw-bold" href="{{ Route::has('restoretahun.index') ? route('restoretahun.index') : url('/keloladata/restore-tahun') }}">
+                                <i class="fas fa-file-upload me-1"></i> Restore File Tahun
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-primary fw-bold" href="{{ Route::has('backuptahun.index') ? route('backuptahun.index') : url('/keloladata/backup-tahun') }}">
+                                <i class="fas fa-download me-1"></i> Backup File Tahun
+                            </a>
+                        </li>
                     </ul>
 
 

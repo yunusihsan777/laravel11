@@ -25,22 +25,27 @@ class DashboardController extends Controller
         // Set tahun_terpilih ke tahun sekarang jika belum ada di session
         $tahun = session('tahun_terpilih', date('Y'));
         session(['tahun_terpilih' => $tahun]);
-        $idSatker = session('id_satker'); // Ambil id_satker dari session
-        // $periode = 'P2'; // Periode yang dicek
+        $idSatker = session('id_satker') ?? (auth()->check() ? (auth()->user()->id_satker ?? auth()->id()) : null);
+
+        if (!$idSatker) {
+            return redirect()->route('logout');
+        }
 
         if ($tahun == "2024") {
             $periode = "P1";
         } elseif ($tahun >= "2025" && $tahun <= "2029") {
             $periode = "P2";
+        } else {
+            $periode = "P2";
         }
-
-        // Lanjutkan dengan logika untuk menampilkan data berdasarkan tahun
-        // return view('dashboard', ['tahun' => $tahun]);
 
         $pengumuman = DB::table('sinori_sakip_inbox')->get();
         $jumlahAturan = DB::table('sinori_sakip_literasi')->count(); // Hitung jumlah aturan
         // Data untuk chart
         $id = DB::table('sinori_login')->where('id_satker', $idSatker)->first();
+        if (!$id) {
+            return redirect()->route('logout');
+        }
         $data = DB::table('sinori_login')
             ->where('id_kejati', $id->id_kejati)
             ->get();

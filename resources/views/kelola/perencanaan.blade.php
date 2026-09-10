@@ -763,10 +763,21 @@
 
 
                                         @if ($tahun != 2024)
+                                            @php
+                                                $namaBidang = $bidang->bidang_nama;
+                                                $upperName = strtoupper(trim($namaBidang));
+                                                if (str_starts_with($upperName, 'ASISTEN ')) {
+                                                    $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 8))));
+                                                } elseif (str_starts_with($upperName, 'KEPALA SEKSI ')) {
+                                                    $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 13))));
+                                                } elseif (str_starts_with($upperName, 'KASI ')) {
+                                                    $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 5))));
+                                                }
+                                            @endphp
                                             <div class="card mb-2">
                                                 <div class="card-header d-flex justify-content-between align-items-center"
                                                     style="background-color: #e6bf3e; color: white;">
-                                                    {{ $bidang->bidang_nama }}
+                                                    {{ $namaBidang }}
                                                     <a data-bs-toggle="collapse"
                                                         href="#collapseBidang{{ $index }}" role="button"
                                                         aria-expanded="false"

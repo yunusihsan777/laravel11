@@ -133,9 +133,20 @@
                                                 }
                                             @endphp
                                             @foreach ($bidangs as $bidang)
+                                                @php
+                                                    $namaBidang = $bidang->bidang_nama;
+                                                    $upperName = strtoupper(trim($namaBidang));
+                                                    if (str_starts_with($upperName, 'ASISTEN ')) {
+                                                        $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 8))));
+                                                    } elseif (str_starts_with($upperName, 'KEPALA SEKSI ')) {
+                                                        $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 13))));
+                                                    } elseif (str_starts_with($upperName, 'KASI ')) {
+                                                        $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 5))));
+                                                    }
+                                                @endphp
                                                 <button class="btn btn-outline-success text-black w-100 mb-2 bidang-item"
                                                     data-rumpun="{{ $bidang->rumpun }}">
-                                                    {{ $bidang->bidang_nama }}
+                                                    {{ $namaBidang }}
                                                 </button>
                                             @endforeach
                                         </div>

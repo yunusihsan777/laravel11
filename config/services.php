@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'sicana' => [
+        'secret' => env('SICANA_JWT_SECRET'),
+    ],
+
 ];
