@@ -25,6 +25,7 @@ use App\Http\Controllers\DataLke;
 use App\Http\Controllers\KriteriaController;
 use App\Http\Controllers\Indikator2025Controller;
 use App\Http\Controllers\Lke\LkeEvidenceMappingController;
+use App\Http\Controllers\Lke\LkeMasterBuktiController;
 use App\Http\Controllers\Lke\LkeEvaluasiController;
 use App\Http\Controllers\HapusFileController;
 use App\Http\Controllers\RestoreFileController;
@@ -156,6 +157,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/lke/evidence-mapping', [LkeEvidenceMappingController::class, 'index'])->name('lke.evidence_mapping.index');
     Route::get('/lke/evidence-mapping/detail/{kode}', [LkeEvidenceMappingController::class, 'getCriteriaDetail'])->name('lke.evidence_mapping.detail');
     Route::post('/lke/evidence-mapping/update/{kode}', [LkeEvidenceMappingController::class, 'updateMapping'])->name('lke.evidence_mapping.update');
+    Route::get('/lke/master-bukti', [LkeMasterBuktiController::class, 'index'])->name('lke.master_bukti.index');
+    Route::post('/lke/master-bukti/update/{id}', [LkeMasterBuktiController::class, 'update'])->name('lke.master_bukti.update');
 
     // === Pengumuman ===
     Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman');

@@ -131,9 +131,20 @@
                 @endif
 
                 @if ($levelSakip == 99 || in_array($idSatker, ['admin', '999999']))
-                    <a href="{{ route('lke.evidence_mapping.index') }}" class="{{ request()->is('lke/evidence-mapping*') ? 'active' : '' }}" title="Mapping Bukti LKE (Admin)">
+                    @php
+                        $isMappingActive = request()->is('lke/evidence-mapping*') || request()->is('lke/master-bukti*');
+                    @endphp
+                    <a href="#mappingBuktiMenu" data-bs-toggle="collapse" class="dropdown-toggle {{ $isMappingActive ? '' : 'collapsed' }}" title="Mapping Bukti LKE (Admin)">
                         <i class="bi bi-diagram-3-fill text-info"></i> <span class="sidebar-text">Mapping Bukti (Admin)</span>
                     </a>
+                    <div class="collapse {{ $isMappingActive ? 'show' : '' }}" id="mappingBuktiMenu">
+                        <a href="{{ route('lke.evidence_mapping.index') }}" class="{{ request()->routeIs('lke.evidence_mapping.index') ? 'active' : '' }} ps-4">
+                            <i class="bi bi-link"></i> <span class="sidebar-text">Mapping LKE</span>
+                        </a>
+                        <a href="{{ route('lke.master_bukti.index') }}" class="{{ request()->routeIs('lke.master_bukti.index') ? 'active' : '' }} ps-4">
+                            <i class="bi bi-file-earmark-text"></i> <span class="sidebar-text">Master Bukti Dukung</span>
+                        </a>
+                    </div>
                 @endif
             </div>
         @endif
