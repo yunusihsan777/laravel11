@@ -85,117 +85,171 @@
                         <div class="tab-pane fade {{ $activeTab == 'capaian' ? 'show active' : '' }}" id="capaian"
                             role="tabpanel" aria-labelledby="capaian-tab">
                             <h5>Capaian Kinerja</h5>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="card">
-                                        <div class="card-header bg-warning">
-                                            <strong>📌 Daftar Bidang</strong>
-                                        </div>
-                                        <div class="card-body">
-                                            @php
-                                                $level = session('id_sakip_level');
-                                                $satkernama = session('satkernama') ?? '';
-                                                // $bidangs = [];
-                                                $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
-                                                if ($level == 0) {
-                                                    // Admin atau superuser: ambil semua bidang
-                                                    $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
-                                                        ->where('hide', 0)
-                                                        ->orderBy('bidang_lokasi', 'asc')
-                                                        ->orderBy('bidang_level', 'asc')
-                                                        ->get();
-                                                } elseif ($level == 1) {
-                                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                                        ->where('hide', 0)
-                                                        ->whereRaw("LOWER(REPLACE(bidang_nama, '_', ' ')) LIKE ?", [
-                                                            '%' . strtolower(trim($kataTerakhir)),
-                                                        ])
-                                                        ->whereNotNull('bidang_level')
-                                                        ->orderBy('bidang_level', 'asc')
-                                                        ->get();
-                                                } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
-                                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                                        ->whereNotNull('bidang_level')
-                                                        ->orderBy('bidang_level', 'asc')
-                                                        ->get();
-
-                                                    if (
-                                                        $bidangs->isNotEmpty() &&
-                                                        stripos($bidangs[0]->bidang_nama, 'kepala') === 0
-                                                    ) {
-                                                        $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
-                                                    }
-                                                } elseif ($level > 1) {
-                                                    $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
-                                                        ->whereNotNull('bidang_level')
-                                                        ->orderBy('bidang_level', 'asc')
-                                                        ->get();
-                                                }
-                                            @endphp
-                                            @foreach ($bidangs as $bidang)
+                            @if ($levelSakip == 1)
+                                {{-- ===== MODE LEVEL 1: Capaian Kinerja IKP Kejaksaan Agung ===== --}}
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="card">
+                                            <div class="card-header bg-warning">
+                                                <strong>📌 Daftar Bidang</strong>
+                                            </div>
+                                            <div class="card-body">
                                                 @php
-                                                    $namaBidang = $bidang->bidang_nama;
-                                                    $upperName = strtoupper(trim($namaBidang));
-                                                    if (str_starts_with($upperName, 'ASISTEN ')) {
-                                                        $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 8))));
-                                                    } elseif (str_starts_with($upperName, 'KEPALA SEKSI ')) {
-                                                        $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 13))));
-                                                    } elseif (str_starts_with($upperName, 'KASI ')) {
-                                                        $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 5))));
+                                                    $satkerBidangs = \App\Http\Controllers\PengukuranIkpController::getFilteredBidangs();
+                                                @endphp
+                                                @foreach ($satkerBidangs as $sb)
+                                                    <button class="btn btn-outline-success text-black w-100 mb-2 text-start bidang-ikp-item"
+                                                        data-satker-id="{{ $sb['id'] }}"
+                                                        data-satker-nama="{{ $sb['nama'] }}">
+                                                        <i class="bi bi-folder2-open me-2 text-success"></i>
+                                                        <span class="bidang-nama-text">{{ $sb['nama'] }}</span>
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-9">
+                                        <div class="card" id="ikp-controls-wrapper" style="display:none;">
+                                            <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span>📋 Indikator Kinerja Program</span>
+                                                    <select id="triwulan-ikp" class="form-select w-auto">
+                                                        <option value="1" selected>Triwulan 1</option>
+                                                        <option value="2">Triwulan 2</option>
+                                                        <option value="3">Triwulan 3</option>
+                                                        <option value="4">Triwulan 4</option>
+                                                    </select>
+                                                    <button id="reloadIkpBtn" class="btn btn-success btn-sm">Pilih</button>
+                                                </div>
+                                                <div class="d-flex align-items-center gap-2" id="pelaporan-accordion-actions">
+                                                    <button type="button" class="btn btn-sm btn-outline-dark" id="btn-pelaporan-expand-all" title="Buka Semua Sasaran Program">
+                                                        <i class="bi bi-arrows-expand me-1"></i> Buka Semua
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-outline-dark" id="btn-pelaporan-collapse-all" title="Tutup Semua Sasaran Program">
+                                                        <i class="bi bi-arrows-collapse me-1"></i> Tutup Semua
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body" id="ikp-subindikator-wrapper">
+                                                <strong>(Indikator Kinerja Program)</strong>
+                                                <div class="ikp-wrapper">Pilih Bidang Terlebih Dahulu</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                {{-- ===== MODE LEVEL SATKER (Kejati/Kejari): Existing Capaian Kinerja ===== --}}
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="card">
+                                            <div class="card-header bg-warning">
+                                                <strong>📌 Daftar Bidang</strong>
+                                            </div>
+                                            <div class="card-body">
+                                                @php
+                                                    $level = session('id_sakip_level');
+                                                    $satkernama = session('satkernama') ?? '';
+                                                    $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
+                                                    if ($level == 0) {
+                                                        // Admin atau superuser: ambil semua bidang
+                                                        $bidangs = \App\Models\Bidang::whereNotNull('bidang_level')
+                                                            ->where('hide', 0)
+                                                            ->orderBy('bidang_lokasi', 'asc')
+                                                            ->orderBy('bidang_level', 'asc')
+                                                            ->get();
+                                                    } elseif ($level == 1) {
+                                                        $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                            ->where('hide', 0)
+                                                            ->whereRaw("LOWER(REPLACE(bidang_nama, '_', ' ')) LIKE ?", [
+                                                                '%' . strtolower(trim($kataTerakhir)),
+                                                            ])
+                                                            ->whereNotNull('bidang_level')
+                                                            ->orderBy('bidang_level', 'asc')
+                                                            ->get();
+                                                    } elseif (str_starts_with(strtoupper($satkernama), 'CABJARI')) {
+                                                        $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                            ->whereNotNull('bidang_level')
+                                                            ->orderBy('bidang_level', 'asc')
+                                                            ->get();
+
+                                                        if (
+                                                            $bidangs->isNotEmpty() &&
+                                                            stripos($bidangs[0]->bidang_nama, 'kepala') === 0
+                                                        ) {
+                                                            $bidangs[0]->bidang_nama = 'Kepala Cabang Kejaksaan Negeri';
+                                                        }
+                                                    } elseif ($level > 1) {
+                                                        $bidangs = \App\Models\Bidang::where('bidang_lokasi', $level)
+                                                            ->whereNotNull('bidang_level')
+                                                            ->orderBy('bidang_level', 'asc')
+                                                            ->get();
                                                     }
                                                 @endphp
-                                                <button class="btn btn-outline-success text-black w-100 mb-2 bidang-item"
-                                                    data-rumpun="{{ $bidang->rumpun }}">
-                                                    {{ $namaBidang }}
-                                                </button>
-                                            @endforeach
+                                                @foreach ($bidangs as $bidang)
+                                                    @php
+                                                        $namaBidang = $bidang->bidang_nama;
+                                                        $upperName = strtoupper(trim($namaBidang));
+                                                        if (str_starts_with($upperName, 'ASISTEN ')) {
+                                                            $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 8))));
+                                                        } elseif (str_starts_with($upperName, 'KEPALA SEKSI ')) {
+                                                            $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 13))));
+                                                        } elseif (str_starts_with($upperName, 'KASI ')) {
+                                                            $namaBidang = 'Bidang ' . ucwords(strtolower(trim(substr($namaBidang, 5))));
+                                                        }
+                                                    @endphp
+                                                    <button class="btn btn-outline-success text-black w-100 mb-2 bidang-item"
+                                                        data-rumpun="{{ $bidang->rumpun }}">
+                                                        {{ $namaBidang }}
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-9">
+                                        <div class="card" id="controls-wrapper" class="mb-3" style="display:none;">
+                                            <div class="card-header d-flex align-items-center gap-2">
+                                                <span>📋 Indikator</span>
+                                                @php
+                                                    $tahun = session('tahun_terpilih');
+                                                    $khusus = session('tw4_khusus');
+                                                @endphp
+
+                                                <select id="triwulan" class="form-select w-auto">
+                                                    @if ($tahun == 2025)
+                                                        @if ($khusus == 1)
+                                                            <option value="4" selected>Triwulan 4</option>
+                                                        @else
+                                                            <option value="1" selected>Triwulan 1</option>
+                                                            <option value="2">Triwulan 2</option>
+                                                            <option value="3">Triwulan 3</option>
+                                                        @endif
+                                                    @else
+                                                        <option value="1" selected>Triwulan 1</option>
+                                                        <option value="2">Triwulan 2</option>
+                                                        <option value="3">Triwulan 3</option>
+                                                        <option value="4">Triwulan 4</option>
+                                                    @endif
+                                                </select>
+
+                                                <button id="reloadBtn" class="btn btn-success">Pilih</button>
+                                            </div>
+                                            <div class="card-body" id="subindikator-wrapper">
+                                                <form method="POST" action="#">
+                                                    <strong>(Sub Indikator)</strong>
+                                                    <div class="subindikator-wrapper">Pilih Bidang Terlebih dahulu</div>
+
+                                                    <div class="text-end mt-4">
+                                                        <button type="submit" class="btn btn-success" id="btn-simpan"
+                                                            style="background-color: #198754; color: white; display: none;">Simpan</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="col-md-9">
-                                    <div class="card" id="controls-wrapper" class="mb-3" style="display:none;">
-                                        <div class="card-header d-flex align-items-center gap-2">
-                                            <span>📋 Indikator</span>
-                                            @php
-    $tahun   = session('tahun_terpilih');
-    $khusus  = session('tw4_khusus');
-@endphp
-
-<select id="triwulan" class="form-select w-auto">
-    @if ($tahun == 2025)
-        @if ($khusus == 1)
-            <option value="4" selected>Triwulan 4</option>
-        @else
-            <option value="1" selected>Triwulan 1</option>
-            <option value="2">Triwulan 2</option>
-            <option value="3">Triwulan 3</option>
-        @endif
-    @else
-        <option value="1" selected>Triwulan 1</option>
-        <option value="2">Triwulan 2</option>
-        <option value="3">Triwulan 3</option>
-        <option value="4">Triwulan 4</option>
-    @endif
-</select>
-
-                                            <button id="reloadBtn" class="btn btn-success">Pilih</button>
-                                        </div>
-                                        <div class="card-body" id="subindikator-wrapper">
-                                            <form method="POST" action="#">
-                                                <strong>(Sub Indikator)</strong>
-                                                <div class="subindikator-wrapper">Pilih Bidang Terlebih dahulu</div>
-
-                                                <div class="text-end mt-4">
-                                                    <button type="submit" class="btn btn-success" id="btn-simpan"
-                                                        style="background-color: #198754; color: white; display: none;">Simpan</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
+                            @endif
                         </div>
                         {{-- @endif --}}
                         @if ($levelSakip == 99)
@@ -668,16 +722,221 @@
                     });
                 });
 
+                // === LOGIKA PELAPORAN IKP (LEVEL 1 KEJAKSAAN AGUNG) ===
+                let selectedIkpSatkerId = null;
+
+                $('.bidang-ikp-item').on('click', function() {
+                    $(".bidang-ikp-item").removeClass("active btn-success text-white").addClass("btn-outline-success text-black");
+                    $(this).removeClass("btn-outline-success text-black").addClass("active btn-success text-white");
+
+                    selectedIkpSatkerId = $(this).data('satker-id');
+                    $("#ikp-controls-wrapper").show();
+                    let triwulan = $('#triwulan-ikp').val();
+                    loadIkpData(selectedIkpSatkerId, triwulan);
+                });
+
+                // Otomatis pilih bidang jika hanya ada 1 bidang (misal login sebagai JAMWAS)
+                if ($('.bidang-ikp-item').length === 1) {
+                    $('.bidang-ikp-item').first().trigger('click');
+                }
+
+                $('#triwulan-ikp').on('change', function() {
+                    let triwulan = $(this).val();
+                    if (selectedIkpSatkerId) {
+                        loadIkpData(selectedIkpSatkerId, triwulan);
+                    }
+                });
+
+                $(document).on('click', '#reloadIkpBtn', function() {
+                    let triwulan = $('#triwulan-ikp').val();
+                    if (selectedIkpSatkerId) {
+                        loadIkpData(selectedIkpSatkerId, triwulan);
+                    }
+                });
+
+                // Expand All / Collapse All untuk Pelaporan IKP Accordion
+                $(document).on('click', '#btn-pelaporan-expand-all', function() {
+                    $('#accordionPelaporanIkp .accordion-collapse').addClass('show');
+                    $('#accordionPelaporanIkp .accordion-button').removeClass('collapsed').attr('aria-expanded', 'true');
+                });
+
+                $(document).on('click', '#btn-pelaporan-collapse-all', function() {
+                    $('#accordionPelaporanIkp .accordion-collapse').removeClass('show');
+                    $('#accordionPelaporanIkp .accordion-button').addClass('collapsed').attr('aria-expanded', 'false');
+                });
+
+                function loadIkpData(satkerId, triwulan) {
+                    $('#ikp-subindikator-wrapper').html('<div class="text-center py-4"><div class="spinner-border text-success" role="status"></div><p class="mt-2">Memuat data IKP...</p></div>');
+
+                    $.ajax({
+                        url: `/pelaporan/ikp-data/${satkerId}`,
+                        data: {
+                            triwulan: triwulan
+                        },
+                        success: function(data) {
+                            let html = '';
+
+                            if (!data || data.length === 0) {
+                                html = '<p class="text-muted">Tidak ada Sasaran Program & IKP ditemukan untuk bidang ini.</p>';
+                                $('#ikp-subindikator-wrapper').html(html);
+                                return;
+                            }
+
+                            html = '<div class="accordion" id="accordionPelaporanIkp">';
+
+                            data.forEach((sp, idx) => {
+                                html += `
+                                <div class="accordion-item mb-3 border border-warning shadow-sm rounded overflow-hidden">
+                                    <h2 class="accordion-header" id="heading-pelaporan-sp-${idx}">
+                                        <button class="accordion-button bg-light text-dark fw-bold py-3"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapse-pelaporan-sp-${idx}"
+                                            aria-expanded="true"
+                                            aria-controls="collapse-pelaporan-sp-${idx}">
+                                            <div class="d-flex align-items-center justify-content-between w-100 me-3">
+                                                <div class="text-start">
+                                                    <span class="badge bg-warning text-dark me-2">${sp.kode_sp}</span>
+                                                    <span class="text-dark">${sp.nama_sp}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="badge bg-info text-dark">${sp.ikps.length} IKP</span>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-pelaporan-sp-${idx}" class="accordion-collapse collapse show" aria-labelledby="heading-pelaporan-sp-${idx}">
+                                        <div class="accordion-body bg-white p-3">`;
+
+                                if (sp.ikps && sp.ikps.length > 0) {
+                                    sp.ikps.forEach((ikp) => {
+                                        html += `
+                                        <div class="mb-4 p-3 border rounded shadow-sm bg-light">
+                                            <strong class="text-primary fs-6">${ikp.kode_ikp}: ${ikp.nama_ikp}</strong>
+                                            <table class="table table-bordered align-middle mt-3 bg-white">
+                                                <thead class="text-center bg-warning">
+                                                    <tr>
+                                                        <th>Persentase Penyelesaian</th>
+                                                        <th>Target PK Tahunan</th>
+                                                        <th>Capaian Target PK Tahunan</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="text-center">
+                                                    <tr>
+                                                        <td class="fw-bold text-success">${ikp.persentase || 0}%</td>
+                                                        <td>${ikp.target_pk || 0}%</td>
+                                                        <td class="fw-bold text-primary">${ikp.capaian_pk || 0}%</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <div class="mb-2">
+                                                <label class="form-label mb-1"><strong>Faktor-Faktor:</strong></label>
+                                                <textarea class="form-control ikp-faktor-input" rows="2"
+                                                    data-ikp-id="${ikp.ikp_id}" placeholder="Faktor-faktor yang mempengaruhi pencapaian kinerja...">${ikp.faktor || ''}</textarea>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label mb-1"><strong>Upaya Optimalisasi:</strong></label>
+                                                <textarea class="form-control ikp-langkah-input" rows="2"
+                                                    data-ikp-id="${ikp.ikp_id}" placeholder="Upaya atau rencana tindak lanjut optimalisasi kinerja...">${ikp.langkah || ''}</textarea>
+                                            </div>
+
+                                            <button class="btn btn-sm btn-primary btn-simpan-ikp"
+                                                data-ikp-id="${ikp.ikp_id}">
+                                                <i class="bi bi-save me-1"></i> Simpan
+                                            </button>
+                                        </div>
+                                        `;
+                                    });
+                                } else {
+                                    html += '<p class="text-muted ms-2 my-2">Belum ada IKP di bawah sasaran program ini.</p>';
+                                }
+
+                                html += `
+                                        </div>
+                                    </div>
+                                </div>`;
+                            });
+
+                            html += '</div>';
+
+                            $('#ikp-subindikator-wrapper').html(html);
+                        },
+                        error: function() {
+                            $('#ikp-subindikator-wrapper').html(
+                                '<p class="text-danger">Gagal memuat data IKP.</p>');
+                        }
+                    });
+                }
+
+                $(document).on('click', '.btn-simpan-ikp', function() {
+                    const ikpId = $(this).data('ikp-id');
+                    const faktor = $(`.ikp-faktor-input[data-ikp-id='${ikpId}']`).val();
+                    const langkah = $(`.ikp-langkah-input[data-ikp-id='${ikpId}']`).val();
+                    const triwulan = $('#triwulan-ikp').val();
+                    const btn = $(this);
+
+                    if (!selectedIkpSatkerId) {
+                        alert('Pilih bidang terlebih dahulu.');
+                        return;
+                    }
+
+                    btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Menyimpan...');
+
+                    $.ajax({
+                        url: '/pelaporan/simpan-ikp-keterangan',
+                        method: 'POST',
+                        data: {
+                            ikp_id: ikpId,
+                            id_satker: selectedIkpSatkerId,
+                            faktor: faktor,
+                            langkah: langkah,
+                            triwulan: triwulan,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(res) {
+                            showNotifModal('Berhasil disimpan!', 'Sukses');
+                            btn.prop('disabled', false).html('<i class="bi bi-save me-1"></i> Simpan');
+                        },
+                        error: function(err) {
+                            console.log(err);
+                            showNotifModal(err.responseJSON?.message || 'Terjadi kesalahan saat menyimpan data.', 'Peringatan');
+                            btn.prop('disabled', false).html('<i class="bi bi-save me-1"></i> Simpan');
+                        }
+                    });
+                });
+
                 function showNotifModal(pesan, judul = 'Peringatan') {
                     $('#notifModalLabel').text(judul);
                     $('#notifModalMessage').text(pesan);
                     const notifModal = new bootstrap.Modal(document.getElementById('notifModal'));
                     notifModal.show();
                 }
-
-
             });
         </script>
     @endpush
+
+<style>
+.bidang-nama-text {
+    line-height: 1.3;
+    display: inline-block;
+    word-break: break-word;
+}
+.bidang-ikp-item {
+    white-space: normal;
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+}
+#accordionPelaporanIkp .accordion-button:not(.collapsed) {
+    background-color: #fff8e1 !important;
+    color: #000 !important;
+    box-shadow: none;
+}
+#accordionPelaporanIkp .accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+}
+</style>
 
 @endsection

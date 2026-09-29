@@ -16,6 +16,9 @@ use App\Models\SinoriSakipPidum;
 use App\Models\SinoriSakipIndikator;
 use App\Models\TargetPK;
 use App\Models\Pk;
+use App\Models\SasaranProgram;
+use App\Models\IndikatorKinerjaProgram;
+use App\Models\TargetIkp;
 
 class PerencanaanController extends Controller
 {
@@ -449,5 +452,115 @@ class PerencanaanController extends Controller
         ]);
 
         return redirect()->route('perencanaan')->with('success-pk-file', 'File PK berhasil diupload!')->with('active_tab', 'perjanjian-kinerja');
+    }
+
+    /**
+     * Mengambil data Sasaran Program & IKP beserta target untuk Perjanjian Kinerja Level 1
+     */
+    public function getTargetIkpData($idSatkerBidang, Request $request)
+    {
+        $tahun = session('tahun_terpilih', date('Y'));
+
+        $sasaranPrograms = SasaranProgram::where('id_satker', $idSatkerBidang)
+            ->where('tahun', $tahun)
+            ->with(['indikatorKinerjaPrograms' => function ($q) use ($idSatkerBidang, $tahun) {
+                $q->where('id_satker', $idSatkerBidang)->where('tahun', $tahun);
+            }])
+            ->get();
+
+        $data = [];
+        foreach ($sasaranPrograms as $sp) {
+            $spItem = [
+                'sp_id' => $sp->id,
+                'kode_sp' => $sp->kode_sp,
+                'nama_sp' => $sp->nama_sp,
+                'ikps' => []
+            ];
+
+            foreach ($sp->indikatorKinerjaPrograms as $ikp) {
+                $target = TargetIkp::where('ikp_id', $ikp->id)
+                    ->where('id_satker', $idSatkerBidang)
+                    ->where('tahun', $tahun)
+                    ->first();
+
+                $spItem['ikps'][] = [
+                    'ikp_id' => $ikp->id,
+                    'kode_ikp' => $ikp->kode_ikp,
+                    'nama_ikp' => $ikp->nama_ikp,
+                    'sifat_node' => $ikp->sifat_node,
+                    'target_tahun' => $target && $target->target_tahun !== null ? (float)$target->target_tahun : null,
+                    'target_tw1' => $target && $target->target_tw1 !== null ? (float)$target->target_tw1 : null,
+                    'target_tw2' => $target && $target->target_tw2 !== null ? (float)$target->target_tw2 : null,
+                    'target_tw3' => $target && $target->target_tw3 !== null ? (float)$target->target_tw3 : null,
+                    'target_tw4' => $target && $target->target_tw4 !== null ? (float)$target->target_tw4 : null,
+                ];
+            }
+
+            $data[] = $spItem;
+        }
+
+        return response()->json($data);
+    }
+
+    /**
+     * Menyimpan target kinerja masing-masing IKP (Perjanjian Kinerja Level 1)
+     */
+    public function storeTargetIkp(Request $request)
+    {
+        $request->validate([
+            'id_satker_bidang' => 'required',
+            'targets' => 'required|array',
+        ]);
+
+        $idSatkerBidang = $request->input('id_satker_bidang');
+        $tahun = session('tahun_terpilih', date('Y'));
+        $targets = $request->input('targets', []);
+
+        $cleanVal = function($val) {
+            if ($val === null || $val === '') return null;
+            $str = str_replace(',', '.', (string)$val);
+            return is_numeric($str) ? (float)$str : null;
+        };
+
+        foreach ($targets as $ikpId => $tVals) {
+            $ikp = IndikatorKinerjaProgram::find($ikpId);
+            if (!$ikp) {
+                continue;
+            }
+
+            $targetTahun = isset($tVals['target_tahun']) ? $cleanVal($tVals['target_tahun']) : null;
+            $tw1 = isset($tVals['target_tw1']) && $tVals['target_tw1'] !== '' ? $cleanVal($tVals['target_tw1']) : $targetTahun;
+            $tw2 = isset($tVals['target_tw2']) && $tVals['target_tw2'] !== '' ? $cleanVal($tVals['target_tw2']) : $targetTahun;
+            $tw3 = isset($tVals['target_tw3']) && $tVals['target_tw3'] !== '' ? $cleanVal($tVals['target_tw3']) : $targetTahun;
+            $tw4 = isset($tVals['target_tw4']) && $tVals['target_tw4'] !== '' ? $cleanVal($tVals['target_tw4']) : $targetTahun;
+
+            TargetIkp::updateOrCreate(
+                [
+                    'ikp_id' => $ikp->id,
+                    'id_satker' => $idSatkerBidang,
+                    'tahun' => $tahun,
+                ],
+                [
+                    'sp_id' => $ikp->sasaran_program_id,
+                    'target_tahun' => $targetTahun,
+                    'target_tw1' => $tw1,
+                    'target_tw2' => $tw2,
+                    'target_tw3' => $tw3,
+                    'target_tw4' => $tw4,
+                ]
+            );
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Target Perjanjian Kinerja IKP berhasil disimpan!'
+            ]);
+        }
+
+        return redirect()
+            ->route('perencanaan')
+            ->with('success-pk', 'Target Perjanjian Kinerja IKP berhasil disimpan!')
+            ->with('active_tab', 'perjanjian-kinerja');
     }
 }

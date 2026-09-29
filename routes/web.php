@@ -11,6 +11,7 @@ use App\Http\Controllers\EvaluasiController;
 use App\Http\Controllers\PelaporanController;
 use App\Http\Controllers\PerencanaanController;
 use App\Http\Controllers\PengukuranController;
+use App\Http\Controllers\PengukuranIkpController;
 use App\Http\Controllers\KepatuhanController;
 use App\Http\Controllers\ChatsupportController;
 use App\Http\Controllers\PengumumanController;
@@ -95,6 +96,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/perencanaan/indikator', [PerencanaanController::class, 'showIndikator'])->name('perencanaan.indikator');
     Route::post('/perencanaan/store', [PerencanaanController::class, 'store'])->name('perencanaan.store');
     Route::post('/target/store', [PerencanaanController::class, 'storetarget'])->name('target.store');
+    Route::get('/perencanaan/target-ikp/data/{id_satker_bidang}', [PerencanaanController::class, 'getTargetIkpData'])->name('perencanaan.targetIkp.getData');
+    Route::post('/perencanaan/target-ikp/store', [PerencanaanController::class, 'storeTargetIkp'])->name('perencanaan.targetIkp.store');
 
     Route::post('/perencanaan/upload-renstra', [PerencanaanController::class, 'uploadRenstra'])->name('upload.renstra');
     Route::post('/perencanaan/upload-iku', [PerencanaanController::class, 'uploadIku'])->name('upload.iku');
@@ -116,7 +119,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pengukuran/update-inline', [PengukuranController::class, 'updateInline'])->name('pengukuran.updateInline');
     Route::post('/pengukuran/update-bulanan', [PengukuranController::class, 'updateBulanan'])->name('pengukuran.updateBulanan');
     Route::get('/get-subindikator-by-id/{id}', [PengukuranController::class, 'getIndikatorNama']);
-     Route::get('/get-subindikator/{rumpun}', [PelaporanController::class, 'getSubIndikator']);
+    Route::get('/get-subindikator/{rumpun}', [PelaporanController::class, 'getSubIndikator']);
+
+    // === Pengukuran IKP (Level 1 Kejagung) ===
+    Route::get('/pengukuran-ikp', [PengukuranIkpController::class, 'index'])->name('pengukuran-ikp');
+    Route::get('/pengukuran-ikp/data/{id_satker_bidang}', [PengukuranIkpController::class, 'getData'])->name('pengukuran-ikp.getData');
+    Route::post('/pengukuran-ikp/store', [PengukuranIkpController::class, 'store'])->name('pengukuran-ikp.store');
 
     // === Pelaporan ===
     Route::get('/pelaporan', [PelaporanController::class, 'index'])->name('pelaporan');
@@ -125,6 +133,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/upload/rapat-staff-eka', [PelaporanController::class, 'uploadRapatStaffEka'])->name('upload.rapat_staff_eka');
     Route::get('/pelaporan/subindikator/{rumpun}', [PelaporanController::class, 'getSubIndikator2']);
     Route::post('/pelaporan/simpan-keterangan', [PelaporanController::class, 'simpanKeterangan']);
+
+    // === Pelaporan IKP (Level 1 Capaian Kinerja) ===
+    Route::get('/pelaporan/ikp-data/{id_satker_bidang}', [PelaporanController::class, 'getIkpData'])->name('pelaporan.ikpData');
+    Route::post('/pelaporan/simpan-ikp-keterangan', [PelaporanController::class, 'simpanIkpKeterangan'])->name('pelaporan.simpanIkpKeterangan');
 
     // === Evaluasi ===
     Route::get('/evaluasi', [EvaluasiController::class, 'index'])->name('evaluasi');

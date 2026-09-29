@@ -10,6 +10,10 @@ use App\Models\Indikator;
 use App\Models\TargetPK;
 use App\Models\Pengukuran;
 use App\Models\Bidang;
+use App\Models\SasaranProgram;
+use App\Models\IndikatorKinerjaProgram;
+use App\Models\TargetIkp;
+use App\Models\PelaporanIkp;
 use Carbon\Carbon;
 
 class PelaporanController extends Controller
@@ -395,5 +399,105 @@ class PelaporanController extends Controller
         }
 
         return back()->with('error', 'Gagal mengunggah file.');
+    }
+
+    /**
+     * Mendapatkan data SP, IKP, Target, Capaian, dan Faktor/Langkah untuk Pelaporan Capaian Kinerja Level 1
+     */
+    public function getIkpData($idSatkerBidang, Request $request)
+    {
+        $tw = (int)$request->query('triwulan', 1);
+        $tahun = session('tahun_terpilih');
+        $bulan_akhir = $tw * 3; // TW1=3, TW2=6, TW3=9, TW4=12
+
+        // Ambil SP + IKP berdasarkan satker bidang
+        $sasaranPrograms = SasaranProgram::where('id_satker', $idSatkerBidang)
+            ->where('tahun', $tahun)
+            ->with(['indikatorKinerjaPrograms' => function ($q) use ($idSatkerBidang, $tahun) {
+                $q->where('id_satker', $idSatkerBidang)->where('tahun', $tahun);
+            }])
+            ->get();
+
+        $data = [];
+        foreach ($sasaranPrograms as $sp) {
+            $spData = [
+                'sp_id' => $sp->id,
+                'kode_sp' => $sp->kode_sp,
+                'nama_sp' => $sp->nama_sp,
+                'ikps' => []
+            ];
+
+            foreach ($sp->indikatorKinerjaPrograms as $ikp) {
+                // Ambil capaian dari tabel pengukuran (khusus = 2)
+                $capaian = Pengukuran::where('indikator_id', $ikp->id)
+                    ->where('id_satker', $idSatkerBidang)
+                    ->where('tahun', $tahun)
+                    ->where('bulan', $bulan_akhir)
+                    ->where('khusus', 2)
+                    ->value('capaian') ?? 0;
+
+                // Ambil target
+                $target = TargetIkp::where('ikp_id', $ikp->id)
+                    ->where('id_satker', $idSatkerBidang)
+                    ->where('tahun', $tahun)
+                    ->value('target_tahun') ?? 0;
+
+                // Hitung capaian PK
+                $capaian_pk = $target > 0 ? round(($capaian / $target) * 100, 2) : 0;
+
+                // Ambil faktor & langkah dari pelaporan_ikp
+                $pelaporan = PelaporanIkp::where('ikp_id', $ikp->id)
+                    ->where('id_satker', $idSatkerBidang)
+                    ->where('tahun', $tahun)
+                    ->where('triwulan', $tw)
+                    ->first();
+
+                $spData['ikps'][] = [
+                    'ikp_id' => $ikp->id,
+                    'kode_ikp' => $ikp->kode_ikp,
+                    'nama_ikp' => $ikp->nama_ikp,
+                    'persentase' => (float)$capaian,
+                    'target_pk' => (float)$target,
+                    'capaian_pk' => (float)$capaian_pk,
+                    'faktor' => $pelaporan->faktor ?? '',
+                    'langkah' => $pelaporan->langkah_optimalisasi ?? '',
+                ];
+            }
+            $data[] = $spData;
+        }
+
+        return response()->json($data);
+    }
+
+    /**
+     * Menyimpan faktor-faktor dan upaya optimalisasi per IKP
+     */
+    public function simpanIkpKeterangan(Request $request)
+    {
+        $request->validate([
+            'ikp_id' => 'required|integer',
+            'id_satker' => 'required',
+            'faktor' => 'nullable|string',
+            'langkah' => 'nullable|string',
+            'triwulan' => 'required|integer|min:1|max:4',
+        ]);
+
+        $tahun = session('tahun_terpilih');
+        $idSatker = $request->id_satker;
+
+        PelaporanIkp::updateOrCreate(
+            [
+                'ikp_id' => $request->ikp_id,
+                'id_satker' => $idSatker,
+                'tahun' => $tahun,
+                'triwulan' => $request->triwulan,
+            ],
+            [
+                'faktor' => $request->faktor,
+                'langkah_optimalisasi' => $request->langkah,
+            ]
+        );
+
+        return response()->json(['status' => 'success', 'message' => 'Keterangan IKP berhasil disimpan!']);
     }
 }

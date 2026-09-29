@@ -22,7 +22,7 @@
                     <!-- Tabs Navigation -->
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link text-orange-600 {{ $activeTab == 'renstra' ? 'active' : '' }}"
+                            <a class="nav-link {{ $activeTab == 'renstra' ? 'active' : '' }}"
                                 id="renstra-tab" data-bs-toggle="tab" href="#renstra" role="tab" aria-controls="renstra"
                                 aria-selected="{{ $activeTab == 'renstra' ? 'true' : 'false' }}">Renstra</a>
                         </li>
@@ -695,8 +695,79 @@
                                     <h4 class="mb-0">Input Target Perjanjian Kinerja</h4>
                                 </div>
                                 <div class="card-body">
-                                    @php
-                                        $level = session('id_sakip_level');
+                                    @if ($levelSakip == 1 || in_array(session('id_satker'), ['admin', '999999']) || $levelSakip == 99)
+                                        {{-- ===== MODE LEVEL 1 (KEJAKSAAN AGUNG): INPUT TARGET IKP ===== --}}
+                                        <div class="row">
+                                            <!-- Sidebar Bidang Pengampu -->
+                                            <div class="col-md-3">
+                                                <div class="card shadow-sm border-0 mb-3">
+                                                    <div class="card-header bg-warning text-dark font-weight-bold">
+                                                        <strong>📌 Bidang Pengampu</strong>
+                                                    </div>
+                                                    <div class="card-body p-2" id="sidebar-target-bidang-container">
+                                                        @php
+                                                            $satkerBidangs = \App\Http\Controllers\PengukuranIkpController::getFilteredBidangs();
+                                                        @endphp
+                                                        @foreach ($satkerBidangs as $sb)
+                                                            <button type="button"
+                                                                class="btn btn-outline-warning text-dark w-100 mb-2 text-start btn-satker-target-ikp"
+                                                                data-satker-id="{{ $sb['id'] }}"
+                                                                data-satker-nama="{{ $sb['nama'] }}">
+                                                                <i class="bi bi-folder2-open me-2 text-warning"></i>
+                                                                <span class="bidang-nama-text">{{ $sb['nama'] }}</span>
+                                                            </button>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Content Input Target IKP -->
+                                            <div class="col-md-9">
+                                                <div class="card shadow-sm border-0">
+                                                    <div class="card-header bg-warning text-dark d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <span class="fw-bold" id="current-target-bidang-title">📋 Target Perjanjian Kinerja IKP</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-2" id="target-accordion-action-buttons" style="display:none !important;">
+                                                            <button type="button" class="btn btn-sm btn-outline-dark" id="btn-target-expand-all" title="Buka Semua Sasaran Program">
+                                                                <i class="bi bi-arrows-expand me-1"></i> Buka Semua
+                                                            </button>
+                                                            <button type="button" class="btn btn-sm btn-outline-dark" id="btn-target-collapse-all" title="Tutup Semua Sasaran Program">
+                                                                <i class="bi bi-arrows-collapse me-1"></i> Tutup Semua
+                                                            </button>
+                                                            <button type="button" class="btn btn-dark btn-sm" id="btn-save-target-top">
+                                                                <i class="bi bi-save me-1"></i> Simpan Target
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body" id="target-ikp-container">
+                                                        <div class="text-center py-5 text-muted" id="placeholder-target-message">
+                                                            <i class="bi bi-arrow-left-circle display-4"></i>
+                                                            <p class="mt-3 fs-5">Silakan pilih bidang di sebelah kiri untuk menginput target IKP.</p>
+                                                        </div>
+
+                                                        <div id="target-ikp-alert-container"></div>
+
+                                                        <form id="form-target-ikp" style="display: none;">
+                                                            @csrf
+                                                            <input type="hidden" name="id_satker_bidang" id="input-target-satker-id" value="">
+                                                            
+                                                            <div id="target-ikp-tables-wrapper"></div>
+
+                                                            <div class="text-end mt-4">
+                                                                <button type="submit" class="btn btn-warning btn-lg text-dark fw-bold px-4" id="btn-save-target-bottom">
+                                                                    <i class="bi bi-check2-circle me-1"></i> Simpan Target Perjanjian Kinerja
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        {{-- ===== MODE LEVEL SATKER (EXISTING) ===== --}}
+                                        @php
+                                            $level = session('id_sakip_level');
                                         $satkernama = session('satkernama') ?? '';
                                         $kataTerakhir = strtolower(strrchr(' ' . $satkernama, ' '));
 
@@ -839,6 +910,7 @@
                         </div>
                     </div>
                     @endforeach
+                    @endif
                 </div>
             </div>
         </div>
@@ -849,7 +921,7 @@
     </div>
 @endsection
 
-@section('styles')
+@push('styles')
     <style>
         /* Ensure the container and card take full width */
         .container {
@@ -864,24 +936,44 @@
         }
 
         /* Styling for the tabs */
-        .nav-tabs .nav-link {
-            width: 12.5%;
-            /* Make each tab take equal space */
+        .nav-tabs {
+            border-bottom: 2px solid #dee2e6;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .nav-tabs .nav-item {
+            flex: 1 1 auto;
             text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 0.25rem;
+        }
+
+        .nav-tabs .nav-link {
+            width: 100%;
+            white-space: nowrap;
+            padding: 0.6rem 1rem;
+            text-align: center;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            color: #495057;
+            background-color: #f8f9fa;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #0d6efd;
+            background-color: #e9ecef;
+            border-color: #ced4da;
         }
 
         /* Active tab styling */
         .nav-tabs .nav-link.active {
-            color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-
-        /* Hover effect for the tabs */
-        .nav-tabs .nav-link:hover {
-            border-color: #007bff;
+            color: #fff !important;
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(13, 110, 253, 0.25);
         }
 
         /* Styling for tab content */
@@ -918,8 +1010,7 @@
         .table th {
             vertical-align: middle;
         }
-    </style>
-    <style>
+
         .rotate-icon {
             transition: transform 0.3s ease;
         }
@@ -927,11 +1018,17 @@
         .rotate-icon.rotate {
             transform: rotate(180deg);
         }
+
+        .btn-satker-target-ikp.active {
+            background-color: #ffc107 !important;
+            color: #212529 !important;
+            font-weight: 700 !important;
+            border-color: #ffc107 !important;
+        }
     </style>
+@endpush
 
-@endsection
-
-@section('scripts')
+@push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -944,45 +1041,303 @@
                 setTimeout(() => successAlert.remove(), 500); // Hapus elemen setelah transisi selesai
             }
         }, 5000); // 5 detik
-    </script>
-    <!-- Script to Show/Hide Sections Based on Selected Bidang -->
-    <script>
-        // document.getElementById('bidang').addEventListener('change', function() {
-        //     var kajariSection = document.getElementById('kajari-section');
-        //     var pidumSection = document.getElementById('pidum-section');
 
-        //     if (this.value === 'kajari') {
-        //         kajariSection.style.display = 'block';
-        //         pidumSection.style.display = 'none';
-        //     } else if (this.value === 'pidum') {
-        //         kajariSection.style.display = 'none';
-        //         pidumSection.style.display = 'block';
-        //     } else {
-        //         kajariSection.style.display = 'none';
-        //         pidumSection.style.display = 'none';
-        //     }
-        // });
-
-        // // Initialize the correct section to be displayed
-        // document.getElementById('bidang').dispatchEvent(new Event('change'));
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Event ketika collapse dibuka
             document.querySelectorAll('.collapse').forEach(function(collapse) {
                 collapse.addEventListener('show.bs.collapse', function() {
-                    const icon = this.previousElementSibling.querySelector('.rotate-icon');
+                    const icon = this.previousElementSibling?.querySelector('.rotate-icon');
                     if (icon) icon.classList.add('rotate');
                 });
 
                 // Event ketika collapse ditutup
                 collapse.addEventListener('hide.bs.collapse', function() {
-                    const icon = this.previousElementSibling.querySelector('.rotate-icon');
+                    const icon = this.previousElementSibling?.querySelector('.rotate-icon');
                     if (icon) icon.classList.remove('rotate');
                 });
             });
         });
+
+        // === LOGIKA TARGET PERJANJIAN KINERJA IKP (LEVEL 1 KEJAKSAAN AGUNG) ===
+        $(document).ready(function() {
+            let currentTargetSatkerId = null;
+
+            $('.btn-satker-target-ikp').on('click', function() {
+                $('.btn-satker-target-ikp').removeClass('active bg-warning text-dark font-weight-bold shadow-sm');
+                $(this).addClass('active bg-warning text-dark font-weight-bold shadow-sm');
+
+                currentTargetSatkerId = $(this).data('satker-id');
+                const satkerNama = $(this).data('satker-nama');
+
+                $('#current-target-bidang-title').html(`📋 Target Perjanjian Kinerja IKP: <strong>${satkerNama}</strong>`);
+                $('#input-target-satker-id').val(currentTargetSatkerId);
+                loadTargetIkpData(currentTargetSatkerId);
+            });
+
+            // Otomatis pilih bidang jika hanya ada 1 bidang (misal login sebagai JAMWAS)
+            if ($('.btn-satker-target-ikp').length === 1) {
+                $('.btn-satker-target-ikp').first().trigger('click');
+            }
+
+            // Juga trigger jika berpindah ke tab Perjanjian Kinerja
+            $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
+                if ($(e.target).attr('href') === '#perjanjian-kinerja') {
+                    if ($('.btn-satker-target-ikp').length === 1 && !$('#input-target-satker-id').val()) {
+                        $('.btn-satker-target-ikp').first().trigger('click');
+                    }
+                }
+            });
+
+            function loadTargetIkpData(satkerId) {
+                $('#placeholder-target-message').hide();
+                $('#form-target-ikp').hide();
+                $('#target-accordion-action-buttons').attr('style', 'display: none !important');
+                $('#target-ikp-alert-container').empty();
+                $('#target-ikp-tables-wrapper').html('<div class="text-center py-4"><div class="spinner-border text-warning" role="status"></div><p class="mt-2 text-muted">Memuat data Sasaran Program & IKP...</p></div>');
+                $('#form-target-ikp').show();
+
+                $.ajax({
+                    url: `/perencanaan/target-ikp/data/${satkerId}`,
+                    method: 'GET',
+                    success: function(data) {
+                        if (!data || data.length === 0) {
+                            $('#target-ikp-tables-wrapper').html(`
+                                <div class="alert alert-info text-center my-4">
+                                    <i class="bi bi-info-circle me-1"></i> Belum ada data Sasaran Program & IKP yang terdaftar untuk bidang ini.
+                                </div>
+                            `);
+                            $('#target-accordion-action-buttons').attr('style', 'display: none !important');
+                            $('#btn-save-target-bottom').hide();
+                            return;
+                        }
+
+                        let html = '<div class="accordion" id="accordionTargetIkp">';
+
+                        data.forEach(function(sp, idx) {
+                            html += `
+                            <div class="accordion-item mb-3 border border-warning shadow-sm rounded overflow-hidden">
+                                <h2 class="accordion-header" id="heading-target-sp-${idx}">
+                                    <button class="accordion-button bg-light text-dark fw-bold py-3"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse-target-sp-${idx}"
+                                        aria-expanded="true"
+                                        aria-controls="collapse-target-sp-${idx}">
+                                        <div class="d-flex align-items-center justify-content-between w-100 me-3">
+                                            <div class="text-start">
+                                                <span class="badge bg-warning text-dark me-2">${sp.kode_sp}</span>
+                                                <span class="text-dark">${sp.nama_sp}</span>
+                                            </div>
+                                            <div>
+                                                <span class="badge bg-secondary text-white">${sp.ikps.length} IKP</span>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </h2>
+                                <div id="collapse-target-sp-${idx}" class="accordion-collapse collapse show" aria-labelledby="heading-target-sp-${idx}">
+                                    <div class="accordion-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover align-middle mb-0 text-center">
+                                                <thead class="table-warning text-dark align-middle">
+                                                    <tr>
+                                                        <th style="min-width: 280px;" class="text-start">Indikator Kinerja Program (IKP)</th>
+                                                        <th style="width: 130px;">Target Thn</th>
+                                                        <th style="width: 110px;">Target TW 1</th>
+                                                        <th style="width: 110px;">Target TW 2</th>
+                                                        <th style="width: 110px;">Target TW 3</th>
+                                                        <th style="width: 110px;">Target TW 4</th>
+                                                        <th style="width: 50px;" title="Salin Target Tahunan ke TW 1-4">Aksi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>`;
+
+                            sp.ikps.forEach(function(ikp) {
+                                let sifatBadge = '';
+                                if (ikp.sifat_node) {
+                                    let sifatClass = 'bg-secondary';
+                                    let sifatText = ikp.sifat_node.toUpperCase();
+                                    if (ikp.sifat_node.toLowerCase() === 'lead') sifatClass = 'bg-info text-dark';
+                                    else if (ikp.sifat_node.toLowerCase() === 'lag') sifatClass = 'bg-primary';
+                                    else if (ikp.sifat_node.toLowerCase() === 'crosscutting') sifatClass = 'bg-success';
+                                    sifatBadge = `<span class="badge ${sifatClass} ms-1" style="font-size: 0.7rem;">${sifatText}</span>`;
+                                }
+
+                                const valTahun = (ikp.target_tahun !== null && ikp.target_tahun !== undefined) ? ikp.target_tahun : '';
+                                const valTw1 = (ikp.target_tw1 !== null && ikp.target_tw1 !== undefined) ? ikp.target_tw1 : valTahun;
+                                const valTw2 = (ikp.target_tw2 !== null && ikp.target_tw2 !== undefined) ? ikp.target_tw2 : valTahun;
+                                const valTw3 = (ikp.target_tw3 !== null && ikp.target_tw3 !== undefined) ? ikp.target_tw3 : valTahun;
+                                const valTw4 = (ikp.target_tw4 !== null && ikp.target_tw4 !== undefined) ? ikp.target_tw4 : valTahun;
+
+                                html += `
+                                    <tr>
+                                        <td class="text-start">
+                                            <div class="fw-bold text-primary">${ikp.kode_ikp} ${sifatBadge}</div>
+                                            <div class="small text-dark fw-medium mt-1">${ikp.nama_ikp}</div>
+                                        </td>
+                                        <td>
+                                            <input type="number" step="any"
+                                                class="form-control form-control-sm text-center fw-bold input-target-tahun"
+                                                name="targets[${ikp.ikp_id}][target_tahun]"
+                                                value="${valTahun}"
+                                                data-ikp="${ikp.ikp_id}"
+                                                placeholder="0">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="any"
+                                                class="form-control form-control-sm text-center input-target-tw input-tw1-${ikp.ikp_id}"
+                                                name="targets[${ikp.ikp_id}][target_tw1]"
+                                                value="${valTw1}"
+                                                placeholder="0">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="any"
+                                                class="form-control form-control-sm text-center input-target-tw input-tw2-${ikp.ikp_id}"
+                                                name="targets[${ikp.ikp_id}][target_tw2]"
+                                                value="${valTw2}"
+                                                placeholder="0">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="any"
+                                                class="form-control form-control-sm text-center input-target-tw input-tw3-${ikp.ikp_id}"
+                                                name="targets[${ikp.ikp_id}][target_tw3]"
+                                                value="${valTw3}"
+                                                placeholder="0">
+                                        </td>
+                                        <td>
+                                            <input type="number" step="any"
+                                                class="form-control form-control-sm text-center input-target-tw input-tw4-${ikp.ikp_id}"
+                                                name="targets[${ikp.ikp_id}][target_tw4]"
+                                                value="${valTw4}"
+                                                placeholder="0">
+                                        </td>
+                                        <td>
+                                            <button type="button"
+                                                class="btn btn-outline-warning btn-sm btn-copy-tw-row"
+                                                data-ikp="${ikp.ikp_id}"
+                                                title="Salin Target Tahunan ke TW 1-4">
+                                                <i class="bi bi-arrow-right-square text-dark"></i>
+                                            </button>
+                                        </td>
+                                    </tr>`;
+                            });
+
+                            html += `
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+
+                        html += '</div>';
+
+                        $('#target-ikp-tables-wrapper').html(html);
+                        $('#target-accordion-action-buttons').removeAttr('style');
+                        $('#btn-save-target-bottom').show();
+                    },
+                    error: function() {
+                        $('#target-ikp-tables-wrapper').html('<div class="alert alert-danger">Gagal memuat data Target IKP. Silakan coba lagi.</div>');
+                    }
+                });
+            }
+
+            // Quick Copy to TW 1-4 for a single row
+            $(document).on('click', '.btn-copy-tw-row', function() {
+                const ikpId = $(this).data('ikp');
+                const valTahun = $(`input[name="targets[${ikpId}][target_tahun]"]`).val();
+                if (valTahun !== '') {
+                    $(`.input-tw1-${ikpId}`).val(valTahun);
+                    $(`.input-tw2-${ikpId}`).val(valTahun);
+                    $(`.input-tw3-${ikpId}`).val(valTahun);
+                    $(`.input-tw4-${ikpId}`).val(valTahun);
+                }
+            });
+
+            // Live auto-fill: when user types Target Tahunan, if TW inputs are empty, auto-fill
+            $(document).on('input', '.input-target-tahun', function() {
+                const ikpId = $(this).data('ikp');
+                const val = $(this).val();
+                const tw1 = $(`.input-tw1-${ikpId}`);
+                const tw2 = $(`.input-tw2-${ikpId}`);
+                const tw3 = $(`.input-tw3-${ikpId}`);
+                const tw4 = $(`.input-tw4-${ikpId}`);
+
+                if (tw1.val() === '' || tw1.val() === null) tw1.val(val);
+                if (tw2.val() === '' || tw2.val() === null) tw2.val(val);
+                if (tw3.val() === '' || tw3.val() === null) tw3.val(val);
+                if (tw4.val() === '' || tw4.val() === null) tw4.val(val);
+            });
+
+            // Expand All / Collapse All buttons
+            $(document).on('click', '#btn-target-expand-all', function() {
+                $('#accordionTargetIkp .accordion-collapse').addClass('show');
+                $('#accordionTargetIkp .accordion-button').removeClass('collapsed').attr('aria-expanded', 'true');
+            });
+
+            $(document).on('click', '#btn-target-collapse-all', function() {
+                $('#accordionTargetIkp .accordion-collapse').removeClass('show');
+                $('#accordionTargetIkp .accordion-button').addClass('collapsed').attr('aria-expanded', 'false');
+            });
+
+            // Top save button triggers form submit
+            $('#btn-save-target-top').on('click', function() {
+                $('#form-target-ikp').submit();
+            });
+
+            // Form Submit via AJAX
+            $('#form-target-ikp').on('submit', function(e) {
+                e.preventDefault();
+                const btnSaveBottom = $('#btn-save-target-bottom');
+                const btnSaveTop = $('#btn-save-target-top');
+
+                btnSaveBottom.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status"></span> Menyimpan...');
+                btnSaveTop.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1" role="status"></span> Menyimpan...');
+
+                $.ajax({
+                    url: '{{ route("perencanaan.targetIkp.store") }}',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(res) {
+                        btnSaveBottom.prop('disabled', false).html('<i class="bi bi-check2-circle me-1"></i> Simpan Target Perjanjian Kinerja');
+                        btnSaveTop.prop('disabled', false).html('<i class="bi bi-save me-1"></i> Simpan Target');
+
+                        $('#target-ikp-alert-container').html(`
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="bi bi-check-circle-fill me-2"></i> ${res.message || 'Target Perjanjian Kinerja IKP berhasil disimpan!'}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        `);
+
+                        // Scroll smoothly to alert
+                        $('html, body').animate({
+                            scrollTop: $("#target-ikp-alert-container").offset().top - 100
+                        }, 300);
+
+                        setTimeout(function() {
+                            $('#target-ikp-alert-container .alert').fadeOut('slow', function() {
+                                $(this).remove();
+                            });
+                        }, 5000);
+                    },
+                    error: function(xhr) {
+                        btnSaveBottom.prop('disabled', false).html('<i class="bi bi-check2-circle me-1"></i> Simpan Target Perjanjian Kinerja');
+                        btnSaveTop.prop('disabled', false).html('<i class="bi bi-save me-1"></i> Simpan Target');
+
+                        let errMsg = 'Terjadi kesalahan saat menyimpan target IKP.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errMsg = xhr.responseJSON.message;
+                        }
+
+                        $('#target-ikp-alert-container').html(`
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i> ${errMsg}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        `);
+                    }
+                });
+            });
+        });
     </script>
-
-
-@endsection
+@endpush

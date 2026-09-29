@@ -20,7 +20,7 @@
                 </a>
             @endif
             <span class="badge bg-success px-3 py-2 fs-6 rounded-pill">
-                <i class="bi bi-person-badge-fill me-1"></i> Tim Penilai (WAS & Evaluator)
+                <i class="bi bi-person-badge-fill me-1"></i> Tim Penilai (JAMWAS & Admin)
             </span>
         </div>
     </div>

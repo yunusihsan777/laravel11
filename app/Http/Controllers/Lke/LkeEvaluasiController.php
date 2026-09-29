@@ -34,46 +34,37 @@ class LkeEvaluasiController extends Controller
     /**
      * Determine evaluator type:
      * - 'admin': Can inspect and evaluate all satkers.
-     * - 'kejati': Only inspects/evaluates Kejari (level 3) & Cabjari (level 4) under their region (id_kejati).
-     * - 'kejagung': Only inspects/evaluates Kejati (level 2) & fellow Eselon 1 (level 1).
+     * - 'jamwas': Can inspect and evaluate all satkers (Jaksa Agung Muda Bidang Pengawasan).
      * - 'unauthorized': Blocked from evaluation.
      */
     protected function getEvaluatorType()
     {
-        $satker = session('id_satker');
+        $satker = (string) session('id_satker');
         $level = session('id_sakip_level');
         $currentUser = $this->getCurrentUser();
-        $nama = strtolower($currentUser ? $currentUser->satkernama : session('satkernama', ''));
+        $nama = strtolower($currentUser ? $currentUser->satkernama : (session('satkernama') ?? ''));
 
         // 1. Admin
-        if (in_array($satker, ['admin', '999999']) || $level == '99' || $level == 99 || str_contains((string)$satker, 'admin')) {
+        if (
+            in_array($satker, ['admin', '999999', '888881'])
+            || $level == '99'
+            || $level == 99
+            || str_contains($satker, 'admin')
+            || $nama === 'admin'
+            || $nama === 'administrator'
+        ) {
             return 'admin';
         }
 
-        // 2. Kejati & WAS Kejati
-        $isKejatiLevel = ($level == '2' || $level == 2);
-        $isWasKejati = (
-            str_starts_with(strtolower((string)$satker), 'was') ||
-            str_contains(strtolower((string)$satker), 'was') ||
-            str_contains($nama, 'pengawasan')
-        ) && (
-            str_contains($nama, 'kejati') ||
-            ($currentUser && $currentUser->id_kejati > 0 && $currentUser->id_kejati < 50 && !in_array($level, ['1', 1]))
-        );
+        // 2. JAMWAS (Jaksa Agung Muda Bidang Pengawasan)
+        $isJamwas = ($satker === '419346')
+            || in_array($satker, ['888882', 'Pengawasan', 'Panev'])
+            || str_contains($nama, 'jam_bidang_pengawasan')
+            || str_contains($nama, 'jamwas')
+            || (str_contains($nama, 'pengawasan') && !str_contains($nama, 'kejati') && !str_starts_with(strtolower($satker), 'was'));
 
-        if ($isKejatiLevel || $isWasKejati) {
-            return 'kejati';
-        }
-
-        // 3. Kejagung & WAS Kejagung (Eselon 1 / Pusat)
-        $isKejagungLevel = ($level == '1' || $level == 1);
-        $isWasPusat = in_array($satker, ['888881', '888882', 'Pengawasan', 'Panev'])
-            || ($currentUser && in_array($currentUser->id_kejati, [0, 88, 92]))
-            || str_contains($nama, 'jam_')
-            || str_contains($nama, 'badan_');
-
-        if ($isKejagungLevel || $isWasPusat) {
-            return 'kejagung';
+        if ($isJamwas) {
+            return 'jamwas';
         }
 
         return 'unauthorized';
@@ -87,7 +78,7 @@ class LkeEvaluasiController extends Controller
         $type = $this->getEvaluatorType();
 
         if ($type === 'unauthorized') {
-            abort(403, 'Akses Ditolak: Anda tidak memiliki wewenang untuk melakukan evaluasi / penilaian LKE.');
+            abort(403, 'Akses Ditolak: Menu Penilaian LKE hanya dapat dilakukan oleh JAMWAS dan ADMIN.');
         }
     }
 
@@ -98,29 +89,9 @@ class LkeEvaluasiController extends Controller
     {
         $type = $this->getEvaluatorType();
 
-        if ($type === 'admin') {
+        // Hanya Admin dan JAMWAS yang berwenang melakukan penilaian
+        if ($type === 'admin' || $type === 'jamwas') {
             return true;
-        }
-
-        $paddedTarget = is_numeric($targetSatkerId) ? str_pad($targetSatkerId, 6, '0', STR_PAD_LEFT) : $targetSatkerId;
-        $target = DB::table('sinori_login')
-            ->where('id_satker', $targetSatkerId)
-            ->orWhere('id_satker', $paddedTarget)
-            ->first();
-        if (!$target) {
-            return false;
-        }
-
-        if ($type === 'kejati') {
-            $currentUser = $this->getCurrentUser();
-            $myKejati = $currentUser ? $currentUser->id_kejati : 0;
-            // Kejati hanya dapat memeriksa/menilai Kejari (level 3) dan Cabjari (level 4) di bawah wilayahnya
-            return $target->id_kejati == $myKejati && in_array((string)$target->id_sakip_level, ['3', '4']);
-        }
-
-        if ($type === 'kejagung') {
-            // Kejagung hanya dapat memeriksa Kejati (level 2) dan sesama Eselon 1 (level 1)
-            return in_array((string)$target->id_sakip_level, ['1', '2']);
         }
 
         return false;
@@ -137,21 +108,10 @@ class LkeEvaluasiController extends Controller
         $evaluatorType = $this->getEvaluatorType();
         $currentUser = $this->getCurrentUser();
 
-        // Query Satker yang dapat dievaluasi sesuai peran & wilayah wewenang
+        // Query Seluruh Satker yang dapat dievaluasi oleh JAMWAS dan Admin
         $query = DB::table('sinori_login')
             ->whereNotIn('id_satker', ['admin', '999999', '888881', '888882', 'Pengawasan', 'Panev'])
             ->where('id_satker', 'not like', 'was%');
-
-        if ($evaluatorType === 'kejati') {
-            // Kejati & WAS Kejati hanya dapat memeriksa Kejari dan Cabjari di bawah wilayahnya
-            $myKejati = $currentUser ? $currentUser->id_kejati : 0;
-            $query->where('id_kejati', $myKejati)
-                  ->whereIn('id_sakip_level', ['3', '4']);
-        } elseif ($evaluatorType === 'kejagung') {
-            // Kejagung hanya dapat memeriksa Kejati dan sesama Eselon 1
-            $query->whereIn('id_sakip_level', ['1', '2']);
-        }
-        // Admin dapat memeriksa semua satker
 
         $satkerList = $query->select('id_satker', 'satkernama', 'id_sakip_level', 'id_kejati')
             ->orderBy('satkernama')

@@ -30,10 +30,7 @@
             request()->is('pengukuran*') ||
             request()->is('pelaporan*') ||
             request()->is('evaluasi*') ||
-            request()->is('dataLke*') ||
-            request()->is('lke/*') ||
-            request()->is('upload*') ||
-            request()->is('kriteria*');
+            request()->is('lke/*');
     @endphp
 
     <!-- Sidebar Brand Header -->
@@ -86,9 +83,12 @@
                     <i class="bi bi-calendar2-range-fill"></i> <span class="sidebar-text">Perencanaan</span>
                 </a>
 
-                {{-- Pengukuran hanya untuk Admin atau Kejati --}}
-                @if ($tahun != 2024 && ($levelSakip == 99 || $levelSakip == 2 || in_array($idSatker, ['admin', '999999'])))
-                    <a href="{{ route('pengukuran') }}" class="{{ request()->is('pengukuran*') ? 'active' : '' }}" title="Pengukuran">
+                {{-- Pengukuran untuk Admin, Kejati, atau Kejagung (Level 1) --}}
+                @if ($tahun != 2024 && ($levelSakip == 99 || $levelSakip == 2 || $levelSakip == 1 || in_array($idSatker, ['admin', '999999'])))
+                    @php
+                        $pengukuranRoute = ($levelSakip == 1) ? route('pengukuran-ikp') : route('pengukuran');
+                    @endphp
+                    <a href="{{ $pengukuranRoute }}" class="{{ request()->is('pengukuran*') ? 'active' : '' }}" title="Pengukuran">
                         <i class="bi bi-graph-up-arrow"></i> <span class="sidebar-text">Pengukuran</span>
                     </a>
                 @endif
@@ -103,26 +103,19 @@
                     <i class="bi bi-clipboard2-check-fill"></i> <span class="sidebar-text">Evaluasi</span>
                 </a>
 
-                <a href="{{ route('dataLke') }}" class="{{ request()->is('evaluasi-akip') ? 'active' : '' }}" title="Evaluasi AKIP">
-                    <i class="bi bi-journal-text"></i> <span class="sidebar-text">Evaluasi AKIP</span>
-                </a>
-
-                <a href="{{ route('kriteria.create') }}" class="{{ request()->is('input-kriteria') ? 'active' : '' }}" title="Input AKIP">
-                    <i class="bi bi-pencil-square"></i> <span class="sidebar-text">Input AKIP</span>
-                </a>
-
-                <a href="{{ route('upload_buktidukung') }}" class="{{ request()->is('upload/bukti-dukung*') ? 'active' : '' }}" title="Input File">
-                    <i class="bi bi-cloud-arrow-up-fill"></i> <span class="sidebar-text">Input File</span>
-                </a>
-
-                <!-- Menu LKE Evaluasi (Hanya untuk Admin, Kejagung, Kejati, atau WAS) -->
+                {{-- Menu Penilaian LKE (Hanya untuk JAMWAS dan ADMIN) --}}
                 @php
-                    $canEvaluateLke = in_array($idSatker, ['admin', '999999', '888881', '888882', 'Pengawasan', 'Panev'])
-                        || in_array($levelSakip, [99, 1, 2])
-                        || str_starts_with(strtolower((string)$idSatker), 'was')
-                        || str_contains(strtolower((string)$idSatker), 'was')
-                        || str_contains(strtolower($satkernama), 'pengawasan')
-                        || str_contains(strtolower($satkernama), 'kejati');
+                    $isLkeAdmin = in_array((string)$idSatker, ['admin', '999999', '888881'])
+                        || $levelSakip == 99
+                        || str_contains(strtolower((string)$idSatker), 'admin');
+
+                    $isLkeJamwas = (string)$idSatker === '419346'
+                        || in_array((string)$idSatker, ['888882', 'Pengawasan', 'Panev'])
+                        || str_contains(strtolower($satkernama), 'jam_bidang_pengawasan')
+                        || str_contains(strtolower($satkernama), 'jamwas')
+                        || (str_contains(strtolower($satkernama), 'pengawasan') && !str_contains(strtolower($satkernama), 'kejati') && !str_starts_with(strtolower((string)$idSatker), 'was'));
+
+                    $canEvaluateLke = $isLkeAdmin || $isLkeJamwas;
                 @endphp
                 @if ($canEvaluateLke)
                     <a href="{{ route('lke.evaluasi.index') }}" class="{{ request()->is('lke/evaluasi*') ? 'active' : '' }}" title="Penilaian LKE">

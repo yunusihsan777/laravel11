@@ -52,8 +52,8 @@
                             <a href="{{ route('perencanaan') }}" class="btn-cta-gold">
                                 <i class="bi bi-calendar2-range me-1"></i> Mulai Perencanaan
                             </a>
-                            <a href="{{ route('upload_buktidukung') }}" class="btn-cta-secondary">
-                                <i class="bi bi-cloud-arrow-up me-1"></i> Unggah Bukti Dukung
+                            <a href="{{ route('pelaporan') }}" class="btn-cta-secondary">
+                                <i class="bi bi-file-earmark-bar-graph me-1"></i> Pelaporan Kinerja
                             </a>
                         </div>
                     </div>
