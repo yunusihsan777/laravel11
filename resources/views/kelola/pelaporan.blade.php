@@ -636,9 +636,9 @@
                         </thead>
                         <tbody class="text-center">
                             <tr>
-                                <td>${item.persentase || 0}%</td>
-                                <td>${item.target_pk || 0}%</td>
-                                <td>${item.capaian_pk || 0}%</td>
+                                <td>${item.persentase || 0}${['indeks', 'nilai', 'opini', 'level', 'rasio'].some(w => item.indikator_nama && item.indikator_nama.toLowerCase().includes(w)) ? '' : '%'}</td>
+                                <td>${item.target_pk || 0}${['indeks', 'nilai', 'opini', 'level', 'rasio'].some(w => item.indikator_nama && item.indikator_nama.toLowerCase().includes(w)) ? '' : '%'}</td>
+                                <td>${item.capaian_pk || 0}${['indeks', 'nilai', 'opini', 'level', 'rasio'].some(w => item.indikator_nama && item.indikator_nama.toLowerCase().includes(w)) ? '' : '%'}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -823,9 +823,9 @@
                                                 </thead>
                                                 <tbody class="text-center">
                                                     <tr>
-                                                        <td class="fw-bold text-success">${ikp.persentase || 0}%</td>
-                                                        <td>${ikp.target_pk || 0}%</td>
-                                                        <td class="fw-bold text-primary">${ikp.capaian_pk || 0}%</td>
+                                                        <td class="fw-bold text-success">${ikp.persentase || 0}${['indeks', 'nilai', 'opini', 'level', 'rasio'].some(w => ikp.nama_ikp && ikp.nama_ikp.toLowerCase().includes(w)) ? '' : '%'}</td>
+                                                        <td>${ikp.target_pk || 0}${['indeks', 'nilai', 'opini', 'level', 'rasio'].some(w => ikp.nama_ikp && ikp.nama_ikp.toLowerCase().includes(w)) ? '' : '%'}</td>
+                                                        <td class="fw-bold text-primary">${ikp.capaian_pk || 0}${['indeks', 'nilai', 'opini', 'level', 'rasio'].some(w => ikp.nama_ikp && ikp.nama_ikp.toLowerCase().includes(w)) ? '' : '%'}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>

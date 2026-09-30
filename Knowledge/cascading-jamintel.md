@@ -80,6 +80,6 @@ Dokumen ini menyajikan peta penjenjangan kinerja (*cascading structure*) secara 
 #### 📊 [IKP 11.8] Indikator Kinerja Program: Indeks Kepuasan Pemangku Kepentingan Terhadap Layanan Penyuluhan dan Penerangan Hukum
 *   **Sifat Node:** `AVERAGE`
 *   **Unit Penanggung Jawab:** Pusat Penerangan Hukum (Puspenkum) / Intelijen
-*   **Target (2025):** 4.00 (Skala 5) / 80.00%
+*   **Target (2025):** 4.00 (Skala 1-5)
 *   **Formula Capaian:**
     $$\text{Capaian} = \text{Indeks Hasil Survei Kepuasan Masyarakat / Stakeholder (SKM)}$$

@@ -19,11 +19,11 @@
                     <td><input type="number" class="form-control text-center" value="{{ $indikator->total_diselesaikan }}"
                             readonly></td>
                     <td><input type="text" class="form-control text-center"
-                            value="{{ number_format($indikator->persentase, 2) }}%" readonly></td>
+                            value="{{ number_format($indikator->persentase, 2) }}{{ preg_match('/indeks|nilai|opini|level|rasio/i', $indikator->indikator_nama) ? '' : '%' }}" readonly></td>
                     <td><input type="text" class="form-control text-center"
-                            value="{{ number_format($indikator->target_pk, 2) }}%" readonly></td>
+                            value="{{ number_format($indikator->target_pk, 2) }}{{ preg_match('/indeks|nilai|opini|level|rasio/i', $indikator->indikator_nama) ? '' : '%' }}" readonly></td>
                     <td><input type="text" class="form-control text-center"
-                            value="{{ number_format($indikator->capaian_pk, 2) }}%" readonly></td>
+                            value="{{ number_format($indikator->capaian_pk, 2) }}{{ preg_match('/indeks|nilai|opini|level|rasio/i', $indikator->indikator_nama) ? '' : '%' }}" readonly></td>
                     <textarea class="form-control" rows="2" readonly>{{ $indikator->faktor }}</textarea>
                     <textarea class="form-control" rows="2" readonly>{{ $indikator->langkah_optimalisasi }}</textarea>
                     <td>
