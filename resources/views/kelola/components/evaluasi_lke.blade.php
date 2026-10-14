@@ -40,6 +40,7 @@
                                 <th>No</th>
                                 <th>ID</th>
                                 <th>Kriteria</th>
+                                <th>Langkah Kerja</th>
                                 <th>Bukti Dukung</th>
                                 <th>Cek Bukti Dukung</th>
                             </tr>
@@ -50,6 +51,7 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $item->kode }}</td>
                                     <td>{{ $item->nama }}</td>
+                                    <td>{{ $item->langkah_kerja ?? '-' }}</td>
                                     <td>{{ $item->dokumen_bukti }}</td>
                                     <td>
                                         <a href="{{ route('cekbdeval_lke', ['kode' => $item->kode]) }}" class="btn btn-primary btn-sm">
@@ -59,7 +61,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center">Belum ada data</td>
+                                    <td colspan="6" class="text-center">Belum ada data</td>
                                 </tr>
                             @endforelse
                         </tbody>

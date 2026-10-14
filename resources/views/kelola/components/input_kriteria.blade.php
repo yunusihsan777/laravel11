@@ -155,7 +155,15 @@
                                             <label for="kriteria" class="form-label">
                                                 Rincian Kriteria Penilaian <span class="text-danger">*</span>
                                             </label>
-                                            <textarea name="kriteria" id="kriteria" class="form-control" rows="5" placeholder="Tuliskan uraian kriteria penilaian yang jelas dan terukur..." required style="resize: vertical;"></textarea>
+                                            <textarea name="kriteria" id="kriteria" class="form-control" rows="4" placeholder="Tuliskan uraian kriteria penilaian yang jelas dan terukur..." required style="resize: vertical;">{{ old('kriteria') }}</textarea>
+                                        </div>
+
+                                        <!-- Langkah Kerja Textarea -->
+                                        <div class="mb-3">
+                                            <label for="langkah_kerja" class="form-label">
+                                                Langkah Kerja Penilaian
+                                            </label>
+                                            <textarea name="langkah_kerja" id="langkah_kerja" class="form-control" rows="3" placeholder="Tuliskan petunjuk atau langkah kerja penilaian kriteria..." style="resize: vertical;">{{ old('langkah_kerja') }}</textarea>
                                         </div>
                                     </div>
                                 </div>

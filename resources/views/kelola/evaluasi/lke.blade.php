@@ -7,6 +7,7 @@
                 <th>Kode</th>
                 {{-- <th>Kode Kriteria</th> --}}
                 <th>Kriteria</th>
+                <th>Langkah Kerja</th>
                 <th>Dokumen Bukti Dukung</th>
                 <th>Aksi</th>
             </tr>
@@ -38,6 +39,7 @@
                             <td>{{ $row->kode }}</td>
                             {{-- <td>{{ $row->id_kriteria }}</td> --}}
                             <td>{{ $row->nama_kriteria }}</td>
+                            <td>{{ $row->langkah_kerja ?? '-' }}</td>
                             @php
                                 // kebutuhan dokumen & format
                                 $needs = array_map('trim', explode(';', $row->bukti_pengisian ?? ''));

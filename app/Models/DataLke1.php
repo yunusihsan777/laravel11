@@ -15,6 +15,7 @@ class DataLke1 extends Model
         'subkomponen_id',
         'kode',
         'nama',
+        'langkah_kerja',
         'dokumen_bukti',
     ];
     public $timestamps = false;

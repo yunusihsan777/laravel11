@@ -122,7 +122,8 @@
                     <tr>
                         <th class="text-center" style="width: 70px;">Kode</th>
                         <th style="min-width: 250px;">Nama Kriteria</th>
-                        <th style="min-width: 380px;">Bukti Dukung Terpetakan (Evidence)</th>
+                        <th style="min-width: 200px;">Langkah Kerja</th>
+                        <th style="min-width: 320px;">Bukti Dukung Terpetakan (Evidence)</th>
                         <th class="text-center" style="width: 140px;">Aksi</th>
                     </tr>
                 </thead>
@@ -141,6 +142,9 @@
                                     <span class="badge bg-secondary-subtle text-secondary me-1">{{ $item->subkomponen_id }}</span>
                                     {{ $item->subkomponen->nama ?? '' }}
                                 </div>
+                            </td>
+                            <td>
+                                <span class="text-muted small">{{ $item->langkah_kerja ?? '-' }}</span>
                             </td>
                             <td id="evidence-container-{{ str_replace('.', '-', $item->kode) }}">
                                 @if(!empty($evidenceIds))
@@ -177,7 +181,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center py-5 text-muted">
+                            <td colspan="5" class="text-center py-5 text-muted">
                                 <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
                                 Tidak ada data kriteria yang sesuai filter.
                             </td>

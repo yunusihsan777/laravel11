@@ -12,6 +12,7 @@ class LkeKriteria extends Model
         'subkomponen_id',
         'kode',
         'nama',
+        'langkah_kerja',
         'dokumen_bukti',
         'kode_bukti',
         'eselon_i',

@@ -79,6 +79,7 @@ class EvaluasiController extends Controller
                 'sub_komponen.nama_subkomponen',
                 'kriteria.id as id_kriteria',
                 'kriteria.nama_kriteria',
+                'kriteria.langkah_kerja',
                 'kriteria.bukti_pengisian',
                 'kriteria.format_nama_file',
                 'kriteria.kode'

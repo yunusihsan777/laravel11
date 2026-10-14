@@ -33,16 +33,42 @@ class KriteriaController extends Controller
             'bentuk_bukti' => 'required|string|max:255',
             'bobot' => 'required|numeric',
             'kriteria' => 'required|string',
+            'langkah_kerja' => 'nullable|string',
         ]);
 
-        DB::table('lke_kriteria')->insert([
-            'komponen_id' => $request->komponen_id,
-            'subkomponen_id' => $request->subkomponen_id,
-            'range_nilai' => $request->range_nilai,
-            'bentuk_bukti' => $request->bentuk_bukti,
-            'bobot' => $request->bobot,
-            'kriteria' => $request->kriteria,
-        ]);
+        $insertData = [];
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'komponen_id')) {
+            $insertData['komponen_id'] = $request->komponen_id;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'subkomponen_id')) {
+            $insertData['subkomponen_id'] = $request->subkomponen_id;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'range_nilai')) {
+            $insertData['range_nilai'] = $request->range_nilai;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'bentuk_bukti')) {
+            $insertData['bentuk_bukti'] = $request->bentuk_bukti;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'bobot')) {
+            $insertData['bobot'] = $request->bobot;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'kriteria')) {
+            $insertData['kriteria'] = $request->kriteria;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'nama')) {
+            $insertData['nama'] = $request->kriteria;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'dokumen_bukti')) {
+            $insertData['dokumen_bukti'] = $request->bentuk_bukti;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'langkah_kerja')) {
+            $insertData['langkah_kerja'] = $request->langkah_kerja;
+        }
+        if (\Illuminate\Support\Facades\Schema::hasColumn('lke_kriteria', 'tahun')) {
+            $insertData['tahun'] = $tahun;
+        }
+
+        DB::table('lke_kriteria')->insert($insertData);
 
         return redirect()->route('kriteria.create')->with('success', 'Kriteria berhasil ditambahkan.');
     }

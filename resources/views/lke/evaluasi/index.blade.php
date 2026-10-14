@@ -175,6 +175,11 @@
                                                             <span class="badge bg-dark font-monospace text-xs me-2">{{ $cr->kode }}</span>
                                                             <div class="fw-bold text-dark text-sm">{{ $cr->nama }}</div>
                                                         </div>
+                                                        @if(!empty($cr->langkah_kerja))
+                                                            <div class="mb-2 p-2 bg-info bg-opacity-10 rounded border border-info border-opacity-25 text-xs text-dark">
+                                                                <i class="bi bi-list-check me-1 text-info fw-bold"></i><strong>Langkah Kerja:</strong> {{ $cr->langkah_kerja }}
+                                                            </div>
+                                                        @endif
 
                                                         <!-- Required Evidence Badges -->
                                                         <div class="mt-3 p-2 bg-light rounded-2 border">
